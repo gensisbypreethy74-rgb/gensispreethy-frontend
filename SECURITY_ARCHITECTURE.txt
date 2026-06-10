@@ -1,0 +1,166 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    LUXY GALLERIA SECURE LOGIN ARCHITECTURE                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              AUTHENTICATION FLOW                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────┐
+    │   FRONTEND  │
+    └──────┬──────┘
+           │
+    ┌──────▼──────────────────────────────────────────────┐
+    │        1. User Visits /checkout                     │
+    │           ↓                                          │
+    │        2. Check localStorage for token              │
+    │           ↓                                          │
+    │        ┌───────────────────────────┐                │
+    │        │  Token Exists?            │                │
+    │        └────┬────────────────┬─────┘                │
+    │             │ NO             │ YES                  │
+    │             ↓                ↓                      │
+    │        [REDIRECT]        [LOAD PAGE]               │
+    │        /sign-in          Checkout                  │
+    │        (Toast msg)       (with addresses)          │
+    └──────────────────────────────────────────────────────┘
+           │                          │
+           │                          │
+    ┌──────▼──────────────────┐  ┌────▼───────────────────────────┐
+    │    SIGN-IN PAGE         │  │   CHECKOUT PAGE                │
+    ├─────────────────────────┤  ├───────────────────────────────┤
+    │ Email Input             │  │ 1. Fetch addresses (w/ token) │
+    │ Password Input          │  │ 2. Display shipping options   │
+    │ Login Button            │  │ 3. New address form           │
+    │ Google OAuth            │  │ 4. Payment button             │
+    │ Register Link           │  │ 5. Secure checkout flow       │
+    └──────┬──────────────────┘  └────┬───────────────────────────┘
+           │                          │
+           │ POST /auth/login         │ GET /addresses (Bearer token)
+           │                          │ POST /addresses (Bearer token)
+           │                          │ POST /orders (Bearer token)
+           │                          │
+    ┌──────▼──────────────────────────▼────────────────────────────┐
+    │                         BACKEND API                           │
+    ├──────────────────────────────────────────────────────────────┤
+    │                                                                │
+    │  ✓ Validate email & password                                 │
+    │  ✓ Generate JWT token (7 days expiry)                       │
+    │  ✓ Check user role (admin/customer)                         │
+    │  ✓ Verify authentication for protected endpoints            │
+    │  ✓ Store addresses linked to user ID                        │
+    │  ✓ Process payments only for authenticated users            │
+    │                                                                │
+    └──────┬───────────────────────────────────────────────────────┘
+           │
+           │ Response with JWT Token
+           │
+    ┌──────▼──────────────────────────────────────────────────────┐
+    │                    TOKEN STORAGE (localStorage)              │
+    ├──────────────────────────────────────────────────────────────┤
+    │                                                                │
+    │  luxygalleria_user: {                                        │
+    │    "_id": "user123",                                         │
+    │    "name": "John Doe",                                       │
+    │    "email": "john@example.com",                              │
+    │    "token": "eyJhbGciOiJIUzI1NiIs..."                       │
+    │  }                                                             │
+    │                                                                │
+    │  ✓ Persists across sessions                                 │
+    │  ✓ Included in Authorization headers                        │
+    │  ✓ Cleared on logout                                        │
+    │                                                                │
+    └──────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SECURITY CHECKLIST                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Frontend Security:
+  ✓ Token required for checkout access
+  ✓ Automatic redirect if not authenticated
+  ✓ Token included in all API requests
+  ✓ Session persistence with localStorage
+  ✓ Loading state prevents UI flashing
+  ✓ Error messages don't expose sensitive data
+
+Backend Security:
+  ✓ Password hashing with bcrypt
+  ✓ JWT token verification on protected routes
+  ✓ Role-based access control (admin/customer)
+  ✓ Account deactivation checks
+  ✓ HTTP-only cookies for additional security
+  ✓ CORS configuration for specific origins
+  ✓ Rate limiting on auth endpoints
+  ✓ Secure password requirements
+
+API Security:
+  ✓ Bearer token authentication
+  ✓ Token expiration (7 days)
+  ✓ HTTPS-only in production
+  ✓ Request validation
+  ✓ Error handling without info leaks
+  ✓ CORS headers properly configured
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    API ENDPOINT SECURITY MATRIX                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Endpoint                          Method    Auth Required    Role Required
+────────────────────────────────────────────────────────────────────────────
+/api/v1/auth/customer-login       POST      NO               -
+/api/v1/auth/google               POST      NO               -
+/api/v1/auth/register             POST      NO               -
+/api/v1/auth/verify-otp           POST      NO               -
+────────────────────────────────────────────────────────────────────────────
+/api/v1/users/addresses           GET       YES              customer
+/api/v1/users/addresses           POST      YES              customer
+/api/v1/users/addresses/{id}      PUT       YES              customer
+/api/v1/users/addresses/{id}      DELETE    YES              customer
+────────────────────────────────────────────────────────────────────────────
+/api/v1/orders                    POST      YES              customer
+/api/v1/orders                    GET       YES              customer
+/api/v1/orders/{id}/verify        POST      YES              customer
+────────────────────────────────────────────────────────────────────────────
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          DEPLOYMENT REQUIREMENTS                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Production Checklist:
+  □ HTTPS enabled on all domains
+  □ JWT_SECRET set to strong random value
+  □ DATABASE connection string configured
+  □ Rate limiting enabled (e.g., express-rate-limit)
+  □ CORS configured for frontend domain only
+  □ Environment variables properly set
+  □ Logging/monitoring configured
+  □ Database backups automated
+  □ Security headers configured
+  □ Regular security audits scheduled
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              QUICK REFERENCE                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Login URL:        http://localhost:3000/sign-in
+Checkout URL:     http://localhost:3000/checkout
+API Base:         http://localhost:5000/api/v1
+
+Test Credentials:
+  Email:    admin@luxygalleria.com
+  Password: password123
+
+Backend Setup:
+  1. POST /auth/setup-test-admin  (Creates test user)
+  2. GET  /auth/customer-login    (Sign in)
+  3. GET  /users/addresses        (Fetch addresses)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              STATUS: ✅ SECURE
+═══════════════════════════════════════════════════════════════════════════════

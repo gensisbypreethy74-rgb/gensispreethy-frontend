@@ -59,9 +59,9 @@ const CONTACT_CARDS: ContactCardData[] = [
     id: "email",
     Icon: Mail,
     title: "Email Us",
-    primary: "infoheedy@gmail.com",
-    href: "mailto:infoheedy@gmail.com",
-    ariaLabel: "Email us at infoheedy@gmail.com",
+    primary: "infoluxygalleria@gmail.com",
+    href: "mailto:infoluxygalleria@gmail.com",
+    ariaLabel: "Email us at infoluxygalleria@gmail.com",
   },
   {
     id: "hours",
@@ -125,12 +125,12 @@ function ContactCard({
         aria-label={`${card.title} contact information`}
       >
         <div
-          className="icon-box w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mx-auto mb-6 transition-all duration-400 ease-out md:group-hover:scale-110 md:group-hover:bg-blue-700 md:group-hover:shadow-md"
+          className="icon-box w-16 h-16 rounded-2xl bg-[#8B5E34] flex items-center justify-center mx-auto mb-6 transition-all duration-400 ease-out md:group-hover:scale-110 md:group-hover:bg-[#6B4423] md:group-hover:shadow-md"
         >
           <card.Icon size={28} className="text-white" />
         </div>
 
-        <h3 className="font-sans font-bold text-xl md:text-2xl text-slate-900 mb-3 transition-colors duration-400 md:group-hover:text-blue-800">
+        <h3 className="font-sans font-bold text-xl md:text-2xl text-slate-900 mb-3 transition-colors duration-400 md:group-hover:text-[#5A3A1E]">
           {card.title}
         </h3>
 
@@ -138,12 +138,12 @@ function ContactCard({
           <a
             href={card.href}
             aria-label={card.ariaLabel}
-            className="font-semibold text-base md:text-lg text-blue-800 hover:text-blue-600 transition-colors mb-2 block break-all"
+            className="font-semibold text-base md:text-lg text-[#5A3A1E] hover:text-[#8B5E34] transition-colors mb-2 block break-all"
           >
             {card.primary}
           </a>
         ) : (
-          <p className="font-semibold text-base md:text-lg text-blue-800 mb-2">
+          <p className="font-semibold text-base md:text-lg text-[#5A3A1E] mb-2">
             {card.primary}
           </p>
         )}
@@ -165,7 +165,7 @@ function ContactCard({
 // ─── Field wrapper ────────────────────────────────────────────────────────────
 
 const inputCls =
-  "w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 placeholder:text-slate-400 text-sm font-sans focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all duration-200 autofill:bg-slate-50";
+  "w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 placeholder:text-slate-400 text-sm font-sans focus:outline-none focus:border-[#A68B5B]/50 focus:ring-2 focus:ring-[#A68B5B]/50/20 focus:bg-white transition-all duration-200 autofill:bg-slate-50";
 
 function FieldWrapper({
   label,
@@ -219,8 +219,8 @@ function ContactForm() {
   const onSubmit = async (data: ContactFormData) => {
     try {
       setSubmitError("");
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const response = await axios.post(`${baseUrl}/api/v1/contacts`, data);
+      const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+      const response = await axios.post(`${apiURL}/contacts`, data);
       if (response.data.success) {
         setSubmitted(true);
       }
@@ -252,7 +252,7 @@ function ContactForm() {
         >
           {/* Blue top accent */}
           <div
-            className="h-1 bg-blue-500 w-full"
+            className="h-1 bg-[#A68B5B]/50 w-full"
             style={{
               transform: visible ? "scaleX(1)" : "scaleX(0)",
               transformOrigin: "center",
@@ -274,8 +274,8 @@ function ContactForm() {
             {submitted ? (
               /* ── Success state ── */
               <div className="flex flex-col items-center justify-center py-14 gap-5 text-center">
-                <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center">
-                  <CheckCircle2 size={42} className="text-blue-600" />
+                <div className="w-20 h-20 rounded-full bg-[#A68B5B]/5 flex items-center justify-center">
+                  <CheckCircle2 size={42} className="text-[#8B5E34]" />
                 </div>
                 <h3 className="font-bold text-2xl text-slate-900">
                   Message Sent!
@@ -286,7 +286,7 @@ function ContactForm() {
                 </p>
                 <button
                   onClick={handleReset}
-                  className="mt-2 px-8 py-3 bg-blue-600 text-white font-bold text-sm uppercase tracking-[0.15em] rounded-full hover:bg-blue-700 transition-colors duration-300 shadow-lg shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="mt-2 px-8 py-3 bg-[#8B5E34] text-white font-bold text-sm uppercase tracking-[0.15em] rounded-full hover:bg-[#6B4423] transition-colors duration-300 shadow-lg shadow-[#A68B5B]/50/30 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2"
                 >
                   Send Another
                 </button>
@@ -397,13 +397,13 @@ function ContactForm() {
                     disabled={isSubmitting}
                     aria-label="Send message"
                     className="w-full mt-6 md:mt-8 flex items-center justify-center gap-3
-                             bg-blue-600 text-white py-4 md:py-5 rounded-full
+                             bg-[#8B5E34] text-white py-4 md:py-5 rounded-full
                              font-bold text-sm tracking-[0.15em] uppercase
-                             hover:bg-blue-700 active:scale-[0.98]
+                             hover:bg-[#6B4423] active:scale-[0.98]
                              transition-all duration-300
-                             shadow-lg shadow-blue-500/30
+                             shadow-lg shadow-[#A68B5B]/50/30
                              disabled:opacity-60 disabled:cursor-not-allowed
-                             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                             focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2
                              motion-reduce:transition-none"
                   >
                     {isSubmitting ? (
@@ -440,10 +440,10 @@ export default function ContactUsPage() {
 
   return (
     <>
-      <title>Contact Us – HEEDY | We&apos;d Love to Hear From You</title>
+      <title>Contact Us – LUXY GALLERIA | We&apos;d Love to Hear From You</title>
       <meta
         name="description"
-        content="Get in touch with the HEEDY team. Call, email, or send us a message — we're here to help with all your skincare needs."
+        content="Get in touch with the LUXY GALLERIA team. Call, email, or send us a message — we're here to help with all your skincare needs."
       />
 
       <main id="top" className="min-h-screen bg-slate-50">
@@ -477,8 +477,8 @@ export default function ContactUsPage() {
 
             {/* Pill */}
             <div
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-blue-300/30
-                         text-blue-300 mb-7 hover:border-blue-300/60 hover:bg-blue-400/10 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#A68B5B]/30/30
+                         text-[#A68B5B]/30 mb-7 hover:border-[#A68B5B]/30/60 hover:bg-[#A68B5B]/60/10 transition-all duration-300"
               aria-label="Get in touch with our team"
               style={{
                 opacity: heroVisible ? 1 : 0,
@@ -561,9 +561,8 @@ function FAQSection() {
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : "http://localhost:5000";
-        const API_URL = `${baseUrl}/api`;
-        const res = await axios.get(`${API_URL}/v1/faqs`);
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+        const res = await axios.get(`${apiURL}/faqs`);
         if (res.data.success) {
           setFaqs(res.data.data);
         }
@@ -587,7 +586,7 @@ function FAQSection() {
         >
           {/* Eyebrow */}
           <p
-            className="font-sans font-semibold text-xs tracking-[0.2em] uppercase text-blue-500 mb-4"
+            className="font-sans font-semibold text-xs tracking-[0.2em] uppercase text-[#A68B5B] mb-4"
             style={{
               opacity: headerVisible ? 1 : 0,
               transition: "opacity 0.4s ease 0ms",
@@ -630,7 +629,7 @@ function FAQSection() {
           >
             {loading ? (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#A68B5B]/50"></div>
               </div>
             ) : faqs.length === 0 ? (
               <div className="text-center py-8 text-slate-500 font-medium">No frequently asked questions available at the moment.</div>
@@ -641,7 +640,7 @@ function FAQSection() {
                 className="border border-slate-200 rounded-2xl bg-white overflow-hidden
                            hover:border-slate-300 transition-colors duration-200
                            data-[state=open]:border-slate-300
-                           focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2"
+                           focus-within:ring-2 focus-within:ring-[#A68B5B]/50 focus-within:ring-offset-2"
                 style={{
                   opacity: listVisible ? 1 : 0,
                   transform: listVisible ? "translateY(0)" : "translateY(1rem)",
@@ -663,7 +662,7 @@ function FAQSection() {
                       size={20}
                       aria-hidden="true"
                       className="flex-shrink-0 text-slate-400
-                                 group-data-[state=open]:text-blue-500
+                                 group-data-[state=open]:text-[#A68B5B]/50
                                  group-data-[state=open]:rotate-90
                                  transition-all duration-300 motion-reduce:transition-none"
                     />
@@ -703,10 +702,10 @@ function FAQSection() {
               document.querySelector("form[aria-label='Contact form']")?.scrollIntoView({ behavior: "smooth", block: "center" });
             }}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full
-                       bg-blue-600 text-white font-bold text-sm tracking-[0.12em] uppercase
-                       hover:bg-blue-700 transition-colors duration-300
-                       shadow-lg shadow-blue-500/30
-                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                       bg-[#8B5E34] text-white font-bold text-sm tracking-[0.12em] uppercase
+                       hover:bg-[#6B4423] transition-colors duration-300
+                       shadow-lg shadow-[#A68B5B]/50/30
+                       focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2
                        motion-reduce:transition-none"
             aria-label="Send us a message via the contact form"
           >

@@ -13,9 +13,9 @@ export default function Home() {
       <HeroSection />
       <CategorySection />
       <ProductSection />
-      <ValueSection />
-      <FeaturesSection />
-      <TestimonialsSection />
+      {/* <ValueSection /> */}
+      {/*<FeaturesSection />*/}
+       {/*<TestimonialsSection />*/}
     </main>
   );
 }

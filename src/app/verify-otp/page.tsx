@@ -17,10 +17,16 @@ function VerifyOtpContent() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resendSuccess, setResendSuccess] = useState<string | null>(null);
+  const [devOtp, setDevOtp] = useState<string | null>(null);
 
   useEffect(() => {
     if (!email) {
       router.push("/register");
+    }
+    // Check for development OTP
+    const storedOtp = sessionStorage.getItem('dev_otp');
+    if (storedOtp) {
+      setDevOtp(storedOtp);
     }
   }, [email, router]);
 
@@ -78,20 +84,24 @@ function VerifyOtpContent() {
       setApiError(null);
       setResendSuccess(null);
       
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL 
-        ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '')
-        : 'http://localhost:5000';
+      const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
         
-      const res = await axios.post(`${baseUrl}/api/v1/auth/verify-otp`, { email, otp: otpValue });
+      const res = await axios.post(`${apiURL}/auth/verify-otp`, { email, otp: otpValue });
 
       // Success! Save user and redirect to home page
       if (res.data.data) {
-        localStorage.setItem('heedy_user', JSON.stringify(res.data.data));
+        localStorage.setItem('luxygalleria_user', JSON.stringify(res.data.data));
       }
       router.push("/");
     } catch (err: any) {
-      console.error("Verification error:", err);
-      setApiError(err.response?.data?.message || "Something went wrong. Please try again.");
+      // Don't log expected OTP errors to console
+      const status = err.response?.status;
+      if (status === 400 || status === 404) {
+        setApiError(err.response?.data?.message || "Invalid or expired OTP. Please try again.");
+      } else {
+        console.error("Verification error:", err);
+        setApiError(err.response?.data?.message || "Something went wrong. Please try again.");
+      }
       setIsSubmitting(false);
     }
   };
@@ -101,17 +111,19 @@ function VerifyOtpContent() {
       setApiError(null);
       setResendSuccess(null);
       
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL 
-        ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '')
-        : 'http://localhost:5000';
+      const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
         
-      await axios.post(`${baseUrl}/api/v1/auth/resend-otp`, { email });
+      await axios.post(`${apiURL}/auth/resend-otp`, { email });
 
       setResendSuccess("A new verification code has been sent to your email.");
       setOtp(Array(6).fill(""));
       inputRefs.current[0]?.focus();
     } catch (err: any) {
-      console.error("Resend OTP error:", err);
+      // Don't log expected errors to console
+      const status = err.response?.status;
+      if (status !== 400 && status !== 404) {
+        console.error("Resend OTP error:", err);
+      }
       setApiError(err.response?.data?.message || "Something went wrong while resending OTP.");
     }
   };
@@ -122,7 +134,7 @@ function VerifyOtpContent() {
       <div className="bg-[#F5F0EB] lg:w-5/12 flex flex-col justify-center px-8 pt-28 pb-16 lg:p-16 xl:p-24 relative overflow-hidden">
         <div className="max-w-md mx-auto relative z-10 w-full">
           <p className="font-sans font-bold text-xs uppercase tracking-[0.25em] text-slate-800 mb-6 lg:mb-8">
-            HEEDY MEMBERSHIP
+            LUXY GALLERIA MEMBERSHIP
           </p>
           
           <h1 className="font-serif font-normal text-4xl lg:text-5xl xl:text-6xl text-[#0A192F] leading-tight mb-6">
@@ -149,6 +161,14 @@ function VerifyOtpContent() {
           <p className="font-sans text-slate-500 text-base mb-10">
             We've sent a 6-digit code to <span className="font-medium text-slate-800">{email}</span>
           </p>
+
+          {devOtp && (
+            <div className="mb-6 bg-amber-50 border-2 border-amber-300 rounded-xl p-4 text-center animate-pulse">
+              <p className="text-xs font-bold text-amber-700 uppercase mb-2">🔓 Development Mode - Your OTP</p>
+              <p className="text-3xl font-black text-amber-900 tracking-widest">{devOtp}</p>
+              <p className="text-xs text-amber-600 mt-2">Copy this code to verify your email</p>
+            </div>
+          )}
 
           <form onSubmit={onSubmit} className="space-y-8">
             {apiError && (
@@ -191,7 +211,7 @@ function VerifyOtpContent() {
             <button
               type="submit"
               disabled={isSubmitting || otp.join("").length !== 6}
-              className="w-full bg-[#0A192F] text-white font-bold text-base rounded-xl py-4 sm:py-5 flex items-center justify-center gap-2 group hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-[#0A192F] text-white font-bold text-base rounded-xl py-4 sm:py-5 flex items-center justify-center gap-2 group hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Verifying..." : "Verify & Continue"} 
             </button>
@@ -202,7 +222,7 @@ function VerifyOtpContent() {
             <button 
               onClick={handleResend}
               type="button"
-              className="font-sans font-bold text-sm text-slate-900 hover:text-blue-600 transition-colors"
+              className="font-sans font-bold text-sm text-slate-900 hover:text-[#8B5E34] transition-colors"
             >
               Resend Verification Code
             </button>

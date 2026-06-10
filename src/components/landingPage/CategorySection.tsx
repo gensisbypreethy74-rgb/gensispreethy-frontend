@@ -37,10 +37,8 @@ export default function CategorySection() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL
-          ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '')
-          : 'http://localhost:5000';
-        const res = await axios.get(`${baseUrl}/api/v1/categories`);
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+        const res = await axios.get(`${apiURL}/categories`);
         if (res.data.success && res.data.data) {
           const activeCats = res.data.data.filter((c: any) => c.status === 'ACTIVE').slice(0, 3);
 
@@ -125,7 +123,7 @@ export default function CategorySection() {
       {/* Section Header */}
       <div className="text-center px-6 md:px-12 max-w-4xl mx-auto mb-8 md:mb-16">
         <p
-          className={`font-sans font-semibold text-xs tracking-[0.3em] uppercase text-blue-800 mb-4 transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`font-sans font-semibold text-xs tracking-[0.3em] uppercase text-[#5A3A1E] mb-4 transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
         >
           THE CURATED SELECTION
@@ -155,7 +153,7 @@ export default function CategorySection() {
             <Link
               href={`/products?category=${category.id}`}
               aria-label={`Browse ${category.label}`}
-              className={`md:hidden group relative overflow-hidden rounded-[2.5rem] aspect-[4/5] block focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none shadow-xl shadow-black/10 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              className={`md:hidden group relative overflow-hidden rounded-[2.5rem] aspect-[4/5] block focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none shadow-xl shadow-black/10 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
                 }`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
@@ -187,7 +185,7 @@ export default function CategorySection() {
             <Link
               href={`/products?category=${category.id}`}
               aria-label={`Browse ${category.label}`}
-              className={`hidden md:block group relative overflow-hidden aspect-square lg:aspect-[4/3] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+              className={`hidden md:block group relative overflow-hidden aspect-square lg:aspect-[4/3] focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
                 }`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
@@ -216,7 +214,7 @@ export default function CategorySection() {
                 }`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              <Link href={`/products?category=${category.id}`} className="font-sans font-bold text-xs tracking-[0.2em] uppercase text-slate-400 hover:text-blue-600 transition-colors duration-300">
+              <Link href={`/products?category=${category.id}`} className="font-sans font-bold text-xs tracking-[0.2em] uppercase text-slate-400 hover:text-[#8B5E34] transition-colors duration-300">
                 {category.label}
               </Link>
             </div>
@@ -239,7 +237,7 @@ export default function CategorySection() {
                 currentIndexRef.current = index;
               }
             }}
-            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-blue-300 w-4' : 'bg-blue-100/80'
+            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-[#A68B5B]/30 w-4' : 'bg-[#A68B5B]/10/80'
               }`}
             aria-label={`Go to slide ${index + 1}`}
           />

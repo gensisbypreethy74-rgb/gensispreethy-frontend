@@ -52,7 +52,7 @@ export default function ValueSection() {
           <div className="flex flex-col justify-center">
 
             <p
-              className={`font-sans font-semibold text-xs md:text-sm tracking-[0.25em] uppercase text-blue-300 mb-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5"
+              className={`font-sans font-semibold text-xs md:text-sm tracking-[0.25em] uppercase text-[#A68B5B]/30 mb-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5"
                 }`}
               style={{ transitionDelay: "300ms" }}
             >
@@ -75,7 +75,7 @@ export default function ValueSection() {
                 }`}
               style={{ transitionDelay: "500ms" }}
             >
-              At HEEDY, we don&apos;t just create products. We create experiences that elevate your everyday lifestyle.
+              At LUXY GALLERIA, we don&apos;t just create products. We create experiences that elevate your everyday lifestyle.
             </p>
 
             {/* Feature Grid */}
@@ -145,7 +145,7 @@ export default function ValueSection() {
             <Link
               href="/process"
               aria-label="Discover our scientific process and product development"
-              className={`mt-10 self-center md:self-start bg-white text-[#0A1E3D] px-8 md:px-10 py-4 md:py-5 rounded-full font-sans font-bold text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-slate-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-[#0A1E3D] motion-reduce:transition-none motion-reduce:transform-none ${
+              className={`mt-10 self-center md:self-start bg-white text-[#0A1E3D] px-8 md:px-10 py-4 md:py-5 rounded-full font-sans font-bold text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-slate-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/60 focus:ring-offset-2 focus:ring-offset-[#0A1E3D] motion-reduce:transition-none motion-reduce:transform-none ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
               style={{ transitionDelay: "1000ms" }}

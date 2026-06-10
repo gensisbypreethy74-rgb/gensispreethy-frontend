@@ -63,7 +63,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       case "warning":
         return "bg-amber-50 border-amber-200 text-amber-800";
       default:
-        return "bg-blue-50 border-blue-200 text-blue-800";
+        return "bg-[#A68B5B]/5 border-[#A68B5B]/20 text-[#5A3A1E]";
     }
   };
 
@@ -72,7 +72,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       case "success": return "text-emerald-500";
       case "error": return "text-red-500";
       case "warning": return "text-amber-500";
-      default: return "text-blue-500";
+      default: return "text-[#A68B5B]";
     }
   };
 

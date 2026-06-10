@@ -71,7 +71,7 @@ export default function FeaturesSection() {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16 md:mb-20">
           <div className="lg:max-w-2xl">
             <p 
-              className={`font-sans font-bold text-xs tracking-[0.15em] uppercase text-blue-800 mb-3 transition-opacity duration-400 ease-out motion-reduce:transition-none ${
+              className={`font-sans font-bold text-xs tracking-[0.15em] uppercase text-[#5A3A1E] mb-3 transition-opacity duration-400 ease-out motion-reduce:transition-none ${
                 isVisible ? "opacity-100" : "opacity-0"
               }`}
             >
@@ -94,7 +94,7 @@ export default function FeaturesSection() {
             style={{ transitionDelay: "200ms" }}
           >
             <p className="font-sans font-normal text-base md:text-lg text-slate-400 leading-relaxed">
-              Every drop of HEEDY is crafted with powerful actives to protect, nourish, and elevate your skin in modern environments.
+              Every drop of LUXY GALLERIA is crafted with powerful actives to protect, nourish, and elevate your skin in modern environments.
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function FeaturesSection() {
               >
                 {/* Step Number */}
                 <div 
-                  className="font-serif font-normal text-6xl md:text-7xl lg:text-8xl mb-4 md:mb-6 select-none transition-colors duration-300 text-slate-200 group-hover:text-blue-100/60"
+                  className="font-serif font-normal text-6xl md:text-7xl lg:text-8xl mb-4 md:mb-6 select-none transition-colors duration-300 text-slate-200 group-hover:text-[#A68B5B]/10/60"
                   aria-hidden="true"
                 >
                   {feature.step}
@@ -121,7 +121,7 @@ export default function FeaturesSection() {
                 {/* Category Tag */}
                 <div className="mb-4">
                   <span 
-                    className="inline-block px-3 py-1.5 rounded-full font-sans font-semibold text-[10px] md:text-xs tracking-[0.15em] uppercase transition-colors duration-200 bg-slate-100 text-slate-600 group-hover:bg-blue-100 group-hover:text-blue-800"
+                    className="inline-block px-3 py-1.5 rounded-full font-sans font-semibold text-[10px] md:text-xs tracking-[0.15em] uppercase transition-colors duration-200 bg-slate-100 text-slate-600 group-hover:bg-[#A68B5B]/10 group-hover:text-[#5A3A1E]"
                     aria-label={`Feature category: ${feature.category}`}
                   >
                     {feature.category}
@@ -139,7 +139,7 @@ export default function FeaturesSection() {
                 </p>
 
                 {/* Hover Bottom Accent */}
-                <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-blue-500 rounded-t-md opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute bottom-0 left-6 right-6 h-0.5 bg-[#A68B5B]/50 rounded-t-md opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </article>
             );
           })}

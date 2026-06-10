@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --luxy-primary: #A68B5B;
+  --luxy-dark: #6B5344;
+  --luxy-light: #F5F1E8;
+  --luxy-gold: #C9A961;
 }
 
 @theme inline {
@@ -11,6 +15,13 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-playfair);
+  
+  /* Override default blue with Luxy colors */
+  --color-blue-50: #FAF8F5;
+  --color-blue-100: #F5F1E8;
+  --color-blue-500: #A68B5B; /* Primary */
+  --color-blue-600: #8B5E34; /* Hover state */
+  --color-blue-700: #6B5344; /* Active/Dark state */
 }
 
 body {

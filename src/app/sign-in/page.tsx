@@ -10,6 +10,7 @@ import * as z from "zod";
 import { Eye, EyeOff, ShieldCheck, UserPlus, ArrowRight } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
 import GoogleAuthButton from "../../components/auth/GoogleAuthButton";
+import { getAPIURL } from "../../lib/apiClient";
 
 const signInSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -34,27 +35,34 @@ export default function SignInPage() {
   const { showToast } = useToast();
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL
-    ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '')
-    : 'http://localhost:5000';
-
   const onSubmit = async (data: SignInValues) => {
     try {
       setApiError(null);
-      const res = await axios.post(`${baseUrl}/api/v1/auth/customer-login`, {
+      const apiURL = getAPIURL();
+      const res = await axios.post(`${apiURL}/auth/customer-login`, {
         email: data.email,
         password: data.password,
       });
 
       // Success! Save user and redirect to home page
       if (res.data.data) {
-        localStorage.setItem('heedy_user', JSON.stringify(res.data.data));
+        localStorage.setItem('luxygalleria_user', JSON.stringify(res.data.data));
       }
       showToast("Signed in successfully!", "success");
       router.push("/");
     } catch (err: any) {
-      console.error("Sign in error:", err);
-      setApiError(err.response?.data?.message || "Something went wrong. Please try again.");
+      // Don't log expected auth errors (401, 403) to console - show user-friendly message instead
+      const status = err.response?.status;
+      const serverMsg = err.response?.data?.message;
+
+      if (status === 401) {
+        setApiError("Invalid email or password. Please try again.");
+      } else if (status === 403) {
+        setApiError(serverMsg || "Account not verified. Please check your email for OTP.");
+      } else {
+        console.error("Sign in error:", err);
+        setApiError(serverMsg || "Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -68,7 +76,7 @@ export default function SignInPage() {
 
         <div className="max-w-lg mx-auto relative z-10 w-full">
           <p className="font-sans font-bold text-xs uppercase tracking-[0.25em] text-slate-800 mb-6 md:mb-8">
-            HEEDY LUXURY COMMERCE
+            LUXY GALLERIA LUXURY COMMERCE
           </p>
 
           <h1 className="font-serif font-normal text-4xl md:text-5xl lg:text-6xl text-[#0A192F] leading-tight mb-6">
@@ -96,6 +104,14 @@ export default function SignInPage() {
             Enter your credentials to continue.
           </p>
 
+          {/* Helpful Hint */}
+          <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-xs font-semibold text-blue-700 uppercase mb-2">💡 Tip</p>
+            <p className="text-sm text-blue-700">
+              Don't have an account yet? <Link href="/register" className="font-bold underline hover:text-blue-900">Create one first</Link>, verify your email with OTP, then login here.
+            </p>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
             {apiError && (
               <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-medium border border-red-100">
@@ -116,7 +132,7 @@ export default function SignInPage() {
                 type="email"
                 placeholder="you@luxury.com"
                 {...register("email")}
-                className={`w-full bg-slate-50 border rounded-xl px-5 py-4 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors ${errors.email ? "border-red-500 ring-1 ring-red-500" : "border-slate-100"
+                className={`w-full bg-slate-50 border rounded-xl px-5 py-4 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:bg-white transition-colors ${errors.email ? "border-red-500 ring-1 ring-red-500" : "border-slate-100"
                   }`}
                 aria-invalid={errors.email ? "true" : "false"}
                 aria-describedby={errors.email ? "email-error" : undefined}
@@ -142,7 +158,7 @@ export default function SignInPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   {...register("password")}
-                  className={`w-full bg-slate-50 border rounded-xl px-5 py-4 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors pr-14 ${errors.password ? "border-red-500 ring-1 ring-red-500" : "border-slate-100"
+                  className={`w-full bg-slate-50 border rounded-xl px-5 py-4 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:bg-white transition-colors pr-14 ${errors.password ? "border-red-500 ring-1 ring-red-500" : "border-slate-100"
                     }`}
                   aria-invalid={errors.password ? "true" : "false"}
                   aria-describedby={errors.password ? "password-error" : undefined}
@@ -173,7 +189,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#0A192F] text-white font-bold text-base rounded-xl py-4 sm:py-5 flex items-center justify-center gap-2 group hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70"
+              className="w-full bg-[#0A192F] text-white font-bold text-base rounded-xl py-4 sm:py-5 flex items-center justify-center gap-2 group hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 disabled:opacity-70"
             >
               {isSubmitting ? "Signing in..." : "Sign In"}
               <ArrowRight size={20} className="transition-transform group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:transform-none" />
@@ -203,7 +219,7 @@ export default function SignInPage() {
               href="/register"
               className="inline-flex items-center justify-center gap-1.5 font-sans text-sm text-slate-500 hover:text-slate-900 transition-colors"
             >
-              New to Heedy? <span className="font-bold text-slate-800">Create Account</span> <UserPlus size={16} className="text-slate-800" />
+              New to Luxy Galleria? <span className="font-bold text-slate-800">Create Account</span> <UserPlus size={16} className="text-slate-800" />
             </Link>
           </div>
         </div>

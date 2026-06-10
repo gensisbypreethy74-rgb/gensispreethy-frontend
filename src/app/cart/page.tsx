@@ -13,7 +13,9 @@ export default function CartPage() {
   const { cartItems, updateQuantity, removeItem } = useCart();
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const total = subtotal;
+  const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
+  const shippingFee = totalWeight * 60;
+  const total = subtotal + shippingFee;
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
@@ -59,7 +61,7 @@ export default function CartPage() {
             <div className="lg:col-span-8 flex flex-col gap-6">
               {cartItems.map((item) => (
                 <div
-                  key={item.id}
+                  key={`${item.id}-${item.size || 'default'}`}
                   className="flex flex-col sm:flex-row gap-6 p-8 sm:p-6 border border-slate-100 rounded-2xl bg-white relative group transition-shadow hover:shadow-md"
                 >
                   {/* Remove Button (Desktop absolute, Mobile relative) */}
@@ -138,11 +140,21 @@ export default function CartPage() {
                   <span className="font-semibold text-slate-900">₹{subtotal}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-600 font-sans">
-                  <span>Shipping</span>
+                  <span>Shipping (₹60/kg)</span>
                   <span className="font-semibold text-slate-900">
-                    <span className="text-green-600 uppercase text-xs font-bold tracking-wider">Free</span>
+                    {shippingFee === 0 ? (
+                      <span className="text-green-600 uppercase text-xs font-bold tracking-wider">Free</span>
+                    ) : (
+                      <span>₹{shippingFee}</span>
+                    )}
                   </span>
                 </div>
+                {totalWeight > 0 && (
+                  <div className="flex justify-between items-center text-slate-400 font-sans text-xs">
+                    <span>Total Weight</span>
+                    <span>{totalWeight} kg</span>
+                  </div>
+                )}
               </div>
 
               <div className="h-px bg-slate-200 mb-6" />
@@ -152,7 +164,7 @@ export default function CartPage() {
                 <span className="font-sans font-bold text-3xl text-slate-900">₹{total}</span>
               </div>
 
-              <Link href="/checkout" className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-bold text-sm uppercase tracking-widest py-4 rounded-full hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              <Link href="/checkout" className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-bold text-sm uppercase tracking-widest py-4 rounded-full hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2">
                 Proceed to Checkout
               </Link>
               

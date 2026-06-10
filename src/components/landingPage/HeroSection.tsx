@@ -61,15 +61,14 @@ export default function HeroSection() {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL
-          ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
-          : "http://localhost:5000";
-        const res = await axios.get(`${baseUrl}/api/v1/banners`);
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+        const res = await axios.get(`${apiURL}/banners`);
         if (res.data.success && res.data.data && res.data.data.length > 0) {
           const activeBanners: IBanner[] = res.data.data.filter(
             (b: IBanner) => b.status === "ACTIVE"
           );
           if (activeBanners.length > 0) {
+            const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
             const mapped = activeBanners.map((b) => ({
               id: b._id,
               image: b.image.startsWith("/")
@@ -177,14 +176,14 @@ export default function HeroSection() {
             className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
           >
             <h1 className="text-black font-sans font-black text-6xl md:text-8xl tracking-[0.2em] uppercase mb-8">
-              HEEDY
+              LUXY GALLERIA
             </h1>
             <div className="w-64 md:w-80 h-[2px] bg-slate-100 overflow-hidden relative">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 2, ease: "easeInOut" }}
-                className="h-full bg-blue-400"
+                className="h-full bg-[#A68B5B]/60"
               />
             </div>
           </motion.div>
@@ -283,8 +282,8 @@ export default function HeroSection() {
                 aria-selected={currentSlide === index}
                 aria-label={`Go to slide ${index + 1}`}
                 onClick={() => goToSlide(index)}
-                className={`transition-colors duration-300 motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black ${currentSlide === index
-                    ? "w-2.5 h-2.5 rounded-full bg-blue-500"
+                className={`transition-colors duration-300 motion-reduce:transition-none focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 focus:ring-offset-black ${currentSlide === index
+                    ? "w-2.5 h-2.5 rounded-full bg-[#A68B5B]/50"
                     : "w-2.5 h-2.5 rounded-full bg-white/50"
                   }`}
               />

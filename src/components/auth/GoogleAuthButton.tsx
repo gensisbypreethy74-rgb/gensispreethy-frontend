@@ -25,8 +25,9 @@ function GoogleAuthButtonConfigured({ mode = "signin" }: GoogleAuthButtonProps) 
   const { useGoogleLogin } = require("@react-oauth/google");
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL
-    ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
+    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api(\/v1)?\/?$/, "")
     : "http://localhost:5000";
+  const apiURL = `${baseUrl}/api/v1`;
 
   const googleLogin = useGoogleLogin({
     flow: "implicit",
@@ -44,7 +45,7 @@ function GoogleAuthButtonConfigured({ mode = "signin" }: GoogleAuthButtonProps) 
         const { sub: googleId, email, name, picture } = userInfo.data;
 
         // Send to our backend
-        const res = await axios.post(`${baseUrl}/api/v1/auth/google`, {
+        const res = await axios.post(`${apiURL}/auth/google`, {
           credential: tokenResponse.access_token,
           googleId,
           email,
@@ -53,7 +54,7 @@ function GoogleAuthButtonConfigured({ mode = "signin" }: GoogleAuthButtonProps) 
         });
 
         if (res.data.data) {
-          localStorage.setItem("heedy_user", JSON.stringify(res.data.data));
+          localStorage.setItem("luxygalleria_user", JSON.stringify(res.data.data));
           showToast(
             mode === "signin"
               ? "Signed in with Google successfully!"
@@ -117,7 +118,7 @@ function GoogleButtonUI({
           hover:border-slate-300 hover:bg-slate-50 hover:shadow-lg hover:shadow-slate-100/50
           active:scale-[0.98] 
           transition-all duration-300 ease-out
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+          focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2
           disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
       >
         {/* Google Logo */}

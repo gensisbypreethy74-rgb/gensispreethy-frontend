@@ -9,6 +9,8 @@ import {
   Star, StarHalf, ShoppingBag, ChevronRight,
   Shield, Truck, RotateCcw, Plus, Minus, Check,
 } from "lucide-react";
+import { useToast } from "../../../context/ToastContext";
+import CartAnimation from "../../../components/CartAnimation";
 import { useCart } from "../../../context/CartContext";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -29,6 +31,7 @@ interface Product {
   ingredients: string;
   howToUse: string;
   sizes: string[];
+  weight?: number;
 }
 
 // Data will be fetched dynamically from backend
@@ -40,6 +43,19 @@ const TRUST_BADGES = [
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const normalizeImg = (img: any) => {
+  if (!img) return "/products/suncream-1.jpg";
+  const str = String(img).trim();
+  if (!str) return "/products/suncream-1.jpg";
+  if (str.startsWith("http://") || str.startsWith("https://") || str.startsWith("/")) {
+    return str;
+  }
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")
+    : "http://localhost:5000";
+  return `${baseUrl.replace(/\/$/, "")}/${str.replace(/^\/+/, "")}`;
+};
 
 const renderStars = (rating: number) =>
   Array.from({ length: 5 }, (_, i) => {
@@ -69,19 +85,18 @@ export default function ProductDetailPage() {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isIngredientsExpanded, setIsIngredientsExpanded] = useState(false);
   const [showAllThumbs, setShowAllThumbs] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, cartCount } = useCart();
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL
-          ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '')
-          : 'http://localhost:5000';
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
         const [prodRes, catRes] = await Promise.all([
-          axios.get(`${baseUrl}/api/v1/products`),
-          axios.get(`${baseUrl}/api/v1/categories`)
+          axios.get(`${apiURL}/products`),
+          axios.get(`${apiURL}/categories`)
         ]);
 
         const prodJson = prodRes.data;
@@ -103,7 +118,7 @@ export default function ProductDetailPage() {
             id: p._id,
             name: p.name,
             tagline: p.description || "",
-            images: p.images && p.images.length > 0 ? p.images : ["/products/suncream-1.jpg"],
+            images: p.images && p.images.length > 0 ? p.images.map(normalizeImg) : ["/products/suncream-1.jpg"],
             rating: p.starRating || 0,
             reviewCount: p.reviewsCount || 0,
             currentPrice: p.variants?.[0]?.price || 0,
@@ -111,6 +126,7 @@ export default function ProductDetailPage() {
             currency: "₹",
             dealBadge: p.offerText || "",
             category: p.category || "all",
+            weight: p.weight || 0,
             benefits: p.keyFeatures ? p.keyFeatures.split(/,|\n/).map((s: string) => s.trim()).filter(Boolean) : ["Premium Quality"],
             ingredients: p.description || "Refer to packaging",
             howToUse: "Follow instructions on packaging",
@@ -129,24 +145,25 @@ export default function ProductDetailPage() {
     if (id) fetchProducts();
   }, [id]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e?: React.MouseEvent<HTMLElement>) => {
+    if (e) {
+      e.preventDefault();
+    }
     if (!product) return;
 
-    const savedUser = localStorage.getItem("heedy_user");
-    if (!savedUser) {
-      router.push("/sign-in");
-      return;
-    }
-
+    const savedUser = localStorage.getItem("luxygalleria_user");
     addToCart({
       id: product.id,
       name: product.name,
       image: product.images[0],
       price: product.currentPrice,
       currency: product.currency,
+      weight: (product as any).weight || 0,
       size: product.sizes?.[selectedSize],
       quantity: qty,
     });
+    const nextCount = cartCount + qty;
+    showToast(`Added to cart. Cart now has ${nextCount} item${nextCount === 1 ? '' : 's'}.`, "success");
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
   };
@@ -205,20 +222,17 @@ export default function ProductDetailPage() {
           {/* ── Left: Image Gallery ── */}
           <div className="flex flex-col gap-4">
             {/* Main Image */}
-            <div className="relative aspect-square rounded-3xl overflow-hidden bg-slate-50 border border-slate-100">
+            <div className="relative aspect-square rounded-3xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center min-h-[28rem]">
               {product.images.map((src, i) => (
-                <Image
-                  key={i}
+                <img
+                  key={`${product.id}-main-${i}`}
                   src={src}
                   alt={`${product.name} view ${i + 1}`}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority={i === 0}
-                  className={`object-cover transition-opacity duration-500 ${i === activeImage ? "opacity-100" : "opacity-0"
-                    }`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  onError={(event) => { event.currentTarget.src = "/products/suncream-1.jpg"; }}
+                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${i === activeImage ? "opacity-100" : "opacity-0"}`}
                 />
               ))}
-              {/* Deal Badge */}
               {discount > 0 && (
                 <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
                   {discount}% OFF
@@ -228,34 +242,22 @@ export default function ProductDetailPage() {
 
             {/* Thumbnails */}
             {product.images.length > 1 && (
-              <div className={`flex gap-3 ${showAllThumbs ? "flex-wrap" : "flex-nowrap md:flex-wrap overflow-hidden"}`}>
-                {product.images.map((src, i) => {
-                  const isFourth = i === 3;
-                  const isExtra = i > 3;
-                  const hasMore = product.images.length > 4;
-
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        setActiveImage(i);
-                        if (isFourth && hasMore && !showAllThumbs) {
-                          setShowAllThumbs(true);
-                        }
-                      }}
-                      aria-label={`View image ${i + 1}`}
-                      className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-200 flex-shrink-0 ${i === activeImage ? "border-slate-900 shadow-md" : "border-slate-200 hover:border-slate-400"
-                        } ${!showAllThumbs && isExtra && hasMore ? "hidden md:block" : ""}`}
-                    >
-                      <Image src={src} alt={`Thumbnail ${i + 1}`} fill sizes="80px" className="object-cover" />
-                      {!showAllThumbs && isFourth && hasMore && (
-                        <div className="absolute inset-0 bg-black/40 flex md:hidden items-center justify-center text-white backdrop-blur-[1px]">
-                          <Plus size={28} strokeWidth={2.5} />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
+              <div className="flex flex-wrap gap-3">
+                {product.images.map((src, i) => (
+                  <button
+                    key={`${product.id}-thumb-${i}`}
+                    onClick={() => setActiveImage(i)}
+                    aria-label={`View image ${i + 1}`}
+                    className={`relative w-24 h-24 rounded-3xl overflow-hidden border-2 transition-all duration-200 flex-shrink-0 ${i === activeImage ? "border-slate-900 shadow-lg" : "border-slate-200 hover:border-slate-400"}`}
+                  >
+                    <img
+                      src={src}
+                      alt={`Thumbnail ${i + 1}`}
+                      onError={(event) => { event.currentTarget.src = "/products/suncream-1.jpg"; }}
+                      className="w-full h-full object-contain"
+                    />
+                  </button>
+                ))}
               </div>
             )}
           </div>
@@ -263,7 +265,7 @@ export default function ProductDetailPage() {
           {/* ── Right: Product Info ── */}
           <div className="flex flex-col">
             {/* Category */}
-            <p className="font-sans font-semibold text-xs tracking-[0.2em] uppercase text-blue-600 mb-3">
+            <p className="font-sans font-semibold text-xs tracking-[0.2em] uppercase text-[#8B5E34] mb-3">
               {product.category}
             </p>
 
@@ -280,7 +282,7 @@ export default function ProductDetailPage() {
               {product.tagline && product.tagline.length > 150 && (
                 <button
                   onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                  className="text-blue-600 font-semibold text-sm mt-1 hover:text-blue-800 transition-colors inline-block"
+                  className="text-[#8B5E34] font-semibold text-sm mt-1 hover:text-[#5A3A1E] transition-colors inline-block"
                 >
                   {isDescriptionExpanded ? 'Read Less' : 'Read More'}
                 </button>
@@ -326,7 +328,7 @@ export default function ProductDetailPage() {
                       <button
                         key={size}
                         onClick={() => handleSizeChange(i)}
-                        className={`px-5 py-2.5 rounded-xl font-sans font-semibold text-sm border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 relative ${i === selectedSize
+                        className={`px-5 py-2.5 rounded-xl font-sans font-semibold text-sm border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 relative ${i === selectedSize
                           ? "border-slate-900 bg-slate-900 text-white"
                           : "border-slate-200 text-slate-600 hover:border-slate-400 bg-white"
                           }`}
@@ -371,27 +373,33 @@ export default function ProductDetailPage() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
-              <button
-                onClick={handleAddToCart}
-                aria-label="Add to cart"
-                className={`flex-1 flex items-center justify-center gap-2.5 py-4 rounded-full font-bold text-sm uppercase tracking-widest transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${added
-                  ? "bg-green-500 text-white"
-                  : "bg-slate-900 text-white hover:bg-slate-800"
-                  }`}
+              <CartAnimation onAdd={handleAddToCart}>
+                <button
+                  type="button"
+                  aria-label="Add to cart"
+                  className={`inline-flex items-center justify-center gap-3 px-6 py-3 rounded-full font-bold text-sm uppercase tracking-widest transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 ${added ? "bg-green-500 text-white" : "bg-slate-900 text-white hover:bg-slate-800"}`}
+                >
+                  {added ? (
+                    <><Check size={18} /> Added</>
+                  ) : (
+                    <><ShoppingBag size={18} /> Add to Cart</>
+                  )}
+                </button>
+              </CartAnimation>
+
+              <Link
+                href="/checkout"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#A68B5B] text-white font-bold text-sm uppercase tracking-widest transition-all duration-300 hover:bg-[#8B5E34] focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2"
               >
-                {added ? (
-                  <><Check size={18} /> Added to Cart</>
-                ) : (
-                  <><ShoppingBag size={18} /> Add to Cart</>
-                )}
-              </button>
+                Proceed to Checkout
+              </Link>
             </div>
 
             {/* Trust badges */}
             <div className="grid grid-cols-3 gap-3 p-5 bg-slate-50 rounded-2xl border border-slate-100">
               {TRUST_BADGES.map(({ Icon, label, sub }) => (
                 <div key={label} className="flex flex-col items-center text-center gap-1.5">
-                  <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-[#8B5E34] flex items-center justify-center">
                     <Icon size={16} className="text-white" />
                   </div>
                   <p className="font-sans font-bold text-xs text-slate-900 leading-tight">{label}</p>
@@ -431,8 +439,8 @@ export default function ProductDetailPage() {
             <ul className="space-y-3">
               {product.benefits.map((b) => (
                 <li key={b} className="flex items-start gap-3">
-                  <div className="mt-0.5 w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <Check size={11} className="text-blue-600" strokeWidth={3} />
+                  <div className="mt-0.5 w-5 h-5 rounded-full bg-[#A68B5B]/10 flex items-center justify-center flex-shrink-0">
+                    <Check size={11} className="text-[#8B5E34]" strokeWidth={3} />
                   </div>
                   <span className="font-sans text-base text-slate-700">{b}</span>
                 </li>
@@ -447,7 +455,7 @@ export default function ProductDetailPage() {
               {product.ingredients && product.ingredients.length > 200 && (
                 <button
                   onClick={() => setIsIngredientsExpanded(!isIngredientsExpanded)}
-                  className="text-blue-600 font-semibold text-sm mt-2 hover:text-blue-800 transition-colors inline-block"
+                  className="text-[#8B5E34] font-semibold text-sm mt-2 hover:text-[#5A3A1E] transition-colors inline-block"
                 >
                   {isIngredientsExpanded ? 'Read Less' : 'Read More'}
                 </button>
@@ -471,7 +479,7 @@ export default function ProductDetailPage() {
             </h2>
             <Link
               href="/products"
-              className="font-sans font-bold text-sm text-blue-600 hover:text-blue-800 transition-colors uppercase tracking-wider"
+              className="font-sans font-bold text-sm text-[#8B5E34] hover:text-[#5A3A1E] transition-colors uppercase tracking-wider"
             >
               View All →
             </Link>

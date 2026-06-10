@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Star, StarHalf } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { useToast } from "../../context/ToastContext";
+import CartAnimation from "../CartAnimation";
 
 interface Product {
   id: string;
@@ -19,9 +21,23 @@ interface Product {
   currency: string;
   dealBadge: string;
   benefit: string;
+  weight?: number;
 }
 
 const DEFAULT_PRODUCTS: Product[] = [];
+
+const normalizeImg = (img: any) => {
+  if (!img) return "/products/suncream-1.jpg";
+  const str = String(img).trim();
+  if (!str) return "/products/suncream-1.jpg";
+  if (str.startsWith("http://") || str.startsWith("https://") || str.startsWith("/")) {
+    return str;
+  }
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")
+    : "http://localhost:5000";
+  return `${baseUrl.replace(/\/$/, "")}/${str.replace(/^\/+/, "")}`;
+};
 
 const renderStars = (rating: number) => {
   return Array.from({ length: 5 }, (_, i) => {
@@ -37,25 +53,25 @@ const renderStars = (rating: number) => {
 
 function ProductCard({ product, isVisible, index }: { product: Product; isVisible: boolean; index: number }) {
   const [isAdded, setIsAdded] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, cartCount } = useCart();
+  const { showToast } = useToast();
 
   const router = useRouter();
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    const savedUser = localStorage.getItem("heedy_user");
-    if (!savedUser) {
-      router.push("/sign-in");
-      return;
-    }
+    const savedUser = localStorage.getItem("luxygalleria_user");
     addToCart({
       id: product.id,
       name: product.name,
       image: product.images[0],
       price: product.currentPrice,
       currency: product.currency,
+      weight: (product as any).weight || 0,
       quantity: 1,
     });
+    const nextCount = cartCount + 1;
+    showToast(`Added to cart. Cart now has ${nextCount} item${nextCount === 1 ? '' : 's'}.`, "success");
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -66,14 +82,14 @@ function ProductCard({ product, isVisible, index }: { product: Product; isVisibl
         }`}
       style={{ transitionDelay: `${index * 100}ms` }}
     >
-      <Link href={`/products/${product.id}`} className="flex flex-col flex-grow outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-2xl overflow-hidden">
+      <Link href={`/products/${product.id}`} className="flex flex-col flex-grow outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 rounded-2xl overflow-hidden">
         {/* Image Area */}
         <div className="relative overflow-hidden aspect-[3/4] bg-slate-50 flex-shrink-0">
           {product.images.slice(0, 2).map((img, i) => {
             const hasMultipleImages = product.images.length > 1;
             return (
               <Image
-                key={i}
+                key={`${product.id}-landing-${i}`}
                 src={img}
                 alt={`${product.name} product image ${i + 1}`}
                 fill
@@ -120,16 +136,18 @@ function ProductCard({ product, isVisible, index }: { product: Product; isVisibl
         </div>
       </Link>
       <div className="px-4 pb-6">
-        <button
-          onClick={handleAddToCart}
-          aria-label={`Add ${product.name} to cart`}
-          className={`w-full text-white font-sans font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${isAdded
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-slate-900 hover:bg-slate-800"
-            }`}
-        >
-          {isAdded ? "ADDED TO CART" : "ADD TO CART"}
-        </button>
+        <CartAnimation onAdd={handleAddToCart}>
+          <button
+            type="button"
+            aria-label={`Add ${product.name} to cart`}
+            className={`w-full text-white font-sans font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 ${isAdded
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-slate-900 hover:bg-slate-800"
+              }`}
+          >
+            {isAdded ? "ADDED TO CART" : "ADD TO CART"}
+          </button>
+        </CartAnimation>
       </div>
     </article>
   );
@@ -143,17 +161,15 @@ export default function ProductSection() {
   useEffect(() => {
     const fetchLandingProducts = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL
-          ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '')
-          : 'http://localhost:5000';
-        const res = await axios.get(`${baseUrl}/api/v1/products`);
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+        const res = await axios.get(`${apiURL}/products`);
         if (res.data.success && res.data.data) {
           const landingProds = res.data.data.filter((p: any) => p.showOnLandingPage === true);
 
           const mappedProds = landingProds.map((p: any) => ({
             id: p._id,
             name: p.name,
-            images: p.images && p.images.length > 0 ? p.images : ["/products/suncream-1.jpg"],
+            images: p.images && p.images.length > 0 ? p.images.map(normalizeImg) : ["/products/suncream-1.jpg"],
             rating: p.starRating || 0,
             reviewCount: p.reviewsCount || 0,
             currentPrice: p.variants?.[0]?.price || 0,
@@ -161,6 +177,7 @@ export default function ProductSection() {
             currency: "₹",
             dealBadge: p.offerText || "",
             benefit: p.keyFeatures || "",
+            weight: p.weight || 0,
           }));
           setProducts(mappedProds);
         }
@@ -223,7 +240,7 @@ export default function ProductSection() {
       <div className="flex justify-center mt-8 md:mt-12 px-6">
         <Link
           href="/products"
-          className="border border-slate-900 text-slate-900 font-sans font-bold text-xs md:text-sm uppercase tracking-widest py-4 px-12 hover:bg-slate-900 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="border border-slate-900 text-slate-900 font-sans font-bold text-xs md:text-sm uppercase tracking-widest py-4 px-12 hover:bg-slate-900 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2"
         >
           VIEW ALL PRODUCTS
         </Link>

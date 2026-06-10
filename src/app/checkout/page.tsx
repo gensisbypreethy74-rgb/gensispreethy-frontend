@@ -2,18 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import axios from "axios";
-import { Check, CreditCard, ShieldCheck, MapPin, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, ShieldCheck, MapPin, X, Lock, ArrowRight } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../context/ToastContext";
+import { getAPIURL } from "../../lib/apiClient";
 
 export default function CheckoutPage() {
   const { cartItems, clearCart } = useCart();
   const { showToast } = useToast();
+  const router = useRouter();
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [addresses, setAddresses] = useState<any[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [newAddressForm, setNewAddressForm] = useState({
     street: "",
     city: "",
@@ -23,45 +27,49 @@ export default function CheckoutPage() {
   });
   const [addressErrors, setAddressErrors] = useState<Record<string, string>>({});
 
-  const [promoCode, setPromoCode] = useState("");
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [promoMessage, setPromoMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
-  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
-
   const [isSavingAddress, setIsSavingAddress] = useState(false);
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
 
+  // Check login status on mount
   useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const userStr = localStorage.getItem("heedy_user");
-        if (!userStr) return;
-        const { token } = JSON.parse(userStr);
-        if (!token) return;
-
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-        const API_URL = `${baseUrl}/api`;
-        const res = await axios.get(`${API_URL}/v1/users/addresses`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (res.data.success && res.data.data) {
-          const mappedAddresses = res.data.data.map((addr: any) => ({
-            id: addr._id,
-            name: addr.city?.toLowerCase() || 'Address',
-            line1: `${addr.street ? addr.street + ", " : ""}${addr.state?.toLowerCase() || ''}`,
-            line2: addr.zipCode,
-          }));
-          setAddresses(mappedAddresses);
-          if (mappedAddresses.length > 0) {
-            setSelectedAddressId(mappedAddresses[0].id);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch addresses", err);
-      }
-    };
+    const userStr = localStorage.getItem("luxygalleria_user");
+    if (!userStr) {
+      showToast("Please login to proceed with checkout.", "warning");
+      router.push("/sign-in");
+      return;
+    }
+    setIsLoggedIn(true);
+    setIsLoading(false);
     fetchAddresses();
   }, []);
+
+  const fetchAddresses = async () => {
+    try {
+      const userStr = localStorage.getItem("luxygalleria_user");
+      if (!userStr) return;
+      const { token } = JSON.parse(userStr);
+      if (!token) return;
+
+      const apiURL = getAPIURL();
+      const res = await axios.get(`${apiURL}/users/addresses`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.data.success && res.data.data) {
+        const mappedAddresses = res.data.data.map((addr: any) => ({
+          id: addr._id,
+          name: addr.city?.toLowerCase() || 'Address',
+          line1: `${addr.street ? addr.street + ", " : ""}${addr.state?.toLowerCase() || ''}`,
+          line2: addr.zipCode,
+        }));
+        setAddresses(mappedAddresses);
+        if (mappedAddresses.length > 0) {
+          setSelectedAddressId(mappedAddresses[0].id);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch addresses", err);
+    }
+  };
 
   const validateAddressForm = () => {
     const errors: Record<string, string> = {};
@@ -79,89 +87,88 @@ export default function CheckoutPage() {
     setIsSavingAddress(true);
 
     try {
-      const userStr = localStorage.getItem("heedy_user");
-      if (!userStr) {
-        showToast("Please login to save your address.", "warning");
-        setIsSavingAddress(false);
-        return;
-      }
+      const userStr = localStorage.getItem("luxygalleria_user");
+      
+      // If logged in, save to backend
+      if (userStr) {
+        try {
+          const { token } = JSON.parse(userStr);
+          const apiURL = getAPIURL();
 
-      const { token } = JSON.parse(userStr);
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-      const API_URL = `${baseUrl}/api`;
+          const payload = {
+            street: newAddressForm.street,
+            city: newAddressForm.city,
+            state: newAddressForm.state,
+            zipCode: newAddressForm.zip,
+            country: newAddressForm.country
+          };
 
-      const payload = {
-        street: newAddressForm.street,
-        city: newAddressForm.city,
-        state: newAddressForm.state,
-        zipCode: newAddressForm.zip,
-        country: newAddressForm.country
-      };
+          const res = await axios.post(`${apiURL}/users/addresses`, payload, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
 
-      const res = await axios.post(`${API_URL}/v1/users/addresses`, payload, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          if (res.data.success) {
+            const newAddrs = res.data.data;
+            const mappedAddresses = newAddrs.map((addr: any) => ({
+              id: addr._id,
+              name: addr.city?.toLowerCase() || 'Address',
+              line1: `${addr.street ? addr.street + ", " : ""}${addr.state?.toLowerCase() || ''}`,
+              line2: addr.zipCode,
+            }));
+            setAddresses(mappedAddresses);
+            if (mappedAddresses.length > 0) {
+              setSelectedAddressId(mappedAddresses[mappedAddresses.length - 1].id);
+            }
+            showToast("Address saved successfully!", "success");
+          } else {
+            showToast(res.data.message || "Failed to save address", "error");
+          }
+        } catch (err: any) {
+          console.error(err);
+          showToast(err.response?.data?.message || "Error saving address", "error");
         }
-      });
-
-      if (res.data.success) {
-        const newAddrs = res.data.data;
-        const mappedAddresses = newAddrs.map((addr: any) => ({
-          id: addr._id,
-          name: addr.city?.toLowerCase() || 'Address',
-          line1: `${addr.street ? addr.street + ", " : ""}${addr.state?.toLowerCase() || ''}`,
-          line2: addr.zipCode,
-        }));
-        setAddresses(mappedAddresses);
-        if (mappedAddresses.length > 0) {
-          setSelectedAddressId(mappedAddresses[mappedAddresses.length - 1].id);
-        }
-        setIsAddressModalOpen(false);
-        setNewAddressForm({ street: "", city: "", state: "", zip: "", country: "India" });
-        setAddressErrors({});
       } else {
-        showToast(res.data.message || "Failed to save address", "error");
+        // Guest checkout: save address to sessionStorage temporarily
+        const guestAddress = {
+          street: newAddressForm.street,
+          city: newAddressForm.city,
+          state: newAddressForm.state,
+          zipCode: newAddressForm.zip,
+          country: newAddressForm.country,
+          id: `guest_${Date.now()}`
+        };
+        
+        const guestAddresses = JSON.parse(sessionStorage.getItem("guest_addresses") || "[]");
+        guestAddresses.push(guestAddress);
+        sessionStorage.setItem("guest_addresses", JSON.stringify(guestAddresses));
+        
+        const mappedAddress = {
+          id: guestAddress.id,
+          name: guestAddress.city?.toLowerCase() || 'Address',
+          line1: `${guestAddress.street ? guestAddress.street + ", " : ""}${guestAddress.state?.toLowerCase() || ''}`,
+          line2: guestAddress.zipCode,
+        };
+        
+        setAddresses([...addresses, mappedAddress]);
+        setSelectedAddressId(guestAddress.id);
+        showToast("Address added for checkout (guest mode)", "info");
       }
-    } catch (err: any) {
-      console.error(err);
-      showToast(err.response?.data?.message || "Error saving address", "error");
+      
+      setIsAddressModalOpen(false);
+      setNewAddressForm({ street: "", city: "", state: "", zip: "", country: "India" });
+      setAddressErrors({});
     } finally {
       setIsSavingAddress(false);
     }
   };
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = 0;
-  const total = Math.max(0, subtotal - discountAmount);
-
-  const handleApplyPromo = async () => {
-    if (!promoCode.trim()) {
-      setPromoMessage({ text: "Please enter a promo code", type: "error" });
-      return;
-    }
-    setIsApplyingPromo(true);
-    setPromoMessage(null);
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-      const API_URL = `${baseUrl}/api`;
-      const response = await axios.post(`${API_URL}/v1/coupons/validate`, { code: promoCode, cartTotal: subtotal });
-
-      if (response.data.success) {
-        setDiscountAmount(response.data.data.discountAmount);
-        setPromoMessage({ text: response.data.message, type: "success" });
-      } else {
-        setDiscountAmount(0);
-        setPromoMessage({ text: response.data.message || "Invalid promo code", type: "error" });
-      }
-    } catch (error: any) {
-      console.error(error);
-      setDiscountAmount(0);
-      setPromoMessage({ text: error.response?.data?.message || "Failed to apply promo code.", type: "error" });
-    } finally {
-      setIsApplyingPromo(false);
-    }
-  };
+  const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
+  const shipping = totalWeight * 60;
+  const total = subtotal + shipping;
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -185,15 +192,14 @@ export default function CheckoutPage() {
     }
 
     try {
-      const userStr = localStorage.getItem("heedy_user");
+      const userStr = localStorage.getItem("luxygalleria_user");
       if (!userStr) {
         showToast("Please login to proceed.", "warning");
         return;
       }
       const { token } = JSON.parse(userStr);
 
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-      const API_URL = `${baseUrl}/api`;
+      const API_URL = getAPIURL();
 
       const selectedAddress = addresses.find(a => a.id === selectedAddressId);
 
@@ -214,7 +220,7 @@ export default function CheckoutPage() {
       };
 
       // Call backend to create Razorpay order only (no DB save yet)
-      const createOrderRes = await axios.post(`${API_URL}/v1/payments/create-order`, {
+      const createOrderRes = await axios.post(`${API_URL}/payments/create-order`, {
         total
       }, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -229,7 +235,7 @@ export default function CheckoutPage() {
 
       if (isMock) {
         setIsVerifyingPayment(true);
-        const verifyRes = await axios.post(`${API_URL}/v1/payments/verify`, {
+        const verifyRes = await axios.post(`${API_URL}/payments/verify`, {
           razorpay_order_id: razorpayOrder.id,
           razorpay_payment_id: "mock_payment",
           razorpay_signature: "mock_signature",
@@ -237,7 +243,6 @@ export default function CheckoutPage() {
           items: orderItems,
           shippingAddress: orderShippingAddress,
           subtotal,
-          discount: discountAmount,
           shippingFee: shipping,
           total,
         }, {
@@ -264,14 +269,14 @@ export default function CheckoutPage() {
         key: key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_YourTestKey", // Use backend key first to guarantee match
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        name: "Heedy",
+        name: "Luxy Galleria",
         description: "Order Payment",
         order_id: razorpayOrder.id,
         handler: async function (response: any) {
           setIsVerifyingPayment(true);
           try {
             // Verify payment
-            const verifyRes = await axios.post(`${API_URL}/v1/payments/verify`, {
+            const verifyRes = await axios.post(`${API_URL}/payments/verify`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
@@ -279,7 +284,6 @@ export default function CheckoutPage() {
               items: orderItems,
               shippingAddress: orderShippingAddress,
               subtotal,
-              discount: discountAmount,
               shippingFee: shipping,
               total,
             }, {
@@ -316,11 +320,35 @@ export default function CheckoutPage() {
       rzp.open();
 
     } catch (err: any) {
-      console.error(err);
       setIsVerifyingPayment(false);
-      showToast(err.response?.data?.message || "An error occurred during checkout.", "error");
+      const status = err.response?.status;
+      if (status === 401) {
+        // Token expired or invalid - redirect to sign-in
+        localStorage.removeItem("luxygalleria_user");
+        showToast("Your session expired. Please sign in again.", "warning");
+        router.push("/sign-in");
+      } else {
+        console.error("Checkout error:", err);
+        showToast(err.response?.data?.message || "An error occurred during checkout.", "error");
+      }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center pt-24">
+        <div className="text-center space-y-6">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[#0A192F] to-[#A68B5B] rounded-full flex items-center justify-center animate-pulse">
+            <Lock className="text-white" size={32} />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Secure Checkout</h2>
+            <p className="text-slate-500 mt-2">Redirecting to login...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isVerifyingPayment) {
     return (
@@ -362,7 +390,7 @@ export default function CheckoutPage() {
                   const isSelected = selectedAddressId === addr.id;
                   return (
                     <button
-                      key={addr.id}
+                      key={`${addr.id}-${addr.line1}-${addr.line2}`}
                       onClick={() => setSelectedAddressId(addr.id)}
                       className={`relative border rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 w-full max-w-sm bg-white text-left transition-colors ${isSelected ? "border-slate-300" : "border-slate-200 hover:border-slate-300"
                         }`}
@@ -399,46 +427,6 @@ export default function CheckoutPage() {
 
             <div className="h-px bg-slate-200 w-full ml-0 sm:ml-12" />
 
-            {/* Step 2: PROMOTION CODE */}
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0A192F] text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
-                  2
-                </div>
-                <h2 className="font-sans font-bold text-xl text-[#0A192F] uppercase tracking-wider">
-                  Promotion Code
-                </h2>
-              </div>
-
-              <div className="flex flex-col gap-2 ml-0 sm:ml-12">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <input
-                    type="text"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    placeholder="Enter gift card or discount code"
-                    className="flex-1 border border-slate-200 rounded-xl px-5 py-4 text-base focus:outline-none focus:ring-2 focus:ring-[#0A192F] bg-white placeholder:text-slate-400"
-                  />
-                  <button
-                    onClick={handleApplyPromo}
-                    disabled={isApplyingPromo}
-                    className="bg-[#111] text-white font-bold text-sm px-10 py-4 rounded-xl hover:bg-black transition-colors shrink-0 disabled:opacity-50"
-                  >
-                    {isApplyingPromo ? "Applying..." : "Apply"}
-                  </button>
-                </div>
-                {promoMessage && (
-                  <p className={`text-sm mt-1 font-medium ${promoMessage.type === 'error' ? 'text-red-500' : 'text-green-600'}`}>
-                    {promoMessage.text}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* <div className="h-px bg-slate-200 w-full ml-0 sm:ml-2" /> */}
-
-
-
           </div>
 
           {/* ── Right Column (Order Bag) ── */}
@@ -451,7 +439,7 @@ export default function CheckoutPage() {
                 <p className="text-slate-500 font-sans text-sm">Your order bag is empty.</p>
               ) : (
                 cartItems.map((item) => (
-                  <div key={item.id} className="flex gap-4">
+                  <div key={`${item.id}-${item.size || 'default'}`} className="flex gap-4">
                     <div className="relative w-16 h-20 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100">
                       <Image
                         src={item.image}
@@ -489,18 +477,22 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span className="text-slate-900">₹{subtotal.toFixed(2)}</span>
               </div>
-              {discountAmount > 0 && (
-                <div className="flex justify-between items-center text-green-600 font-sans text-sm">
-                  <span>Discount</span>
-                  <span>-₹{discountAmount.toFixed(2)}</span>
-                </div>
-              )}
               <div className="flex justify-between items-center text-slate-500 font-sans text-sm">
-                <span>Shipping</span>
+                <span>Shipping (₹60/kg)</span>
                 <span>
-                  <span className="text-green-600 font-bold tracking-wide">Free</span>
+                  {shipping === 0 ? (
+                    <span className="text-green-600 font-bold tracking-wide">Free</span>
+                  ) : (
+                    <span>₹{shipping.toFixed(2)}</span>
+                  )}
                 </span>
               </div>
+              {totalWeight > 0 && (
+                <div className="flex justify-between items-center text-slate-400 font-sans text-xs">
+                  <span>Total Weight</span>
+                  <span>{totalWeight} kg</span>
+                </div>
+              )}
             </div>
 
             <div className="h-px border-t border-dashed border-slate-200 mb-6" />
@@ -612,6 +604,9 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {!isLoggedIn && (
+                <p className="text-sm text-blue-600 mb-3">💡 Guest checkout: Address will be saved temporarily for this order.</p>
+              )}
               <button
                 onClick={handleSaveAddress}
                 disabled={isSavingAddress}

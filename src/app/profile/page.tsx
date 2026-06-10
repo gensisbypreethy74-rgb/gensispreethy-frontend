@@ -54,17 +54,15 @@ export default function ProfilePage() {
 
       if (urlToken) {
         try {
-          const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-          const API_URL = `${baseUrl}/api`;
-
-          const res = await axios.get(`${API_URL}/v1/users/profile`, {
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+          const res = await axios.get(`${baseUrl}/users/profile`, {
             headers: { 'Authorization': `Bearer ${urlToken}` }
           });
 
           if (res.data.success) {
             const userData = { ...res.data.data, token: urlToken };
             setUser(userData);
-            localStorage.setItem("heedy_user", JSON.stringify(userData));
+            localStorage.setItem("luxygalleria_user", JSON.stringify(userData));
 
             // Clean up the URL to remove the token without reloading the page
             window.history.replaceState({}, document.title, window.location.pathname);
@@ -78,7 +76,7 @@ export default function ProfilePage() {
       }
 
       // Load user from localStorage
-      const savedUser = localStorage.getItem("heedy_user");
+      const savedUser = localStorage.getItem("luxygalleria_user");
       if (savedUser) {
         setUser(JSON.parse(savedUser));
       } else {
@@ -95,9 +93,8 @@ export default function ProfilePage() {
     if (activeTab === "addresses" && user?.token) {
       const fetchAddresses = async () => {
         try {
-          const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-          const API_URL = `${baseUrl}/api`;
-          const res = await axios.get(`${API_URL}/v1/users/addresses`, {
+          const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+          const res = await axios.get(`${apiURL}/users/addresses`, {
             headers: { 'Authorization': `Bearer ${user.token}` }
           });
           if (res.data.success && res.data.data) {
@@ -117,9 +114,8 @@ export default function ProfilePage() {
     if (user?.token && (activeTab === "orders" || activeTab === "overview")) {
       const fetchOrders = async () => {
         try {
-          const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-          const API_URL = `${baseUrl}/api`;
-          const res = await axios.get(`${API_URL}/v1/payments/myorders`, {
+          const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+          const res = await axios.get(`${apiURL}/payments/myorders`, {
             headers: { 'Authorization': `Bearer ${user.token}` }
           });
           if (res.data.success) {
@@ -154,8 +150,7 @@ export default function ProfilePage() {
 
     try {
       if (!user?.token) return;
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-      const API_URL = `${baseUrl}/api`;
+      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
       const payload = {
         street: newAddressForm.street,
@@ -169,14 +164,14 @@ export default function ProfilePage() {
 
       let res;
       if (editingAddressId) {
-        res = await axios.put(`${API_URL}/v1/users/addresses/${editingAddressId}`, payload, {
+        res = await axios.put(`${apiURL}/users/addresses/${editingAddressId}`, payload, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${user.token}`
           }
         });
       } else {
-        res = await axios.post(`${API_URL}/v1/users/addresses`, payload, {
+        res = await axios.post(`${apiURL}/users/addresses`, payload, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${user.token}`
@@ -204,10 +199,9 @@ export default function ProfilePage() {
   const handleDeleteAddress = async (addressId: string) => {
     try {
       if (!user?.token) return;
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-      const API_URL = `${baseUrl}/api`;
+      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
-      const res = await axios.delete(`${API_URL}/v1/users/addresses/${addressId}`, {
+      const res = await axios.delete(`${apiURL}/users/addresses/${addressId}`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       if (res.data.success) {
@@ -220,8 +214,8 @@ export default function ProfilePage() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("heedy_user");
-    localStorage.removeItem("heedy_cart");
+    localStorage.removeItem("luxygalleria_user");
+    localStorage.removeItem("luxygalleria_cart");
     clearCart();
     // Also might want to call backend logout to clear HTTP-only cookie if there's an endpoint
     // For now, clear local state and redirect
@@ -247,15 +241,14 @@ export default function ProfilePage() {
     setIsSavingProfile(true);
     try {
       if (!user?.token) return;
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-      const API_URL = `${baseUrl}/api`;
+      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
       const payload = {
         name: editProfileForm.name,
         phone: editProfileForm.phone
       };
 
-      const res = await axios.put(`${API_URL}/v1/users/profile`, payload, {
+      const res = await axios.put(`${apiURL}/users/profile`, payload, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`
@@ -265,7 +258,7 @@ export default function ProfilePage() {
       if (res.data.success) {
         const updatedUser = { ...user, ...res.data.data, token: user.token };
         setUser(updatedUser);
-        localStorage.setItem("heedy_user", JSON.stringify(updatedUser));
+        localStorage.setItem("luxygalleria_user", JSON.stringify(updatedUser));
         setIsEditProfileOpen(false);
         showToast("Profile updated successfully", "success");
       }
@@ -300,7 +293,7 @@ export default function ProfilePage() {
         <aside className="w-full md:w-72 border-r border-slate-100 flex flex-col shrink-0">
           {/* User Profile Info */}
           <div className="p-8 flex flex-col items-center border-b border-slate-100">
-            <div className="w-24 h-24 rounded-[32px] bg-blue-600 text-white flex items-center justify-center text-4xl font-bold mb-4 shadow-lg shadow-blue-600/20">
+            <div className="w-24 h-24 rounded-[32px] bg-[#8B5E34] text-white flex items-center justify-center text-4xl font-bold mb-4 shadow-lg shadow-[#8B5E34]/20">
               {initials}
             </div>
             <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
@@ -319,7 +312,7 @@ export default function ProfilePage() {
             )}
             <button
               onClick={handleEditProfileClick}
-              className="text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-full transition-colors"
+              className="text-xs font-bold text-[#8B5E34] bg-[#A68B5B]/5 hover:bg-[#A68B5B]/10 px-4 py-2 rounded-full transition-colors"
             >
               Edit Profile
             </button>
@@ -330,7 +323,7 @@ export default function ProfilePage() {
             <button
               onClick={() => setActiveTab("overview")}
               className={`flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-sm transition-all ${activeTab === "overview"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                ? "bg-[#8B5E34] text-white shadow-md shadow-[#8B5E34]/20"
                 : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 }`}
             >
@@ -340,7 +333,7 @@ export default function ProfilePage() {
             <button
               onClick={() => setActiveTab("orders")}
               className={`flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-sm transition-all ${activeTab === "orders"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                ? "bg-[#8B5E34] text-white shadow-md shadow-[#8B5E34]/20"
                 : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 }`}
             >
@@ -350,7 +343,7 @@ export default function ProfilePage() {
             <button
               onClick={() => setActiveTab("addresses")}
               className={`flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-sm transition-all ${activeTab === "addresses"
-                ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                ? "bg-[#8B5E34] text-white shadow-md shadow-[#8B5E34]/20"
                 : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 }`}
             >
@@ -428,7 +421,7 @@ export default function ProfilePage() {
                             <p className="font-bold text-sm text-slate-900">₹{order.total}</p>
                             <span className={`inline-block mt-1 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider ${order.orderStatus === 'delivered' ? 'bg-green-100 text-green-700' :
                               order.orderStatus === 'cancelled' ? 'bg-red-100 text-red-700' :
-                                order.orderStatus === 'processing' ? 'bg-blue-100 text-blue-700' :
+                                order.orderStatus === 'processing' ? 'bg-[#A68B5B]/10 text-[#6B4423]' :
                                   'bg-slate-100 text-slate-700'
                               }`}>
                               {order.orderStatus}
@@ -474,7 +467,7 @@ export default function ProfilePage() {
                           <div className="flex-1 text-right min-w-[100px]">
                             <span className={`inline-block text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider ${order.orderStatus === 'delivered' ? 'bg-green-100 text-green-700' :
                               order.orderStatus === 'cancelled' ? 'bg-red-100 text-red-700' :
-                                order.orderStatus === 'processing' ? 'bg-blue-100 text-blue-700' :
+                                order.orderStatus === 'processing' ? 'bg-[#A68B5B]/10 text-[#6B4423]' :
                                   'bg-slate-100 text-slate-700'
                               }`}>
                               {order.orderStatus}
@@ -484,7 +477,7 @@ export default function ProfilePage() {
                         <div className="p-6 sm:p-8">
                           <div className="flex flex-col gap-4">
                             {order.items.map((item: any, idx: number) => (
-                              <div key={idx} className="flex items-center gap-4 border-b border-slate-100 pb-4 last:border-0 last:pb-0">
+                              <div key={`${order._id}-item-${item.product?._id || idx}`} className="flex items-center gap-4 border-b border-slate-100 pb-4 last:border-0 last:pb-0">
                                 <div className="w-16 h-16 rounded-xl bg-slate-100 shrink-0 overflow-hidden">
                                   {item.product?.images?.[0] ? (
                                     <img src={item.product.images[0]} alt={item.product?.name} className={`w-full h-full object-cover ${(order.orderStatus === 'delivered' || order.orderStatus === 'cancelled') ? 'grayscale' : ''}`} />
@@ -546,7 +539,7 @@ export default function ProfilePage() {
                             setEditingAddressId(addr._id);
                             setIsAddressModalOpen(true);
                           }}
-                          className="text-blue-600 text-sm font-bold hover:underline"
+                          className="text-[#8B5E34] text-sm font-bold hover:underline"
                         >
                           Edit Details
                         </button>
@@ -566,7 +559,7 @@ export default function ProfilePage() {
                       setEditingAddressId(null);
                       setIsAddressModalOpen(true);
                     }}
-                    className="border-2 border-dashed border-slate-200 rounded-[2rem] p-8 w-full flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-all font-bold group"
+                    className="border-2 border-dashed border-slate-200 rounded-[2rem] p-8 w-full flex items-center justify-center text-slate-500 hover:text-[#8B5E34] hover:border-[#A68B5B]/30 hover:bg-[#A68B5B]/5 transition-all font-bold group"
                   >
                     + Add New Shipping Location
                   </button>
@@ -605,7 +598,7 @@ export default function ProfilePage() {
                   value={newAddressForm.street}
                   onChange={(e) => { setNewAddressForm({ ...newAddressForm, street: e.target.value }); setAddressErrors(prev => ({ ...prev, street: '' })); }}
                   placeholder="e.g. 123 Luxury Lane"
-                  className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400 ${addressErrors.street ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
+                  className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400 ${addressErrors.street ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
                 />
                 {addressErrors.street && <p className="text-red-500 text-xs mt-1.5 font-medium">{addressErrors.street}</p>}
               </div>
@@ -618,7 +611,7 @@ export default function ProfilePage() {
                     value={newAddressForm.apartment}
                     onChange={(e) => setNewAddressForm({ ...newAddressForm, apartment: e.target.value })}
                     placeholder="e.g. Apt 4B"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400"
                   />
                 </div>
                 <div>
@@ -628,7 +621,7 @@ export default function ProfilePage() {
                     value={newAddressForm.landmark}
                     onChange={(e) => setNewAddressForm({ ...newAddressForm, landmark: e.target.value })}
                     placeholder="e.g. Near City Mall"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400"
                   />
                 </div>
               </div>
@@ -641,7 +634,7 @@ export default function ProfilePage() {
                     value={newAddressForm.city}
                     onChange={(e) => { setNewAddressForm({ ...newAddressForm, city: e.target.value }); setAddressErrors(prev => ({ ...prev, city: '' })); }}
                     placeholder="Mumbai"
-                    className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400 ${addressErrors.city ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
+                    className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400 ${addressErrors.city ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
                   />
                   {addressErrors.city && <p className="text-red-500 text-xs mt-1.5 font-medium">{addressErrors.city}</p>}
                 </div>
@@ -652,7 +645,7 @@ export default function ProfilePage() {
                     value={newAddressForm.state}
                     onChange={(e) => { setNewAddressForm({ ...newAddressForm, state: e.target.value }); setAddressErrors(prev => ({ ...prev, state: '' })); }}
                     placeholder="Maharashtra"
-                    className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400 ${addressErrors.state ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
+                    className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400 ${addressErrors.state ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
                   />
                   {addressErrors.state && <p className="text-red-500 text-xs mt-1.5 font-medium">{addressErrors.state}</p>}
                 </div>
@@ -666,7 +659,7 @@ export default function ProfilePage() {
                     value={newAddressForm.zip}
                     onChange={(e) => { setNewAddressForm({ ...newAddressForm, zip: e.target.value }); setAddressErrors(prev => ({ ...prev, zip: '' })); }}
                     placeholder="123456"
-                    className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400 ${addressErrors.zip ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
+                    className={`w-full border rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400 ${addressErrors.zip ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200'}`}
                   />
                   {addressErrors.zip && <p className="text-red-500 text-xs mt-1.5 font-medium">{addressErrors.zip}</p>}
                 </div>
@@ -677,7 +670,7 @@ export default function ProfilePage() {
                     value={newAddressForm.country}
                     onChange={(e) => setNewAddressForm({ ...newAddressForm, country: e.target.value })}
                     placeholder="India"
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400"
                   />
                 </div>
               </div>
@@ -685,7 +678,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSaveAddress}
                 disabled={isSavingAddress}
-                className="w-full bg-blue-600 text-white font-bold text-base py-4 rounded-xl mt-4 hover:bg-blue-700 transition-colors focus:outline-none disabled:opacity-50"
+                className="w-full bg-[#8B5E34] text-white font-bold text-base py-4 rounded-xl mt-4 hover:bg-[#6B4423] transition-colors focus:outline-none disabled:opacity-50"
               >
                 {isSavingAddress ? "Saving..." : "Save Address"}
               </button>
@@ -756,7 +749,7 @@ export default function ProfilePage() {
                   value={editProfileForm.name}
                   onChange={(e) => setEditProfileForm({ ...editProfileForm, name: e.target.value })}
                   placeholder="Your Name"
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400"
                 />
               </div>
 
@@ -767,7 +760,7 @@ export default function ProfilePage() {
                   value={editProfileForm.phone}
                   onChange={(e) => setEditProfileForm({ ...editProfileForm, phone: e.target.value })}
                   placeholder="e.g. +91 9876543210"
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-blue-500 placeholder:text-slate-400"
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base text-slate-900 focus:outline-none focus:border-[#A68B5B]/50 placeholder:text-slate-400"
                 />
                 <p className="text-[12px] text-slate-500 mt-2">Required for delivery and order updates.</p>
               </div>
@@ -775,7 +768,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSaveProfile}
                 disabled={isSavingProfile}
-                className="w-full bg-blue-600 text-white font-bold text-base py-4 rounded-xl mt-2 hover:bg-blue-700 transition-colors focus:outline-none disabled:opacity-50"
+                className="w-full bg-[#8B5E34] text-white font-bold text-base py-4 rounded-xl mt-2 hover:bg-[#6B4423] transition-colors focus:outline-none disabled:opacity-50"
               >
                 {isSavingProfile ? "Saving..." : "Save Changes"}
               </button>

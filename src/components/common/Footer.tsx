@@ -1,215 +1,72 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Mail, Heart } from "lucide-react";
-
-// Lucide removed brand icons from their core package, so we define them here:
-const Facebook = (props: any) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-  </svg>
-);
-
-const Instagram = (props: any) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-  </svg>
-);
-
-const Twitter = (props: any) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
-  </svg>
-);
-
-const Youtube = (props: any) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/>
-    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
-  </svg>
-);
-
-const shopLinks = [
-  { label: "Skin Care", href: "/products?category=skin-care" },
-  { label: "Lip Care", href: "/products?category=lip-care" },
-  { label: "Body Care", href: "/products?category=body-care" },
-];
-
-const careLinks = [
-  { label: "Contact Us", href: "/contact-us#top" },
-  { label: "FAQ", href: "/contact-us#faq" },
-];
-
-const contacts = [
-  {
-    icon: MapPin,
-    label: "VISIT US",
-    value: "Heedy Sajin Land, Kadakkavoor\nThiruvanathapuram, Kerala",
-    href: "https://maps.google.com",
-  },
-  {
-    icon: Phone,
-    label: "CALL US",
-    value: "+91 9074881551",
-    href: "tel:+919074881551",
-  },
-  {
-    icon: Mail,
-    label: "EMAIL DIRECTLY",
-    value: "infoheedy@gmail.com",
-    href: "mailto:infoheedy@gmail.com",
-  },
-];
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { getAPIURL } from "../../lib/apiClient";
 
 const socials = [
-  { icon: Facebook, label: "Visit our Facebook", href: "https://facebook.com" },
-  { icon: Instagram, label: "Visit our Instagram", href: "https://instagram.com" },
-  { icon: Twitter, label: "Visit our Twitter", href: "https://twitter.com" },
-  { icon: Youtube, label: "Visit our YouTube", href: "https://youtube.com" },
+  { src: "/social/facebook.svg", label: "Facebook", href: "https://www.facebook.com/share/1BLZJWnKyP/?mibextid=wwXIfr" },
+  { src: "/social/instagram.svg", label: "Instagram Luxy Galleria", href: "https://www.instagram.com/luxygalleria?igsh=aDhpM2Zoc3FvejQw" },
+  { src: "/social/instagram.svg", label: "Instagram Snack Station", href: "https://www.instagram.com/luxysnackstation?igsh=MXAyNWQwZmZtaHoydQ==" },
+  { src: "/social/snapchat.svg", label: "Snapchat", href: "https://www.snapchat.com/add/luxygalleria" },
+  { src: "/social/youtube.svg", label: "YouTube", href: "https://youtube.com/@luxysnackstation?si=oqzX6swsa1f5hYBz" },
 ];
 
-function ColumnTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-6">
-      <h3 className="font-sans font-bold text-sm tracking-[0.15em] uppercase text-slate-900">
-        {children}
-      </h3>
-      <div className="w-8 h-1 bg-blue-500 rounded-full mt-2" />
-    </div>
-  );
-}
-
 export default function Footer() {
-  const year = new Date().getFullYear();
+  const [footerText, setFooterText] = useState("More than a snack store, a destination for worldwide treats and everyday cravings.");
+  const [whatsappNumber, setWhatsappNumber] = useState("");
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const apiURL = getAPIURL();
+        const res = await axios.get(`${apiURL}/settings`);
+        if (res.data.success && res.data.data) {
+          if (res.data.data.footerText) {
+            setFooterText(res.data.data.footerText);
+          }
+          if (res.data.data.whatsappNumber) {
+            setWhatsappNumber(res.data.data.whatsappNumber);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch footer settings:", error);
+        // Use default text if fetch fails
+      }
+    };
+    fetchSettings();
+  }, []);
 
   return (
-    <footer className="bg-slate-50 w-full border-t border-slate-200">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pt-8 md:pt-12 pb-8">
-        {/* Footer Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16">
-
-          {/* Column 1 — Brand */}
-          <div className="lg:col-span-4">
-            <Link href="/" className="inline-flex items-center mb-6" aria-label="HEEDY brand logo">
-              <div className="relative w-52 h-14">
-                <Image
-                  src="/logo.jpg"
-                  alt="HEEDY Logo"
-                  fill
-                  sizes="(max-width: 640px) 208px, 208px"
-                  className="object-contain object-left"
-                />
+    <footer className="bg-[#f8efe6] w-full border-t border-[#e7d7c6]">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-5">
+            <Link href="/" className="inline-flex items-center mb-6 rounded-[28px] bg-white p-3 shadow-sm shadow-[#e4d3c5]/50">
+              <div className="h-20 w-20 flex items-center justify-center overflow-hidden">
+                <img src="/luxy_logo.png" alt="Luxy Galleria" className="h-full w-full object-contain" />
               </div>
             </Link>
-            <p className="font-sans font-normal text-base text-slate-500 leading-relaxed mb-8 max-w-sm">
-              Redefining high-end beauty. Our carefully curated collections are designed to elevate your everyday routines to extraordinary premium experiences.
+            <p className="max-w-lg text-base leading-8 text-[#8a6b4f]">
+              {footerText}
             </p>
-            <div className="flex gap-3 flex-wrap">
-              {socials.map(({ icon: Icon, label, href }) => (
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              {socials.map(({ src, label, href }) => (
                 <a
-                  key={label}
+                  key={label + href}
                   href={href}
                   aria-label={label}
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full border border-slate-300 flex items-center justify-center text-slate-500 hover:border-blue-500 hover:text-blue-500 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="flex h-14 w-14 items-center justify-center rounded-full bg-white border border-[#d9c0a3] shadow-sm transition hover:bg-[#f7efe7]"
+                  target="_blank"
+                  referrerPolicy="no-referrer"
                 >
-                  <Icon size={16} strokeWidth={2} />
+                  <img src={src} alt={label} className="h-6 w-6 object-contain" />
                 </a>
               ))}
             </div>
-          </div>
-
-          {/* Links Section (Side by side on all screens) */}
-          <div className="lg:col-span-4 grid grid-cols-2 gap-8">
-            {/* Column 2 — Shop Collections */}
-            <div>
-              <ColumnTitle>SHOP COLLECTIONS</ColumnTitle>
-              <ul className="space-y-4">
-                {shopLinks.map(({ label, href }) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="font-sans font-normal text-base text-slate-600 hover:text-blue-800 transition-colors duration-200"
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Column 3 — Client Care */}
-            <div>
-              <ColumnTitle>CLIENT CARE</ColumnTitle>
-              <ul className="space-y-4">
-                {careLinks.map(({ label, href }) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="font-sans font-normal text-base text-slate-600 hover:text-blue-800 transition-colors duration-200"
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Column 4 — Get In Touch */}
-          <div className="lg:col-span-4">
-            <ColumnTitle>GET IN TOUCH</ColumnTitle>
-            <ul className="space-y-6">
-              {contacts.map(({ icon: Icon, label, value, href }) => (
-                <li key={label}>
-                  <a
-                    href={href}
-                    rel="noopener noreferrer"
-                    aria-label={`${label}: ${value}`}
-                    className="flex items-start gap-4 group"
-                  >
-                    <div className="w-11 h-11 rounded-xl bg-blue-50 group-hover:bg-blue-100 flex items-center justify-center flex-shrink-0 transition-colors duration-200">
-                      <Icon size={18} className="text-blue-500" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <p className="font-sans font-semibold text-xs tracking-[0.15em] uppercase text-slate-500 mb-1">
-                        {label}
-                      </p>
-                      <p className="font-sans font-medium text-sm text-slate-900 whitespace-pre-line leading-relaxed">
-                        {value}
-                      </p>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-sans font-normal text-sm text-slate-500 flex items-center gap-1.5">
-            © {year} Our Brand. Crafted with{" "}
-            <Heart size={14} className="text-blue-500 fill-blue-500 inline" />{" "}
-            for you.
-          </p>
-          <div className="flex items-center gap-2 flex-wrap justify-center">
-            {["Privacy Policy", "Terms & Conditions"].map((item, i, arr) => (
-              <span key={item} className="flex items-center gap-2">
-                <Link
-                  href={item === "Privacy Policy" ? "/privacy-policy" : "/terms-and-conditions"}
-                  className="font-sans font-normal text-sm text-slate-500 hover:text-slate-700 transition-colors duration-200"
-                >
-                  {item}
-                </Link>
-                {i < arr.length - 1 && (
-                  <span className="text-slate-300 select-none">•</span>
-                )}
-              </span>
-            ))}
           </div>
         </div>
       </div>

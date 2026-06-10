@@ -6,6 +6,8 @@ import Link from "next/link";
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCart } from "../../context/CartContext";
+import { useToast } from "../../context/ToastContext";
+import CartAnimation from "../../components/CartAnimation";
 import { Star, StarHalf, SlidersHorizontal, X, ChevronLeft } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -22,6 +24,7 @@ interface Product {
   dealBadge: string;
   benefit: string;
   category: string;
+  weight?: number;
 }
 
 // Categories and Products will be fetched dynamically
@@ -53,25 +56,25 @@ const renderStars = (rating: number) =>
 function ProductCard({ product, index }: { product: Product; index: number }) {
   const [imgIdx, setImgIdx] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, cartCount } = useCart();
+  const { showToast } = useToast();
 
   const router = useRouter();
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    const savedUser = localStorage.getItem("heedy_user");
-    if (!savedUser) {
-      router.push("/sign-in");
-      return;
-    }
+    const savedUser = localStorage.getItem("luxygalleria_user");
     addToCart({
       id: product.id,
       name: product.name,
       image: product.images[0],
       price: product.currentPrice,
       currency: product.currency,
+      weight: (product as any).weight || 0,
       quantity: 1,
     });
+    const nextCount = cartCount + 1;
+    showToast(`Added to cart. Cart now has ${nextCount} item${nextCount === 1 ? '' : 's'}.`, "success");
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -90,23 +93,23 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
       className="bg-white rounded-2xl overflow-hidden border border-slate-100 hover:shadow-lg transition-shadow duration-300 group flex flex-col motion-reduce:transition-none"
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      <Link href={`/products/${product.id}`} className="flex flex-col flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <Link href={`/products/${product.id}`} className="flex flex-col flex-grow focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50">
         {/* Image */}
         <div className="relative aspect-[3/4] overflow-hidden bg-slate-50">
           {product.images.map((src, i) => (
             <Image
-              key={i}
+              key={`${product.id}-img-${i}`}
               src={src}
               alt={`${product.name} image ${i + 1}`}
               fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 25vw"
               className={`object-cover transition-opacity duration-500 group-hover:scale-105 group-hover:transition-transform motion-reduce:transition-none ${i === imgIdx ? "opacity-100" : "opacity-0"}`}
             />
           ))}
           {/* Dots */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
             {product.images.map((_, i) => (
-              <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === imgIdx ? "bg-white" : "bg-white/50"}`} />
+              <div key={`${product.id}-dot-${i}`} className={`w-2 h-2 rounded-full transition-colors ${i === imgIdx ? "bg-white" : "bg-white/50"}`} />
             ))}
           </div>
         </div>
@@ -129,16 +132,18 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
         </div>
       </Link>
       <div className="px-4 pb-6">
-        <button
-          onClick={handleAddToCart}
-          aria-label={`Add ${product.name} to cart`}
-          className={`w-full text-white font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 motion-reduce:transition-none ${isAdded
-            ? "bg-green-600 hover:bg-green-700"
-            : "bg-slate-900 hover:bg-slate-800"
-            }`}
-        >
-          {isAdded ? "ADDED TO CART" : "ADD TO CART"}
-        </button>
+        <CartAnimation onAdd={handleAddToCart}>
+          <button
+            type="button"
+            aria-label={`Add ${product.name} to cart`}
+            className={`w-full text-white font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 motion-reduce:transition-none ${isAdded
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-slate-900 hover:bg-slate-800"
+              }`}
+          >
+            {isAdded ? "ADDED TO CART" : "ADD TO CART"}
+          </button>
+        </CartAnimation>
       </div>
     </article>
   );
@@ -186,7 +191,7 @@ function FilterSidebar({
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="font-sans font-bold text-xl tracking-wider uppercase text-slate-900">FILTERS</h2>
-        <button onClick={onClear} className="font-sans font-semibold text-sm text-blue-500 hover:text-blue-700 transition-colors">
+        <button onClick={onClear} className="font-sans font-semibold text-sm text-[#A68B5B] hover:text-[#6B4423] transition-colors">
           CLEAR
         </button>
       </div>
@@ -202,7 +207,7 @@ function FilterSidebar({
               key={cat.id}
               aria-pressed={activeCategory === cat.id}
               onClick={() => onCategoryChange(cat.id)}
-              className={`px-5 py-3 rounded-xl font-sans font-medium text-sm text-left transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${activeCategory === cat.id
+              className={`px-5 py-3 rounded-xl font-sans font-medium text-sm text-left transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 ${activeCategory === cat.id
                 ? "bg-slate-900 text-white"
                 : "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200"
                 }`}
@@ -226,7 +231,7 @@ function FilterSidebar({
               <div
                 key={i}
                 style={{ height: `${bar.height}%` }}
-                className="flex-1 rounded-full bg-blue-400"
+                className="flex-1 rounded-full bg-[#A68B5B]/60"
               />
             ))}
           </div>
@@ -242,7 +247,7 @@ function FilterSidebar({
 
             {/* Active track */}
             <div
-              className="absolute h-3.5 bg-blue-600 rounded-full top-1/2 -translate-y-1/2"
+              className="absolute h-3.5 bg-[#8B5E34] rounded-full top-1/2 -translate-y-1/2"
               style={{ left: `${getPercent(pendingMin)}%`, right: `${100 - getPercent(pendingMax)}%` }}
             />
 
@@ -251,7 +256,7 @@ function FilterSidebar({
               className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-grab"
               style={{ left: `${getPercent(pendingMin)}%` }}
             >
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full" />
+              <div className="w-3.5 h-3.5 bg-[#8B5E34] rounded-full" />
             </div>
 
             {/* Max handle */}
@@ -259,7 +264,7 @@ function FilterSidebar({
               className="absolute top-1/2 -translate-y-1/2 translate-x-1/2 w-7 h-7 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-grab"
               style={{ right: `${100 - getPercent(pendingMax)}%` }}
             >
-              <div className="w-3.5 h-3.5 bg-blue-600 rounded-full" />
+              <div className="w-3.5 h-3.5 bg-[#8B5E34] rounded-full" />
             </div>
           </div>
         </div>
@@ -275,7 +280,7 @@ function FilterSidebar({
               min={0}
               max={pendingMax - 1}
               onChange={(e) => onMinChange(Math.min(Number(e.target.value), pendingMax - 1))}
-              className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-center font-bold text-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-center font-bold text-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50"
             />
           </div>
           <span className="text-slate-400 mt-5 font-bold">—</span>
@@ -288,7 +293,7 @@ function FilterSidebar({
               min={pendingMin + 1}
               max={PRICE_MAX}
               onChange={(e) => onMaxChange(Math.max(Number(e.target.value), pendingMin + 1))}
-              className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-center font-bold text-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-center font-bold text-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50"
             />
           </div>
         </div>
@@ -296,7 +301,7 @@ function FilterSidebar({
         {/* Apply */}
         <button
           onClick={onApply}
-          className="mt-4 w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-sm tracking-[0.15em] uppercase hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 motion-reduce:transition-none"
+          className="mt-4 w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-sm tracking-[0.15em] uppercase hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 motion-reduce:transition-none"
         >
           APPLY FILTER
         </button>
@@ -330,8 +335,8 @@ function Pagination({ currentPage, totalPages, onPageChange }: { currentPage: nu
             key={p}
             onClick={() => onPageChange(p)}
             className={`px-4 py-2 font-sans text-sm border-r border-slate-200 transition-colors ${currentPage === p
-              ? "bg-blue-600 text-white"
-              : "bg-white text-blue-500 hover:bg-slate-50"
+              ? "bg-[#8B5E34] text-white"
+              : "bg-white text-[#A68B5B] hover:bg-slate-50"
               }`}
           >
             {p}
@@ -340,7 +345,7 @@ function Pagination({ currentPage, totalPages, onPageChange }: { currentPage: nu
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-4 py-2 font-sans text-sm bg-white text-blue-500 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 font-sans text-sm bg-white text-[#A68B5B] hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Next
         </button>
@@ -378,13 +383,11 @@ function ProductsContent() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL
-          ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '')
-          : 'http://localhost:5000';
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
         const [prodRes, catRes] = await Promise.all([
-          axios.get(`${baseUrl}/api/v1/products`),
-          axios.get(`${baseUrl}/api/v1/categories`)
+          axios.get(`${apiURL}/products`),
+          axios.get(`${apiURL}/categories`)
         ]);
 
         const prodJson = prodRes.data;
@@ -408,19 +411,33 @@ function ProductsContent() {
               activeCatNames.includes((p.category || "").toLowerCase())
             );
 
-            const mappedProds = activeProducts.map((p: any) => ({
-              id: p._id,
-              name: p.name,
-              images: p.images && p.images.length > 0 ? p.images : ["/products/suncream-1.jpg"],
-              rating: p.starRating || 0,
-              reviewCount: p.reviewsCount || 0,
-              currentPrice: p.variants?.[0]?.price || 0,
-              originalPrice: p.variants?.[0]?.oldPrice || p.variants?.[0]?.price || 0,
-              currency: "₹",
-              dealBadge: p.offerText || "",
-              benefit: p.keyFeatures || "",
-              category: p.category ? p.category.toLowerCase().replace(/\s+/g, '-') : "all",
-            }));
+            const mappedProds = activeProducts.map((p: any) => {
+              // Normalize image paths coming from backend so `next/image` always
+              // receives an absolute or root-relative URL.
+              const normalizeImg = (img: any) => {
+                if (!img) return "/products/suncream-1.jpg";
+                const s = String(img);
+                if (s.startsWith('http://') || s.startsWith('https://') || s.startsWith('/')) return s;
+                // If backend returned a relative upload path like "uploads/..",
+                // prefix it with the API base URL.
+                return `${apiURL.replace(/\/$/, '')}/${s.replace(/^\/+/, '')}`;
+              };
+
+              return {
+                id: p._id,
+                name: p.name,
+                images: p.images && p.images.length > 0 ? p.images.map(normalizeImg) : ["/products/suncream-1.jpg"],
+                rating: p.starRating || 0,
+                reviewCount: p.reviewsCount || 0,
+                currentPrice: p.variants?.[0]?.price || 0,
+                originalPrice: p.variants?.[0]?.oldPrice || p.variants?.[0]?.price || 0,
+                currency: "₹",
+                dealBadge: p.offerText || "",
+                benefit: p.keyFeatures || "",
+                weight: p.weight || 0,
+                category: p.category ? p.category.toLowerCase().replace(/\s+/g, '-') : "all",
+              };
+            });
             setProducts(mappedProds);
           }
         }
@@ -555,17 +572,6 @@ function ProductsContent() {
             Back to Home
           </Link>
 
-          {/* Collection Banner */}
-          <div className="relative w-full aspect-[16/9] md:aspect-[21/9] lg:aspect-[24/9] rounded-2xl overflow-hidden mb-8 bg-blue-50/50">
-            <Image
-              src="/images/shop-banner.png"
-              alt="HEEDY Moisturizing Brightening Sunscreen"
-              fill
-              priority
-              className="object-cover object-center"
-            />
-          </div>
-
           {/* Results Bar + Mobile Filter Toggle */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white border border-slate-100 rounded-xl px-5 py-4 mb-6 gap-4">
             <div>
@@ -579,7 +585,7 @@ function ProductsContent() {
               {searchTerm && (
                 <p className="font-sans text-sm text-slate-500 mt-1">
                   Search results for: <span className="font-bold text-slate-900">&quot;{searchTerm}&quot;</span>
-                  <button onClick={() => setSearchTerm("")} className="ml-3 text-blue-500 hover:underline text-xs">Clear search</button>
+                  <button onClick={() => setSearchTerm("")} className="ml-3 text-[#A68B5B] hover:underline text-xs">Clear search</button>
                 </p>
               )}
             </div>

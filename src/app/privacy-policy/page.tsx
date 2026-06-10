@@ -14,10 +14,10 @@ export default function PrivacyPolicyPage() {
 
   return (
     <>
-      <title>Privacy Policy – HEEDY</title>
+      <title>Privacy Policy – LUXY GALLERIA</title>
       <meta
         name="description"
-        content="Read the Privacy Policy of HEEDY. Learn how we collect, use, and protect your data."
+        content="Read the Privacy Policy of LUXY GALLERIA. Learn how we collect, use, and protect your data."
       />
 
       <main id="top" className="min-h-screen bg-slate-50">
@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
           className="relative w-full pt-32 md:pt-40 pb-36 md:pb-48"
           style={{
             background:
-              "linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%)",
+              "linear-gradient(135deg, #2C1810 0%, #5A3A1E 40%, #8B5E34 100%)",
           }}
         >
           <div className="max-w-4xl mx-auto px-6 text-center">
@@ -71,7 +71,7 @@ export default function PrivacyPolicyPage() {
                   "opacity 0.6s ease 300ms, transform 0.6s ease 300ms",
               }}
             >
-              At HEEDY, we value your privacy. This policy explains how we collect and use your data.
+              At LUXY GALLERIA, we value your privacy. This policy explains how we collect and use your data.
             </p>
           </div>
         </section>
@@ -147,8 +147,8 @@ export default function PrivacyPolicyPage() {
 
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Contact Us</h2>
-                <p className="mb-2">Email: <a href="mailto:infoheedy@gmail.com" className="text-blue-600 hover:text-blue-800 transition-colors">infoheedy@gmail.com</a></p>
-                <p>Phone: <a href="tel:+919074881551" className="text-blue-600 hover:text-blue-800 transition-colors">9074881551</a></p>
+                <p className="mb-2">Email: <a href="mailto:infoluxygalleria@gmail.com" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">infoluxygalleria@gmail.com</a></p>
+                <p>Phone: <a href="tel:+919074881551" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">9074881551</a></p>
               </section>
             </div>
           </div>

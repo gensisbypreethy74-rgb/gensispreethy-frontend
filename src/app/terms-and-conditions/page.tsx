@@ -14,10 +14,10 @@ export default function TermsAndConditionsPage() {
 
   return (
     <>
-      <title>Terms & Conditions – HEEDY</title>
+      <title>Terms & Conditions – LUXY GALLERIA</title>
       <meta
         name="description"
-        content="Read the Terms & Conditions of HEEDY. Learn about the rules and regulations for using our website."
+        content="Read the Terms & Conditions of LUXY GALLERIA. Learn about the rules and regulations for using our website."
       />
 
       <main id="top" className="min-h-screen bg-slate-50">
@@ -26,7 +26,7 @@ export default function TermsAndConditionsPage() {
           className="relative w-full pt-32 md:pt-40 pb-36 md:pb-48"
           style={{
             background:
-              "linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%)",
+              "linear-gradient(135deg, #2C1810 0%, #5A3A1E 40%, #8B5E34 100%)",
           }}
         >
           <div className="max-w-4xl mx-auto px-6 text-center">
@@ -71,7 +71,7 @@ export default function TermsAndConditionsPage() {
                   "opacity 0.6s ease 300ms, transform 0.6s ease 300ms",
               }}
             >
-              Welcome to HEEDY. By accessing or using our website, you agree to comply with these Terms & Conditions.
+              Welcome to LUXY GALLERIA. By accessing or using our website, you agree to comply with these Terms & Conditions.
             </p>
           </div>
         </section>
@@ -87,7 +87,7 @@ export default function TermsAndConditionsPage() {
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">1. General</h2>
                 <p>
-                  HEEDY operates this website to provide beauty/cosmetic products. By using this site, you confirm that you are at least 18 years old or using it under supervision.
+                  LUXY GALLERIA operates this website to provide beauty/cosmetic products. By using this site, you confirm that you are at least 18 years old or using it under supervision.
                 </p>
               </section>
 
@@ -128,13 +128,13 @@ export default function TermsAndConditionsPage() {
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Intellectual Property</h2>
                 <p>
-                  All content (logo, images, text) belongs to HEEDY and cannot be copied or reused.
+                  All content (logo, images, text) belongs to LUXY GALLERIA and cannot be copied or reused.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Limitation of Liability</h2>
-                <p className="mb-4">HEEDY is not liable for:</p>
+                <p className="mb-4">LUXY GALLERIA is not liable for:</p>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Allergic reactions (please do patch test)</li>
                   <li>Delays in delivery</li>
@@ -151,8 +151,8 @@ export default function TermsAndConditionsPage() {
 
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Contact Us</h2>
-                <p className="mb-2">Email: <a href="mailto:infoheedy@gmail.com" className="text-blue-600 hover:text-blue-800 transition-colors">infoheedy@gmail.com</a></p>
-                <p>Phone: <a href="tel:+919074881551" className="text-blue-600 hover:text-blue-800 transition-colors">9074881551</a></p>
+                <p className="mb-2">Email: <a href="mailto:infoluxygalleria@gmail.com" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">infoluxygalleria@gmail.com</a></p>
+                <p>Phone: <a href="tel:+919074881551" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">9074881551</a></p>
               </section>
             </div>
           </div>

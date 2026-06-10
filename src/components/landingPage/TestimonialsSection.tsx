@@ -18,7 +18,7 @@ const renderStars = (rating: number) =>
   Array.from({ length: 5 }, (_, i) => (
     <Star
       key={i}
-      className={`w-4 h-4 ${i < rating ? "text-blue-400 fill-blue-400" : "text-slate-700 fill-slate-700"}`}
+      className={`w-4 h-4 ${i < rating ? "text-[#A68B5B]/60 fill-[#A68B5B]/60" : "text-slate-700 fill-slate-700"}`}
     />
   ));
 
@@ -65,7 +65,7 @@ function TestimonialCard({ testimonial, isVisible, index }: { testimonial: Testi
           />
         ) : (
           <div
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center flex-shrink-0"
+            className="w-12 h-12 rounded-full bg-gradient-to-br from-[#A68B5B]/50 to-[#A68B5B]/60 flex items-center justify-center flex-shrink-0"
             aria-label={`${testimonial.name} profile picture`}
           >
             <span className="text-white font-bold text-lg uppercase">{testimonial.initial}</span>
@@ -94,10 +94,8 @@ export default function TestimonialsSection() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL
-          ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
-          : "http://localhost:5000";
-        const res = await axios.get(`${baseUrl}/api/v1/testimonials`);
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+        const res = await axios.get(`${apiURL}/testimonials`);
         if (res.data.success && res.data.data) {
           const activeOnes = res.data.data.filter(
             (t: any) => t.status === "ACTIVE"
@@ -151,7 +149,7 @@ export default function TestimonialsSection() {
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-20">
           <p
-            className={`font-sans font-semibold text-xs tracking-[0.25em] uppercase text-blue-300 mb-4 transition-opacity duration-400 ease-out motion-reduce:transition-none ${isVisible ? "opacity-100" : "opacity-0"
+            className={`font-sans font-semibold text-xs tracking-[0.25em] uppercase text-[#A68B5B]/30 mb-4 transition-opacity duration-400 ease-out motion-reduce:transition-none ${isVisible ? "opacity-100" : "opacity-0"
               }`}
           >
             CLIENTELE VOICES

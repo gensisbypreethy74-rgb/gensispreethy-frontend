@@ -11,6 +11,7 @@ export interface CartItem {
   currency: string;
   size?: string;
   quantity: number;
+  weight?: number;
 }
 
 interface CartContextType {
@@ -29,13 +30,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const getApiUrl = () => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "") : 'http://localhost:5000';
-    return `${baseUrl}/api/v1`;
+    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
   };
 
   const getToken = () => {
     if (typeof window !== "undefined") {
-      const userStr = localStorage.getItem("heedy_user");
+      const userStr = localStorage.getItem("luxygalleria_user");
       if (userStr) {
         return JSON.parse(userStr).token;
       }
@@ -52,30 +52,36 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (res.data.success && res.data.data?.items) {
-            const items = res.data.data.items.map((item: any) => {
-              // Extract from variant
-              const variant = item.product.variants?.find((v: any) => v.volume === item.size) || item.product.variants?.[0];
-              
-              return {
-                id: item.product._id,
-                name: item.product.name,
-                image: item.product.images?.[0] || '',
-                price: variant?.price || 0,
-                currency: '₹',
-                size: variant?.volume || item.size,
-                quantity: item.quantity
-              };
-            });
+            const items = res.data.data.items
+              .filter((item: any) => item.product) // ensure product exists
+              .map((item: any) => {
+                // Extract from variant safely
+                const variant = item.product.variants?.find((v: any) => v.volume === item.size) || item.product.variants?.[0] || {};
+                return {
+                  id: item.product._id,
+                  name: item.product.name,
+                  image: item.product.images?.[0] || '',
+                  price: variant.price || 0,
+                  currency: '₹',
+                  size: variant.volume || item.size,
+                  quantity: item.quantity,
+                  weight: item.product.weight || 0,
+                };
+              });
             setCartItems(items);
-            localStorage.setItem("heedy_cart", JSON.stringify(items));
+            localStorage.setItem("luxygalleria_cart", JSON.stringify(items));
           }
-        } catch (err) {
-          console.error("Failed to fetch cart from backend", err);
-          const localCart = localStorage.getItem("heedy_cart");
+        } catch (err: any) {
+          // Silently handle 401 (unauthorized) - user just not logged in
+          if (err?.response?.status !== 401) {
+            console.error("Failed to fetch cart from backend", err);
+          }
+          // Load from local storage instead
+          const localCart = localStorage.getItem("luxygalleria_cart");
           if (localCart) setCartItems(JSON.parse(localCart));
         }
       } else {
-        const localCart = localStorage.getItem("heedy_cart");
+        const localCart = localStorage.getItem("luxygalleria_cart");
         if (localCart) setCartItems(JSON.parse(localCart));
       }
       setIsLoaded(true);
@@ -93,7 +99,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       } else {
         newCart = [...prev, item];
       }
-      localStorage.setItem("heedy_cart", JSON.stringify(newCart));
+      localStorage.setItem("luxygalleria_cart", JSON.stringify(newCart));
       return newCart;
     });
 
@@ -107,8 +113,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }, {
           headers: { Authorization: `Bearer ${token}` }
         });
-      } catch (err) {
-        console.error("Failed to add to backend cart", err);
+      } catch (err: any) {
+        // Silently handle 401 - user session might have expired
+        if (err?.response?.status !== 401) {
+          console.error("Failed to add to backend cart", err);
+        }
       }
     }
   };
@@ -119,7 +128,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const existing = prev.find(i => i.id === id && i.size === size);
       const validQty = qty;
       const newCart = prev.map(i => (i.id === id && i.size === size) ? { ...i, quantity: validQty } : i);
-      localStorage.setItem("heedy_cart", JSON.stringify(newCart));
+      localStorage.setItem("luxygalleria_cart", JSON.stringify(newCart));
       return newCart;
     });
 
@@ -132,8 +141,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }, {
           headers: { Authorization: `Bearer ${token}` }
         });
-      } catch (err) {
-        console.error("Failed to update backend cart", err);
+      } catch (err: any) {
+        // Silently handle 401 - user session might have expired
+        if (err?.response?.status !== 401) {
+          console.error("Failed to update backend cart", err);
+        }
       }
     }
   };
@@ -141,7 +153,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeItem = async (id: string) => {
     setCartItems(prev => {
       const newCart = prev.filter(i => i.id !== id);
-      localStorage.setItem("heedy_cart", JSON.stringify(newCart));
+      localStorage.setItem("luxygalleria_cart", JSON.stringify(newCart));
       return newCart;
     });
 
@@ -152,15 +164,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           headers: { Authorization: `Bearer ${token}` },
           data: { productId: id }
         });
-      } catch (err) {
-        console.error("Failed to remove from backend cart", err);
+      } catch (err: any) {
+        // Silently handle 401 - user session might have expired
+        if (err?.response?.status !== 401) {
+          console.error("Failed to remove from backend cart", err);
+        }
       }
     }
   };
 
   const clearCart = async () => {
     setCartItems([]);
-    localStorage.removeItem("heedy_cart");
+    localStorage.removeItem("luxygalleria_cart");
 
     const token = getToken();
     if (token) {
@@ -168,8 +183,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         await axios.delete(`${getApiUrl()}/cart`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-      } catch (err) {
-        console.error("Failed to clear backend cart", err);
+      } catch (err: any) {
+        // Silently handle 401 - user session might have expired
+        if (err?.response?.status !== 401) {
+          console.error("Failed to clear backend cart", err);
+        }
       }
     }
   };

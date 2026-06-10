@@ -12,7 +12,7 @@ export default function NotFound() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <p className="font-sans font-semibold text-xs tracking-[0.3em] uppercase text-blue-800 mb-4">
+          <p className="font-sans font-semibold text-xs tracking-[0.3em] uppercase text-[#5A3A1E] mb-4">
             404 ERROR
           </p>
           <h1 className="font-serif font-normal text-5xl md:text-7xl text-slate-900 leading-tight mb-6">

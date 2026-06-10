@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/common/Navbar";
 import FloatingActions from "../components/common/FloatingActions";
+import DynamicBanner from "../components/common/DynamicBanner";
 import Footer from "../components/common/Footer";
 
 const geistSans = Geist({
@@ -21,8 +22,11 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "HEEDY",
-  description: "Premium skincare and cosmetics for your daily routine.",
+  title: "Luxy Galleria",
+  description: "Fulfill your global cravings - Premium imported drinks, snacks & more.",
+  icons: {
+    icon: "/luxy_logo.png",
+  },
 };
 
 import { CartProvider } from "../context/CartContext";
@@ -44,7 +48,10 @@ export default function RootLayout({
           <CartProvider>
             <GoogleOAuthWrapper>
               <Navbar />
-              {children}
+              <div className="pt-32">
+                <DynamicBanner />
+                {children}
+              </div>
               <Footer />
               <FloatingActions />
             </GoogleOAuthWrapper>
