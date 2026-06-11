@@ -46,28 +46,54 @@ export default function CheckoutPage() {
   const fetchAddresses = async () => {
     try {
       const userStr = localStorage.getItem("luxygalleria_user");
-      if (!userStr) return;
-      const { token } = JSON.parse(userStr);
-      if (!token) return;
+      if (!userStr) {
+        console.log('No user token found');
+        return;
+      }
+      
+      const userData = JSON.parse(userStr);
+      const token = userData.token;
+      
+      if (!token) {
+        console.log('No token in user data');
+        showToast("Please login again to continue.", "warning");
+        router.push("/sign-in");
+        return;
+      }
 
       const apiURL = getAPIURL();
+      console.log('Fetching addresses from:', `${apiURL}/users/addresses`);
+      
       const res = await axios.get(`${apiURL}/users/addresses`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
       });
+      
       if (res.data.success && res.data.data) {
         const mappedAddresses = res.data.data.map((addr: any) => ({
           id: addr._id,
           name: addr.city?.toLowerCase() || 'Address',
           line1: `${addr.street ? addr.street + ", " : ""}${addr.state?.toLowerCase() || ''}`,
           line2: addr.zipCode,
+          fullAddress: addr
         }));
         setAddresses(mappedAddresses);
         if (mappedAddresses.length > 0) {
           setSelectedAddressId(mappedAddresses[0].id);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to fetch addresses", err);
+      if (err.response?.status === 401) {
+        showToast("Session expired. Please login again.", "warning");
+        localStorage.removeItem("luxygalleria_user");
+        router.push("/sign-in");
+      } else {
+        showToast("Failed to load addresses. Please try again.", "error");
+      }
     }
   };
 
@@ -92,22 +118,33 @@ export default function CheckoutPage() {
       // If logged in, save to backend
       if (userStr) {
         try {
-          const { token } = JSON.parse(userStr);
+          const userData = JSON.parse(userStr);
+          const token = userData.token;
+          
+          if (!token) {
+            showToast("Please login again.", "warning");
+            router.push("/sign-in");
+            return;
+          }
+          
           const apiURL = getAPIURL();
 
           const payload = {
-            street: newAddressForm.street,
-            city: newAddressForm.city,
-            state: newAddressForm.state,
-            zipCode: newAddressForm.zip,
+            street: newAddressForm.street.trim(),
+            city: newAddressForm.city.trim(),
+            state: newAddressForm.state.trim(),
+            zipCode: newAddressForm.zip.trim(),
             country: newAddressForm.country
           };
+
+          console.log('Saving address:', payload);
 
           const res = await axios.post(`${apiURL}/users/addresses`, payload, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
-            }
+            },
+            withCredentials: true
           });
 
           if (res.data.success) {
@@ -117,6 +154,7 @@ export default function CheckoutPage() {
               name: addr.city?.toLowerCase() || 'Address',
               line1: `${addr.street ? addr.street + ", " : ""}${addr.state?.toLowerCase() || ''}`,
               line2: addr.zipCode,
+              fullAddress: addr
             }));
             setAddresses(mappedAddresses);
             if (mappedAddresses.length > 0) {
@@ -127,16 +165,22 @@ export default function CheckoutPage() {
             showToast(res.data.message || "Failed to save address", "error");
           }
         } catch (err: any) {
-          console.error(err);
-          showToast(err.response?.data?.message || "Error saving address", "error");
+          console.error('Address save error:', err);
+          if (err.response?.status === 401) {
+            showToast("Session expired. Please login again.", "warning");
+            localStorage.removeItem("luxygalleria_user");
+            router.push("/sign-in");
+          } else {
+            showToast(err.response?.data?.message || "Error saving address", "error");
+          }
         }
       } else {
         // Guest checkout: save address to sessionStorage temporarily
         const guestAddress = {
-          street: newAddressForm.street,
-          city: newAddressForm.city,
-          state: newAddressForm.state,
-          zipCode: newAddressForm.zip,
+          street: newAddressForm.street.trim(),
+          city: newAddressForm.city.trim(),
+          state: newAddressForm.state.trim(),
+          zipCode: newAddressForm.zip.trim(),
           country: newAddressForm.country,
           id: `guest_${Date.now()}`
         };

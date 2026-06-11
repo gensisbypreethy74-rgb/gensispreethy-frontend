@@ -15,7 +15,7 @@ const socials = [
 ];
 
 export default function Footer() {
-  const [footerText, setFooterText] = useState("More than a snack store, a destination for worldwide treats and everyday cravings.");
+  const [footerText, setFooterText] = useState("Luxy Food is a trusted online food store offering quality food products with freshness, taste, and customer satisfaction at the core. We provide a wide range of carefully selected products, making it easy for customers to browse, order, and receive their favorite food items conveniently. Our goal is to deliver quality products, reliable service, and a seamless shopping experience.");
   const [whatsappNumber, setWhatsappNumber] = useState("");
 
   useEffect(() => {

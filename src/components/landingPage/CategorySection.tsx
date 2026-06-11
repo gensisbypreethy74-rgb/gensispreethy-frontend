@@ -21,7 +21,7 @@ const DEFAULT_CATEGORIES = [
   {
     id: 'body-care',
     label: 'Body Care',
-    image: '/images/body-care.jpg',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop',
     alt: 'Body Care category featuring luxurious body cream application'
   }
 ];

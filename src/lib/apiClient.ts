@@ -25,6 +25,7 @@ export const getAPIURL = () => {
 const apiClient = axios.create({
   baseURL: getAPIURL(),
   timeout: 10000,
+  withCredentials: true, // Enable credentials for CORS
   headers: {
     'Content-Type': 'application/json',
   },
@@ -42,7 +43,9 @@ apiClient.interceptors.request.use(
             config.headers.Authorization = `Bearer ${user.token}`;
           }
         } catch (err) {
-          console.error('Failed to parse user data from localStorage');
+          console.error('Failed to parse user data from localStorage:', err);
+          // Clear corrupted data
+          localStorage.removeItem('luxygalleria_user');
         }
       }
     }
@@ -55,11 +58,16 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Error:', error.response?.status, error.response?.data || error.message);
+    
     if (error.response?.status === 401) {
       // Token expired or invalid - clear storage
       if (typeof window !== 'undefined') {
         localStorage.removeItem('luxygalleria_user');
-        window.location.href = '/sign-in';
+        // Only redirect if not already on sign-in page
+        if (window.location.pathname !== '/sign-in') {
+          window.location.href = '/sign-in?redirect=' + encodeURIComponent(window.location.pathname);
+        }
       }
     }
     return Promise.reject(error);

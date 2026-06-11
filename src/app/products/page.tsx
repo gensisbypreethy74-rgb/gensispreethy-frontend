@@ -9,6 +9,7 @@ import { useCart } from "../../context/CartContext";
 import { useToast } from "../../context/ToastContext";
 import CartAnimation from "../../components/CartAnimation";
 import { Star, StarHalf, SlidersHorizontal, X, ChevronLeft } from "lucide-react";
+import { getImageUrl, handleImageError } from "../../lib/imageUtils";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -67,7 +68,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
     addToCart({
       id: product.id,
       name: product.name,
-      image: product.images[0],
+      image: getImageUrl(product.images[0]),
       price: product.currentPrice,
       currency: product.currency,
       weight: (product as any).weight || 0,
@@ -99,11 +100,12 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
           {product.images.map((src, i) => (
             <Image
               key={`${product.id}-img-${i}`}
-              src={src}
+              src={getImageUrl(src)}
               alt={`${product.name} image ${i + 1}`}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 25vw"
               className={`object-cover transition-opacity duration-500 group-hover:scale-105 group-hover:transition-transform motion-reduce:transition-none ${i === imgIdx ? "opacity-100" : "opacity-0"}`}
+              onError={handleImageError}
             />
           ))}
           {/* Dots */}
@@ -412,21 +414,10 @@ function ProductsContent() {
             );
 
             const mappedProds = activeProducts.map((p: any) => {
-              // Normalize image paths coming from backend so `next/image` always
-              // receives an absolute or root-relative URL.
-              const normalizeImg = (img: any) => {
-                if (!img) return "/products/suncream-1.jpg";
-                const s = String(img);
-                if (s.startsWith('http://') || s.startsWith('https://') || s.startsWith('/')) return s;
-                // If backend returned a relative upload path like "uploads/..",
-                // prefix it with the API base URL.
-                return `${apiURL.replace(/\/$/, '')}/${s.replace(/^\/+/, '')}`;
-              };
-
               return {
                 id: p._id,
                 name: p.name,
-                images: p.images && p.images.length > 0 ? p.images.map(normalizeImg) : ["/products/suncream-1.jpg"],
+                images: p.images && p.images.length > 0 ? p.images.map(getImageUrl) : [getImageUrl("/products/suncream-1.jpg")],
                 rating: p.starRating || 0,
                 reviewCount: p.reviewsCount || 0,
                 currentPrice: p.variants?.[0]?.price || 0,

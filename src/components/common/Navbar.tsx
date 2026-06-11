@@ -8,6 +8,7 @@ import { Search, User, ShoppingBag, X, Menu, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "../../context/CartContext";
+import { getImageUrl, handleImageError } from "../../lib/imageUtils";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -55,15 +56,6 @@ export default function Navbar() {
     }
   }, [searchQuery, allProducts]);
 
-  const getImageUrl = (url: string) => {
-    if (!url) return null;
-    if (url.startsWith('/uploads/')) {
-      const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      return `${BASE_URL}${url}`;
-    }
-    return url;
-  };
-
   const handleResultClick = (id: string) => {
     router.push(`/products/${id}`);
     setIsSearchOpen(false);
@@ -71,12 +63,12 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("luxy_user"));
+    setIsLoggedIn(!!localStorage.getItem("luxygalleria_user"));
   }, [pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem("luxy_user");
-    localStorage.removeItem("luxy_cart");
+    localStorage.removeItem("luxygalleria_user");
+    localStorage.removeItem("luxygalleria_cart");
     setIsLoggedIn(false);
     clearCart();
     router.push("/sign-in");
@@ -337,7 +329,7 @@ export default function Navbar() {
                                   >
                                     <div className="w-10 h-10 bg-slate-100 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
                                       {imgUrl ? (
-                                        <img src={imgUrl} alt={p.name} className="w-full h-full object-cover" />
+                                        <img src={imgUrl} alt={p.name} className="w-full h-full object-cover" onError={handleImageError} />
                                       ) : (
                                         <ShoppingBag size={16} className="text-slate-400" />
                                       )}
@@ -481,7 +473,7 @@ export default function Navbar() {
                             >
                               <div className="w-10 h-10 bg-slate-100 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
                                 {imgUrl ? (
-                                  <img src={imgUrl} alt={p.name} className="w-full h-full object-cover" />
+                                  <img src={imgUrl} alt={p.name} className="w-full h-full object-cover" onError={handleImageError} />
                                 ) : (
                                   <ShoppingBag size={16} className="text-slate-400" />
                                 )}

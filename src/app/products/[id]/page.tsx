@@ -12,6 +12,7 @@ import {
 import { useToast } from "../../../context/ToastContext";
 import CartAnimation from "../../../components/CartAnimation";
 import { useCart } from "../../../context/CartContext";
+import { getImageUrl, handleImageError } from "../../../lib/imageUtils";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -43,19 +44,6 @@ const TRUST_BADGES = [
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const normalizeImg = (img: any) => {
-  if (!img) return "/products/suncream-1.jpg";
-  const str = String(img).trim();
-  if (!str) return "/products/suncream-1.jpg";
-  if (str.startsWith("http://") || str.startsWith("https://") || str.startsWith("/")) {
-    return str;
-  }
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL
-    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")
-    : "http://localhost:5000";
-  return `${baseUrl.replace(/\/$/, "")}/${str.replace(/^\/+/, "")}`;
-};
 
 const renderStars = (rating: number) =>
   Array.from({ length: 5 }, (_, i) => {
@@ -118,7 +106,7 @@ export default function ProductDetailPage() {
             id: p._id,
             name: p.name,
             tagline: p.description || "",
-            images: p.images && p.images.length > 0 ? p.images.map(normalizeImg) : ["/products/suncream-1.jpg"],
+            images: p.images && p.images.length > 0 ? p.images.map(getImageUrl) : [getImageUrl("/products/suncream-1.jpg")],
             rating: p.starRating || 0,
             reviewCount: p.reviewsCount || 0,
             currentPrice: p.variants?.[0]?.price || 0,
@@ -155,7 +143,7 @@ export default function ProductDetailPage() {
     addToCart({
       id: product.id,
       name: product.name,
-      image: product.images[0],
+      image: getImageUrl(product.images[0]),
       price: product.currentPrice,
       currency: product.currency,
       weight: (product as any).weight || 0,
@@ -229,7 +217,7 @@ export default function ProductDetailPage() {
                   src={src}
                   alt={`${product.name} view ${i + 1}`}
                   loading={i === 0 ? "eager" : "lazy"}
-                  onError={(event) => { event.currentTarget.src = "/products/suncream-1.jpg"; }}
+                  onError={handleImageError}
                   className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ${i === activeImage ? "opacity-100" : "opacity-0"}`}
                 />
               ))}
@@ -253,7 +241,7 @@ export default function ProductDetailPage() {
                     <img
                       src={src}
                       alt={`Thumbnail ${i + 1}`}
-                      onError={(event) => { event.currentTarget.src = "/products/suncream-1.jpg"; }}
+                      onError={handleImageError}
                       className="w-full h-full object-contain"
                     />
                   </button>
@@ -493,11 +481,12 @@ export default function ProductDetailPage() {
               >
                 <div className="relative aspect-square overflow-hidden bg-slate-50">
                   <Image
-                    src={p.images[0]}
+                    src={getImageUrl(p.images[0])}
                     alt={p.name}
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={handleImageError}
                   />
                 </div>
                 <div className="p-4 text-center">

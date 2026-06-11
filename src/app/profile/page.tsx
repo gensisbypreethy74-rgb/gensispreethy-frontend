@@ -6,6 +6,7 @@ import axios from "axios";
 import { User, Package, MapPin, LogOut, X } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
 import { useCart } from "../../context/CartContext";
+import { getImageUrl, handleImageError } from "../../lib/imageUtils";
 
 interface UserProfile {
   name: string;
@@ -480,7 +481,12 @@ export default function ProfilePage() {
                               <div key={`${order._id}-item-${item.product?._id || idx}`} className="flex items-center gap-4 border-b border-slate-100 pb-4 last:border-0 last:pb-0">
                                 <div className="w-16 h-16 rounded-xl bg-slate-100 shrink-0 overflow-hidden">
                                   {item.product?.images?.[0] ? (
-                                    <img src={item.product.images[0]} alt={item.product?.name} className={`w-full h-full object-cover ${(order.orderStatus === 'delivered' || order.orderStatus === 'cancelled') ? 'grayscale' : ''}`} />
+                                    <img 
+                                      src={getImageUrl(item.product.images[0])} 
+                                      alt={item.product?.name} 
+                                      className={`w-full h-full object-cover ${(order.orderStatus === 'delivered' || order.orderStatus === 'cancelled') ? 'grayscale' : ''}`} 
+                                      onError={handleImageError}
+                                    />
                                   ) : (
                                     <div className="w-full h-full bg-slate-200" />
                                   )}

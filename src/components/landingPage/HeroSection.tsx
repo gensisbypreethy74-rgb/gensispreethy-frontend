@@ -28,8 +28,8 @@ interface ISlide {
 const DEFAULT_SLIDES: ISlide[] = [
   {
     id: "default-1",
-    image: "/hero-bg.png",
-    mobileImage: "/hero-bg.png",
+    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1200&auto=format&fit=crop",
+    mobileImage: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop",
     alt: "Premium skincare dynamic hydration",
     headline: "DYNAMIC HYDRATION",
     subheadline: "Sweat-resistant, feather-light, invisible finish.",
