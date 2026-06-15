@@ -211,7 +211,7 @@ export default function CheckoutPage() {
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
-  const shipping = totalWeight * 60;
+  const shipping = totalWeight > 0 ? totalWeight * 60 : 0;
   const total = subtotal + shipping;
 
   const loadRazorpayScript = () => {
@@ -522,7 +522,7 @@ export default function CheckoutPage() {
                 <span className="text-slate-900">₹{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between items-center text-slate-500 font-sans text-sm">
-                <span>Shipping (₹60/kg)</span>
+                <span>Shipping</span>
                 <span>
                   {shipping === 0 ? (
                     <span className="text-green-600 font-bold tracking-wide">Free</span>

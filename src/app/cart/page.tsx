@@ -14,7 +14,7 @@ export default function CartPage() {
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
-  const shippingFee = totalWeight * 60;
+  const shippingFee = totalWeight > 0 ? totalWeight * 60 : 0;
   const total = subtotal + shippingFee;
 
   return (
@@ -140,7 +140,7 @@ export default function CartPage() {
                   <span className="font-semibold text-slate-900">₹{subtotal}</span>
                 </div>
                 <div className="flex justify-between items-center text-slate-600 font-sans">
-                  <span>Shipping (₹60/kg)</span>
+                  <span>Shipping</span>
                   <span className="font-semibold text-slate-900">
                     {shippingFee === 0 ? (
                       <span className="text-green-600 uppercase text-xs font-bold tracking-wider">Free</span>

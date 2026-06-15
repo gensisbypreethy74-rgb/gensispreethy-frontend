@@ -123,22 +123,13 @@ export default function Navbar() {
   };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b overflow-hidden ${scrolled ? "bg-white shadow-sm border-slate-200" : "bg-white border-transparent" }`}>
-      {/* Greeting bar shown when user scrolls */}
-      <div
-        className={`absolute inset-x-0 top-0 h-9 bg-[#A68B5B] text-white flex items-center justify-center text-sm font-medium transition-transform duration-300 z-50 ${scrolled ? 'translate-y-0' : '-translate-y-full'}`}
-        aria-hidden={!scrolled}
-      >
-        Welcome to Luxy Galleria!
-      </div>
-
-      {/* Main header content; padding-top applied when greeting visible */}
-      <div style={{ paddingTop: scrolled ? 36 : 0 }} className={`relative h-24 lg:h-28 px-6 lg:px-12 flex items-center justify-between transition-all duration-300 overflow-hidden`}> 
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+      <div className="relative h-20 lg:h-24 px-6 lg:px-12 flex items-center justify-between transition-all duration-300">
       {/* ── Mobile Menu Toggle & Profile (Left on Mobile) ── */}
-      <div className="flex md:hidden flex-1 justify-start items-center gap-1 relative z-20 pointer-events-none">
+      <div className="flex md:hidden flex-1 justify-start items-center gap-1 relative z-20">
         <button
           onClick={toggleMobileMenu}
-          className="p-2 -ml-2 text-slate-900 hover:text-[#A68B5B] transition-colors duration-200 pointer-events-auto"
+          className="p-2 -ml-2 text-slate-900 hover:text-[#A68B5B] transition-colors duration-200"
           aria-label="Toggle mobile menu"
         >
           {isMobileMenuOpen ? <X size={24} strokeWidth={2} /> : <Menu size={24} strokeWidth={2} />}
@@ -155,7 +146,7 @@ export default function Navbar() {
       {/* ── Logo (Center on Mobile, Left on Desktop) ── */}
       <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none z-10 overflow-hidden">
         <Link href="/" className="flex-shrink-0 overflow-hidden" aria-label="Luxy Galleria home">
-          <div className="w-40 sm:w-48 md:w-56 lg:w-64 h-16 lg:h-20 flex items-center justify-center md:justify-start overflow-hidden">
+          <div className="w-36 sm:w-44 md:w-52 lg:w-56 h-14 lg:h-16 flex items-center justify-center md:justify-start overflow-hidden">
             <img
               src="/luxy_logo.png"
               alt="Luxy Galleria Logo"
@@ -182,7 +173,7 @@ export default function Navbar() {
       </nav>
 
       {/* ── Right: Search & Utilities ── */}
-      <div className="flex items-center justify-end gap-2 md:gap-4 flex-1 md:flex-none relative z-20 pointer-events-none md:pointer-events-auto">
+      <div className="flex items-center justify-end gap-2 md:gap-4 flex-1 md:flex-none relative z-20">
 
         {/* --- Mobile Always Visible Icons --- */}
         <div className="flex md:hidden items-center gap-1 sm:gap-2 pointer-events-auto">

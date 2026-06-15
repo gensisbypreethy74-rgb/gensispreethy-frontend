@@ -469,6 +469,7 @@ function ProductsContent() {
     setMinPrice(0);
     setMaxPrice(PRICE_MAX);
     setSearchTerm("");
+    setDrawerOpen(false);
   };
 
   const filtered = useMemo(

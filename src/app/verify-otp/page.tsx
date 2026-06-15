@@ -19,14 +19,26 @@ function VerifyOtpContent() {
   const [resendSuccess, setResendSuccess] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | null>(null);
 
+  // Auto-fill OTP inputs when devOtp is set
+  const fillOtpInputs = (otpValue: string) => {
+    const digits = otpValue.split("");
+    const newOtp = Array(6).fill("");
+    digits.forEach((digit, i) => {
+      if (i < 6) newOtp[i] = digit;
+    });
+    setOtp(newOtp);
+  };
+
   useEffect(() => {
     if (!email) {
       router.push("/register");
+      return;
     }
-    // Check for development OTP
+    // Check for development OTP stored from register page
     const storedOtp = sessionStorage.getItem('dev_otp');
     if (storedOtp) {
       setDevOtp(storedOtp);
+      fillOtpInputs(storedOtp);
     }
   }, [email, router]);
 
@@ -113,13 +125,19 @@ function VerifyOtpContent() {
       
       const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
         
-      await axios.post(`${apiURL}/auth/resend-otp`, { email });
+      const response = await axios.post(`${apiURL}/auth/resend-otp`, { email });
 
-      setResendSuccess("A new verification code has been sent to your email.");
-      setOtp(Array(6).fill(""));
+      // Check if OTP is returned (development mode)
+      if (response.data.data?.otp) {
+        const newOtp = response.data.data.otp;
+        sessionStorage.setItem('dev_otp', newOtp);
+        setDevOtp(newOtp);
+        fillOtpInputs(newOtp); // Auto-fill the OTP boxes!
+      }
+
+      setResendSuccess("New OTP generated successfully!");
       inputRefs.current[0]?.focus();
     } catch (err: any) {
-      // Don't log expected errors to console
       const status = err.response?.status;
       if (status !== 400 && status !== 404) {
         console.error("Resend OTP error:", err);
@@ -138,12 +156,20 @@ function VerifyOtpContent() {
           </p>
           
           <h1 className="font-serif font-normal text-4xl lg:text-5xl xl:text-6xl text-[#0A192F] leading-tight mb-6">
-            Join the world of refined beauty.
+            Almost there!
           </h1>
           
-          <p className="font-sans text-slate-600 text-base leading-relaxed mb-12 max-w-sm">
-            Create an account to unlock exclusive benefits, personalized recommendations, and a faster checkout experience.
+          <p className="font-sans text-slate-600 text-base leading-relaxed mb-8 max-w-sm">
+            Your verification code is ready. Enter it on the right to complete your account setup.
           </p>
+
+          {/* OTP also shown on left panel */}
+          {devOtp && (
+            <div className="bg-white rounded-2xl p-6 shadow-md border border-amber-200 mb-8">
+              <p className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-2">Your OTP Code</p>
+              <p className="text-4xl font-black text-[#0A192F] tracking-widest">{devOtp}</p>
+            </div>
+          )}
           
           <div className="flex items-center gap-3 text-slate-700">
             <ShieldCheck size={20} className="text-slate-900" />
@@ -158,19 +184,34 @@ function VerifyOtpContent() {
           <h2 className="font-sans font-bold text-4xl md:text-5xl text-[#0A192F] mb-3">
             Verify Email
           </h2>
-          <p className="font-sans text-slate-500 text-base mb-10">
-            We've sent a 6-digit code to <span className="font-medium text-slate-800">{email}</span>
+          <p className="font-sans text-slate-500 text-base mb-8">
+            Enter the 6-digit verification code below
           </p>
 
-          {devOtp && (
-            <div className="mb-6 bg-amber-50 border-2 border-amber-300 rounded-xl p-4 text-center animate-pulse">
-              <p className="text-xs font-bold text-amber-700 uppercase mb-2">🔓 Development Mode - Your OTP</p>
-              <p className="text-3xl font-black text-amber-900 tracking-widest">{devOtp}</p>
-              <p className="text-xs text-amber-600 mt-2">Copy this code to verify your email</p>
-            </div>
-          )}
+          {/* ── OTP Display Box (always visible) ── */}
+          <div className={`mb-8 rounded-2xl p-6 text-center border-2 ${devOtp ? 'bg-amber-50 border-amber-400' : 'bg-slate-50 border-slate-200'}`}>
+            {devOtp ? (
+              <>
+                <p className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-3">🔐 Your Verification Code</p>
+                <p className="text-5xl font-black text-[#0A192F] tracking-[0.3em] mb-3">{devOtp}</p>
+                <p className="text-sm text-amber-700 font-medium">✅ Code auto-filled below — click "Verify & Continue"</p>
+              </>
+            ) : (
+              <>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">⏳ Waiting for OTP</p>
+                <p className="text-slate-400 text-base">Click <strong className="text-slate-700">"Get Verification Code"</strong> below</p>
+                <button
+                  onClick={handleResend}
+                  type="button"
+                  className="mt-4 bg-[#0A192F] text-white font-bold text-sm rounded-xl px-6 py-3 hover:bg-slate-700 transition-colors"
+                >
+                  Get Verification Code
+                </button>
+              </>
+            )}
+          </div>
 
-          <form onSubmit={onSubmit} className="space-y-8">
+          <form onSubmit={onSubmit} className="space-y-6">
             {apiError && (
               <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-medium border border-red-100">
                 {apiError}
@@ -179,7 +220,7 @@ function VerifyOtpContent() {
 
             {resendSuccess && (
               <div className="bg-green-50 text-green-700 p-4 rounded-xl text-sm font-medium border border-green-100">
-                {resendSuccess}
+                ✅ {resendSuccess}
               </div>
             )}
             
@@ -189,7 +230,7 @@ function VerifyOtpContent() {
                 ENTER OTP CODE
               </label>
               
-              <div className="flex items-center justify-between gap-2 sm:gap-4 border border-slate-300 rounded-2xl p-4 sm:p-6 bg-white shadow-sm" onPaste={handlePaste}>
+              <div className="flex items-center justify-between gap-2 sm:gap-4 border-2 border-slate-200 rounded-2xl p-4 sm:p-6 bg-slate-50 shadow-sm" onPaste={handlePaste}>
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -200,8 +241,8 @@ function VerifyOtpContent() {
                     value={digit}
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-10 h-12 sm:w-12 sm:h-14 sm:text-2xl text-xl text-center font-bold text-slate-900 bg-transparent border-none focus:outline-none focus:ring-0 placeholder:text-slate-300"
-                    placeholder="0"
+                    className="w-10 h-12 sm:w-14 sm:h-16 sm:text-3xl text-2xl text-center font-black text-[#0A192F] bg-white border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 placeholder:text-slate-300 transition-all"
+                    placeholder="·"
                   />
                 ))}
               </div>
@@ -211,27 +252,28 @@ function VerifyOtpContent() {
             <button
               type="submit"
               disabled={isSubmitting || otp.join("").length !== 6}
-              className="w-full bg-[#0A192F] text-white font-bold text-base rounded-xl py-4 sm:py-5 flex items-center justify-center gap-2 group hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-[#0A192F] text-white font-bold text-base rounded-xl py-4 sm:py-5 flex items-center justify-center gap-2 group hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Verifying..." : "Verify & Continue"} 
+              {!isSubmitting && <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />}
             </button>
           </form>
 
           {/* Resend & Back */}
-          <div className="mt-10 text-center space-y-4">
+          <div className="mt-8 text-center space-y-3">
             <button 
               onClick={handleResend}
               type="button"
-              className="font-sans font-bold text-sm text-slate-900 hover:text-[#8B5E34] transition-colors"
+              className="font-sans font-bold text-sm text-slate-600 hover:text-[#0A192F] transition-colors underline underline-offset-4"
             >
-              Resend Verification Code
+              🔄 Resend Verification Code
             </button>
             <div className="block">
               <Link 
                 href="/register" 
-                className="font-sans text-sm text-slate-500 hover:text-slate-900 transition-colors underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900"
+                className="font-sans text-sm text-slate-400 hover:text-slate-900 transition-colors"
               >
-                Back to Registration
+                ← Back to Registration
               </Link>
             </div>
           </div>

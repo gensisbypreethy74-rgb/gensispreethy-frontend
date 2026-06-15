@@ -85,68 +85,67 @@ export default function PrivacyPolicyPage() {
 
             <div className="space-y-8 text-slate-700 leading-relaxed font-sans">
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Information We Collect</h2>
-                <p className="mb-4">We may collect:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Name</li>
-                  <li>Phone number</li>
-                  <li>Email address</li>
-                  <li>Shipping address</li>
-                  <li>Payment details (secured via payment gateway)</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">2. How We Use Your Information</h2>
-                <p className="mb-4">We use your data to:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Process orders</li>
-                  <li>Provide customer support</li>
-                  <li>Send updates/offers (optional)</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Data Protection</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
                 <p>
-                  We implement secure measures to protect your personal data. Payment details are processed through trusted gateways.
+                  LUXY GALLERIA is committed to protecting your privacy. This policy explains how we collect, use, and protect your personal information.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Sharing of Information</h2>
-                <p className="mb-4">We do NOT sell your data. We may share it with:</p>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Information We Collect</h2>
+                <p className="mb-4">We may collect the following information when you use our website:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Delivery partners</li>
-                  <li>Payment providers</li>
+                  <li>Name and contact details</li>
+                  <li>Shipping address and order details</li>
+                  <li>Payment and transaction information (processed by secure payment gateways)</li>
+                  <li>Device and browser information to improve our service</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Cookies</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">3. How We Use Your Data</h2>
                 <p>
-                  We use cookies to improve user experience and website performance.
+                  We use your information to process orders, manage deliveries, provide customer support, and improve your experience on our website.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Your Rights</h2>
-                <p className="mb-4">You can:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Request access to your data</li>
-                  <li>Ask for correction or deletion</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Updates to Policy</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Cookies & Tracking</h2>
                 <p>
-                  We may update this policy anytime. Changes will be posted on this page.
+                  We use cookies and similar technologies to remember preferences, analyze website traffic, and enhance user experience.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Contact Us</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Data Security</h2>
+                <p>
+                  We take appropriate measures to protect your personal data, but no internet transmission is completely secure. Payment details are handled by trusted payment providers.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Sharing Information</h2>
+                <p>
+                  We do not sell your personal data. We may share information with delivery partners and payment processors as needed to fulfill your orders.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Your Rights</h2>
+                <p>
+                  You may request access to your data, ask for corrections, or request deletion by contacting us at the email below.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Policy Updates</h2>
+                <p>
+                  We may update this policy from time to time. The latest version will always be available on this page.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Contact Us</h2>
                 <p className="mb-2">Email: <a href="mailto:infoluxygalleria@gmail.com" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">infoluxygalleria@gmail.com</a></p>
                 <p>Phone: <a href="tel:+919074881551" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">9074881551</a></p>
               </section>

@@ -85,72 +85,75 @@ export default function TermsAndConditionsPage() {
 
             <div className="space-y-8 text-slate-700 leading-relaxed font-sans">
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">1. General</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
                 <p>
-                  LUXY GALLERIA operates this website to provide beauty/cosmetic products. By using this site, you confirm that you are at least 18 years old or using it under supervision.
+                  These Terms & Conditions govern your access to and use of the LUXY GALLERIA website and services. By using this site, you agree to comply with these terms.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Products & Pricing</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Product Information</h2>
+                <p>
+                  We make every effort to present accurate product information, pricing, and availability. However, LUXY GALLERIA does not guarantee that all information is error-free.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Orders & Payments</h2>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>All prices are listed in INR (₹)</li>
-                  <li>We reserve the right to change prices anytime without notice</li>
-                  <li>Product colors may slightly vary due to screen settings</li>
+                  <li>Orders are confirmed only after successful payment.</li>
+                  <li>Payments are processed through licensed payment gateways.</li>
+                  <li>We may cancel orders for stock unavailability, pricing errors, or suspected fraudulent activity.</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Orders</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Shipping & Delivery</h2>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Orders are confirmed only after successful payment</li>
-                  <li>We reserve the right to cancel orders due to stock issues or suspicious activity</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Shipping</h2>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Delivery timelines may vary depending on location</li>
-                  <li>Delays due to courier issues are not under our control</li>
+                  <li>Delivery timelines are estimates and depend on the destination and courier partner.</li>
+                  <li>Shipping fees are displayed during checkout and depend on the order details.</li>
+                  <li>LUXY GALLERIA is not responsible for delays caused by courier services or external disruptions.</li>
                 </ul>
               </section>
 
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Returns & Refunds</h2>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Returns accepted within 7 days of delivery</li>
-                  <li>Products must be unused and in original packaging</li>
-                  <li>Refunds will be processed within 5-7 business days</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Intellectual Property</h2>
                 <p>
-                  All content (logo, images, text) belongs to LUXY GALLERIA and cannot be copied or reused.
+                  Returns and refunds are subject to our return policy. Please inspect items on delivery and raise any concerns promptly.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Limitation of Liability</h2>
-                <p className="mb-4">LUXY GALLERIA is not liable for:</p>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">6. User Conduct</h2>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Allergic reactions (please do patch test)</li>
-                  <li>Delays in delivery</li>
-                  <li>Indirect damages</li>
+                  <li>Provide accurate account and shipping information.</li>
+                  <li>Do not use the website for unlawful or unauthorized activities.</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Governing Law</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Intellectual Property</h2>
                 <p>
-                  These terms are governed by the laws of India.
+                  All content on this site, including text, images, logos, and designs, is the property of LUXY GALLERIA and may not be used without permission.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Contact Us</h2>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Limitation of Liability</h2>
+                <p>
+                  LUXY GALLERIA is not liable for any indirect, incidental, or consequential losses, including allergic reactions, delays, or loss of income.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Governing Law</h2>
+                <p>
+                  These Terms are governed by the laws of India. Any disputes will be subject to the jurisdiction of Indian courts.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Contact Us</h2>
                 <p className="mb-2">Email: <a href="mailto:infoluxygalleria@gmail.com" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">infoluxygalleria@gmail.com</a></p>
                 <p>Phone: <a href="tel:+919074881551" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">9074881551</a></p>
               </section>

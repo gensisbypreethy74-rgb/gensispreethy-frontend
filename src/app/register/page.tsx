@@ -67,10 +67,15 @@ export default function RegisterPage() {
         }]
       });
 
+      console.log('📨 Registration response:', response.data);
+
       // Check if OTP is returned (development mode)
       if (response.data.data?.otp) {
         // Store OTP temporarily for display
         sessionStorage.setItem('dev_otp', response.data.data.otp);
+        console.log('✅ OTP stored in sessionStorage:', response.data.data.otp);
+      } else {
+        console.log('⚠️ No OTP in response. Check if backend is in development mode.');
       }
 
       // Success! Redirect to OTP verification page

@@ -29,7 +29,7 @@ export default function DynamicBanner() {
   if (!settings || !settings.isBannerActive || !settings.bannerText) return null;
 
   return (
-    <div className="bg-[#A68B5B] text-white text-sm font-semibold text-center py-2 px-4 shadow-sm relative z-[60]">
+    <div className="bg-[#A68B5B] text-white text-sm font-semibold text-center py-2 px-4 shadow-sm relative z-[60] whitespace-pre-wrap break-words">
       {settings.bannerText}
     </div>
   );
