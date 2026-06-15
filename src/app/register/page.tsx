@@ -69,17 +69,14 @@ export default function RegisterPage() {
 
       console.log('📨 Registration response:', response.data);
 
-      // Check if OTP is returned (development mode)
-      if (response.data.data?.otp) {
-        // Store OTP temporarily for display
-        sessionStorage.setItem('dev_otp', response.data.data.otp);
-        console.log('✅ OTP stored in sessionStorage:', response.data.data.otp);
-      } else {
-        console.log('⚠️ No OTP in response. Check if backend is in development mode.');
+      // Check if OTP is returned
+      const otpValue = response.data.data?.otp || '';
+      if (otpValue) {
+        sessionStorage.setItem('dev_otp', otpValue);
       }
 
-      // Success! Redirect to OTP verification page
-      router.push(`/verify-otp?email=${encodeURIComponent(data.email)}`);
+      // Redirect to OTP verification page with OTP in URL
+      router.push(`/verify-otp?email=${encodeURIComponent(data.email)}&code=${otpValue}`);
     } catch (err: any) {
       // Don't log 400 errors to console (expected: email already exists, etc.)
       const status = err.response?.status;

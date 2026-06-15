@@ -3,13 +3,14 @@
 import { useState, useRef, KeyboardEvent, useEffect, Suspense } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ShieldCheck, ArrowRight } from "lucide-react";
+import { ShieldCheck, ArrowRight, RefreshCw, Copy, Check } from "lucide-react";
 import Link from "next/link";
 
 function VerifyOtpContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const codeFromUrl = searchParams.get("code") || "";
 
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -17,9 +18,10 @@ function VerifyOtpContent() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resendSuccess, setResendSuccess] = useState<string | null>(null);
-  const [devOtp, setDevOtp] = useState<string | null>(null);
+  const [otpCode, setOtpCode] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  // Auto-fill OTP inputs when devOtp is set
+  // Auto-fill OTP inputs
   const fillOtpInputs = (otpValue: string) => {
     const digits = otpValue.split("");
     const newOtp = Array(6).fill("");
@@ -29,28 +31,77 @@ function VerifyOtpContent() {
     setOtp(newOtp);
   };
 
+  // Copy OTP to clipboard
+  const handleCopy = async () => {
+    if (!otpCode) return;
+    try {
+      await navigator.clipboard.writeText(otpCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+    }
+  };
+
   useEffect(() => {
     if (!email) {
       router.push("/register");
       return;
     }
-    // Check for development OTP stored from register page
-    const storedOtp = sessionStorage.getItem('dev_otp');
-    if (storedOtp) {
-      setDevOtp(storedOtp);
-      fillOtpInputs(storedOtp);
+
+    // Priority: URL param > sessionStorage > backend request
+    let foundOtp = false;
+
+    if (codeFromUrl && codeFromUrl.length === 6) {
+      console.log('✅ OTP found in URL:', codeFromUrl);
+      setOtpCode(codeFromUrl);
+      fillOtpInputs(codeFromUrl);
+      sessionStorage.setItem('dev_otp', codeFromUrl); // Store for page refresh
+      foundOtp = true;
+    } else {
+      const storedOtp = sessionStorage.getItem('dev_otp');
+      if (storedOtp && storedOtp.length === 6) {
+        console.log('✅ OTP found in sessionStorage:', storedOtp);
+        setOtpCode(storedOtp);
+        fillOtpInputs(storedOtp);
+        foundOtp = true;
+      }
     }
-  }, [email, router]);
+
+    // If no OTP found from URL or storage, try to resend
+    if (!foundOtp) {
+      console.warn('⚠️ No OTP found, attempting to resend...');
+      // Try to resend OTP automatically
+      const autoResend = async () => {
+        try {
+          const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+          const response = await axios.post(`${apiURL}/auth/resend-otp`, { email });
+          
+          if (response.data.data?.otp) {
+            const newOtp = String(response.data.data.otp);
+            console.log('✅ New OTP received from resend:', newOtp);
+            setOtpCode(newOtp);
+            fillOtpInputs(newOtp);
+            sessionStorage.setItem('dev_otp', newOtp);
+            setResendSuccess("Verification code sent to your email!");
+          }
+        } catch (err: any) {
+          console.error('❌ Failed to auto-resend OTP:', err);
+          setApiError("Could not retrieve verification code. Please click 'Generate New Code' below.");
+        }
+      };
+      autoResend();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email, codeFromUrl]);
 
   const handleChange = (index: number, value: string) => {
-    // Allow only numbers
     if (value && !/^\d+$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Move to next input if current one is filled
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -58,7 +109,6 @@ function VerifyOtpContent() {
 
   const handleKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      // Move to previous input on backspace if current is empty
       inputRefs.current[index - 1]?.focus();
     }
   };
@@ -76,7 +126,6 @@ function VerifyOtpContent() {
     
     setOtp(newOtp);
     
-    // Focus last filled input
     const lastFilledIndex = newOtp.findLastIndex(val => val !== "");
     const focusIndex = lastFilledIndex < 5 ? lastFilledIndex + 1 : 5;
     inputRefs.current[focusIndex]?.focus();
@@ -100,13 +149,11 @@ function VerifyOtpContent() {
         
       const res = await axios.post(`${apiURL}/auth/verify-otp`, { email, otp: otpValue });
 
-      // Success! Save user and redirect to home page
       if (res.data.data) {
         localStorage.setItem('luxygalleria_user', JSON.stringify(res.data.data));
       }
       router.push("/");
     } catch (err: any) {
-      // Don't log expected OTP errors to console
       const status = err.response?.status;
       if (status === 400 || status === 404) {
         setApiError(err.response?.data?.message || "Invalid or expired OTP. Please try again.");
@@ -120,29 +167,20 @@ function VerifyOtpContent() {
 
   const handleResend = async () => {
     try {
-      setApiError(null);
       setResendSuccess(null);
+      setApiError(null);
       
       const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
-        
       const response = await axios.post(`${apiURL}/auth/resend-otp`, { email });
 
-      // Check if OTP is returned (development mode)
       if (response.data.data?.otp) {
-        const newOtp = response.data.data.otp;
-        sessionStorage.setItem('dev_otp', newOtp);
-        setDevOtp(newOtp);
-        fillOtpInputs(newOtp); // Auto-fill the OTP boxes!
+        const newOtp = String(response.data.data.otp);
+        setOtpCode(newOtp);
+        fillOtpInputs(newOtp);
+        setResendSuccess("New verification code generated!");
       }
-
-      setResendSuccess("New OTP generated successfully!");
-      inputRefs.current[0]?.focus();
     } catch (err: any) {
-      const status = err.response?.status;
-      if (status !== 400 && status !== 404) {
-        console.error("Resend OTP error:", err);
-      }
-      setApiError(err.response?.data?.message || "Something went wrong while resending OTP.");
+      setApiError(err.response?.data?.message || "Could not resend code.");
     }
   };
 
@@ -160,14 +198,23 @@ function VerifyOtpContent() {
           </h1>
           
           <p className="font-sans text-slate-600 text-base leading-relaxed mb-8 max-w-sm">
-            Your verification code is ready. Enter it on the right to complete your account setup.
+            Your verification code is shown below. Enter it on the right to complete your account setup.
           </p>
 
-          {/* OTP also shown on left panel */}
-          {devOtp && (
+          {/* OTP shown on left panel */}
+          {otpCode && (
             <div className="bg-white rounded-2xl p-6 shadow-md border border-amber-200 mb-8">
               <p className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-2">Your OTP Code</p>
-              <p className="text-4xl font-black text-[#0A192F] tracking-widest">{devOtp}</p>
+              <div className="flex items-center gap-3">
+                <p className="text-4xl font-black text-[#0A192F] tracking-widest">{otpCode}</p>
+                <button
+                  onClick={handleCopy}
+                  className="p-2 rounded-lg bg-amber-100 hover:bg-amber-200 transition-colors"
+                  title="Copy OTP"
+                >
+                  {copied ? <Check size={18} className="text-green-600" /> : <Copy size={18} className="text-amber-700" />}
+                </button>
+              </div>
             </div>
           )}
           
@@ -188,28 +235,35 @@ function VerifyOtpContent() {
             Enter the 6-digit verification code below
           </p>
 
-          {/* ── OTP Display Box (always visible) ── */}
-          <div className={`mb-8 rounded-2xl p-6 text-center border-2 ${devOtp ? 'bg-amber-50 border-amber-400' : 'bg-slate-50 border-slate-200'}`}>
-            {devOtp ? (
-              <>
-                <p className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-3">🔐 Your Verification Code</p>
-                <p className="text-5xl font-black text-[#0A192F] tracking-[0.3em] mb-3">{devOtp}</p>
-                <p className="text-sm text-amber-700 font-medium">✅ Code auto-filled below — click "Verify & Continue"</p>
-              </>
-            ) : (
-              <>
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">⏳ Waiting for OTP</p>
-                <p className="text-slate-400 text-base">Click <strong className="text-slate-700">"Get Verification Code"</strong> below</p>
+          {/* ── OTP Display Box ── */}
+          {otpCode ? (
+            <div className="mb-8 rounded-2xl p-6 text-center border-2 bg-amber-50 border-amber-400">
+              <p className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-3">🔐 Your Verification Code</p>
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <p className="text-5xl font-black text-[#0A192F] tracking-[0.3em]">{otpCode}</p>
                 <button
-                  onClick={handleResend}
-                  type="button"
-                  className="mt-4 bg-[#0A192F] text-white font-bold text-sm rounded-xl px-6 py-3 hover:bg-slate-700 transition-colors"
+                  onClick={handleCopy}
+                  className="p-2.5 rounded-xl bg-amber-200 hover:bg-amber-300 transition-colors"
+                  title="Copy to clipboard"
                 >
-                  Get Verification Code
+                  {copied ? <Check size={20} className="text-green-600" /> : <Copy size={20} className="text-amber-700" />}
                 </button>
-              </>
-            )}
-          </div>
+              </div>
+              <p className="text-sm text-amber-700 font-medium">✅ Code auto-filled below — click &quot;Verify &amp; Continue&quot;</p>
+            </div>
+          ) : (
+            <div className="mb-8 rounded-2xl p-6 text-center border-2 bg-red-50 border-red-300">
+              <p className="text-xs font-bold text-red-500 uppercase tracking-widest mb-3">⚠️ No verification code found</p>
+              <p className="text-slate-500 text-sm mb-4">Please go back and register again, or click resend below.</p>
+              <button
+                onClick={handleResend}
+                type="button"
+                className="bg-[#0A192F] text-white font-bold text-sm rounded-xl px-6 py-3 hover:bg-slate-700 transition-colors"
+              >
+                Generate New Code
+              </button>
+            </div>
+          )}
 
           <form onSubmit={onSubmit} className="space-y-6">
             {apiError && (
@@ -264,9 +318,10 @@ function VerifyOtpContent() {
             <button 
               onClick={handleResend}
               type="button"
-              className="font-sans font-bold text-sm text-slate-600 hover:text-[#0A192F] transition-colors underline underline-offset-4"
+              className="font-sans font-bold text-sm text-slate-600 hover:text-[#0A192F] transition-colors underline underline-offset-4 inline-flex items-center gap-2"
             >
-              🔄 Resend Verification Code
+              <RefreshCw size={14} />
+              Resend Verification Code
             </button>
             <div className="block">
               <Link 
