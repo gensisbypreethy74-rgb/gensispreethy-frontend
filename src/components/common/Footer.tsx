@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -14,25 +13,26 @@ const socials = [
   { src: "/social/youtube.svg", label: "YouTube", href: "https://youtube.com/@luxysnackstation?si=oqzX6swsa1f5hYBz" },
 ];
 
+const footerLinks = [
+  { label: "About Us", href: "/about" },
+  { label: "Shop", href: "/products" },
+  { label: "Contact Us", href: "/contact-us" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms & Conditions", href: "/terms-and-conditions" },
+];
+
 export default function Footer() {
-  const [footerText, setFooterText] = useState("Luxy Food is a trusted online food store offering quality food products with freshness, taste, and customer satisfaction at the core. We provide a wide range of carefully selected products, making it easy for customers to browse, order, and receive their favorite food items conveniently. Our goal is to deliver quality products, reliable service, and a seamless shopping experience.");
-  const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [footerText, setFooterText] = useState("Luxy Galleria is a trusted online store offering premium quality imported snacks, drinks, and more — with freshness, taste, and customer satisfaction at the core. We provide a wide range of carefully selected products, making it easy for customers to browse, order, and receive their favourite items conveniently.");
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
         const apiURL = getAPIURL();
         const res = await axios.get(`${apiURL}/settings`);
-        if (res.data.success && res.data.data) {
-          if (res.data.data.footerText) {
-            setFooterText(res.data.data.footerText);
-          }
-          if (res.data.data.whatsappNumber) {
-            setWhatsappNumber(res.data.data.whatsappNumber);
-          }
+        if (res.data.success && res.data.data?.footerText) {
+          setFooterText(res.data.data.footerText);
         }
-      } catch (error) {
-        console.error("Failed to fetch footer settings:", error);
+      } catch {
         // Use default text if fetch fails
       }
     };
@@ -40,16 +40,18 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-[#f8efe6] w-full border-t border-[#e7d7c6]">
+    <footer className="bg-[#111] text-white w-full">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+          {/* Brand column */}
           <div className="lg:col-span-5">
-            <Link href="/" className="inline-flex items-center mb-6 rounded-[28px] bg-white p-3 shadow-sm shadow-[#e4d3c5]/50">
-              <div className="h-20 w-20 flex items-center justify-center overflow-hidden">
+            <Link href="/" className="inline-flex items-center mb-6 rounded-2xl bg-white/5 border border-white/10 p-3">
+              <div className="h-16 w-16 flex items-center justify-center overflow-hidden">
                 <img src="/luxy_logo.png" alt="Luxy Galleria" className="h-full w-full object-contain" />
               </div>
             </Link>
-            <p className="max-w-lg text-base leading-8 text-[#8a6b4f]">
+            <p className="max-w-md text-sm leading-7 text-slate-400">
               {footerText}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -59,14 +61,57 @@ export default function Footer() {
                   href={href}
                   aria-label={label}
                   rel="noopener noreferrer"
-                  className="flex h-14 w-14 items-center justify-center rounded-full bg-white border border-[#d9c0a3] shadow-sm transition hover:bg-[#f7efe7]"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 border border-white/10 transition hover:bg-white/10"
                   target="_blank"
                   referrerPolicy="no-referrer"
                 >
-                  <img src={src} alt={label} className="h-6 w-6 object-contain" />
+                  <img src={src} alt={label} className="h-5 w-5 object-contain brightness-0 invert" />
                 </a>
               ))}
             </div>
+          </div>
+
+          {/* Links column */}
+          <div className="lg:col-span-3 lg:col-start-7">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-6">Quick Links</h3>
+            <ul className="space-y-3">
+              {footerLinks.map(({ label, href }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact column */}
+          <div className="lg:col-span-3 lg:col-start-10">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-6">Contact</h3>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li>
+                <a href="mailto:infoluxygalleria@gmail.com" className="hover:text-white transition-colors">
+                  infoluxygalleria@gmail.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+919074881551" className="hover:text-white transition-colors">
+                  +91 9074881551
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+          <p>© {new Date().getFullYear()} Luxy Galleria. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="/privacy-policy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-slate-400 transition-colors">Terms & Conditions</Link>
           </div>
         </div>
       </div>

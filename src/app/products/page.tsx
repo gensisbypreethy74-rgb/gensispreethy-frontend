@@ -192,8 +192,8 @@ function FilterSidebar({
     <aside aria-label="Product filters" className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="font-sans font-bold text-xl tracking-wider uppercase text-slate-900">FILTERS</h2>
-        <button onClick={onClear} className="font-sans font-semibold text-sm text-[#A68B5B] hover:text-[#6B4423] transition-colors">
+        <h2 className="font-sans font-bold text-xl tracking-wider uppercase text-white">FILTERS</h2>
+        <button onClick={onClear} className="font-sans font-semibold text-sm text-[#A68B5B] hover:text-[#c9a87c] transition-colors">
           CLEAR
         </button>
       </div>
@@ -203,15 +203,15 @@ function FilterSidebar({
         <p className="font-sans font-semibold text-xs tracking-[0.15em] uppercase text-slate-400 mb-4">
           SHOP BY CATEGORY
         </p>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5">
           {categories.map((cat) => (
             <button
               key={cat.id}
               aria-pressed={activeCategory === cat.id}
               onClick={() => onCategoryChange(cat.id)}
               className={`px-5 py-3 rounded-xl font-sans font-medium text-sm text-left transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 ${activeCategory === cat.id
-                ? "bg-slate-900 text-white"
-                : "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200"
+                ? "bg-[#A68B5B] text-white"
+                : "bg-[#1a1a1a] text-slate-300 border border-[#2a2a2a] hover:bg-[#252525] hover:text-white"
                 }`}
             >
               {cat.label}
@@ -233,7 +233,7 @@ function FilterSidebar({
               <div
                 key={i}
                 style={{ height: `${bar.height}%` }}
-                className="flex-1 rounded-full bg-[#A68B5B]/60"
+                className="flex-1 rounded-full bg-[#A68B5B]/50"
               />
             ))}
           </div>
@@ -244,29 +244,22 @@ function FilterSidebar({
             onClick={handleTrackClick}
             className="relative h-3 w-full cursor-pointer z-10 -mt-1"
           >
-            {/* Unselected track (invisible or very faint to allow clicking) */}
             <div className="absolute inset-0 h-4 bg-transparent rounded-full -translate-y-0.5" />
-
-            {/* Active track */}
             <div
-              className="absolute h-3.5 bg-[#8B5E34] rounded-full top-1/2 -translate-y-1/2"
+              className="absolute h-3.5 bg-[#A68B5B] rounded-full top-1/2 -translate-y-1/2"
               style={{ left: `${getPercent(pendingMin)}%`, right: `${100 - getPercent(pendingMax)}%` }}
             />
-
-            {/* Min handle */}
             <div
-              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-grab"
+              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-7 h-7 bg-[#1a1a1a] border-2 border-[#A68B5B] rounded-full shadow-lg flex items-center justify-center cursor-grab"
               style={{ left: `${getPercent(pendingMin)}%` }}
             >
-              <div className="w-3.5 h-3.5 bg-[#8B5E34] rounded-full" />
+              <div className="w-2.5 h-2.5 bg-[#A68B5B] rounded-full" />
             </div>
-
-            {/* Max handle */}
             <div
-              className="absolute top-1/2 -translate-y-1/2 translate-x-1/2 w-7 h-7 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)] flex items-center justify-center cursor-grab"
+              className="absolute top-1/2 -translate-y-1/2 translate-x-1/2 w-7 h-7 bg-[#1a1a1a] border-2 border-[#A68B5B] rounded-full shadow-lg flex items-center justify-center cursor-grab"
               style={{ right: `${100 - getPercent(pendingMax)}%` }}
             >
-              <div className="w-3.5 h-3.5 bg-[#8B5E34] rounded-full" />
+              <div className="w-2.5 h-2.5 bg-[#A68B5B] rounded-full" />
             </div>
           </div>
         </div>
@@ -274,7 +267,7 @@ function FilterSidebar({
         {/* Min/Max inputs */}
         <div className="flex items-center gap-3">
           <div className="flex-1">
-            <p className="font-sans font-semibold text-[10px] tracking-wider uppercase text-slate-400 mb-1">MIN (₹)</p>
+            <p className="font-sans font-semibold text-[10px] tracking-wider uppercase text-slate-500 mb-1">MIN (₹)</p>
             <input
               type="number"
               aria-label="Minimum price"
@@ -282,12 +275,12 @@ function FilterSidebar({
               min={0}
               max={pendingMax - 1}
               onChange={(e) => onMinChange(Math.min(Number(e.target.value), pendingMax - 1))}
-              className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-center font-bold text-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50"
+              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-3 text-center font-bold text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50"
             />
           </div>
-          <span className="text-slate-400 mt-5 font-bold">—</span>
+          <span className="text-slate-500 mt-5 font-bold">—</span>
           <div className="flex-1">
-            <p className="font-sans font-semibold text-[10px] tracking-wider uppercase text-slate-400 mb-1">MAX (₹)</p>
+            <p className="font-sans font-semibold text-[10px] tracking-wider uppercase text-slate-500 mb-1">MAX (₹)</p>
             <input
               type="number"
               aria-label="Maximum price"
@@ -295,7 +288,7 @@ function FilterSidebar({
               min={pendingMin + 1}
               max={PRICE_MAX}
               onChange={(e) => onMaxChange(Math.max(Number(e.target.value), pendingMin + 1))}
-              className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-center font-bold text-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50"
+              className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-3 text-center font-bold text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50"
             />
           </div>
         </div>
@@ -303,7 +296,7 @@ function FilterSidebar({
         {/* Apply */}
         <button
           onClick={onApply}
-          className="mt-4 w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-sm tracking-[0.15em] uppercase hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 motion-reduce:transition-none"
+          className="mt-4 w-full bg-[#A68B5B] text-white py-4 rounded-xl font-bold text-sm tracking-[0.15em] uppercase hover:bg-[#8B7048] transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 motion-reduce:transition-none"
         >
           APPLY FILTER
         </button>
@@ -525,7 +518,7 @@ function ProductsContent() {
       <div className="flex min-h-[calc(100vh-5rem)]">
 
         {/* ── Desktop Sidebar ─────────────────────────────────────── */}
-        <aside className="hidden lg:block w-72 xl:w-80 bg-slate-50 border-r border-slate-200 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto shrink-0">
+        <aside className="hidden lg:block w-72 xl:w-80 bg-[#0f0f0f] border-r border-[#1a1a1a] sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto shrink-0">
           <FilterSidebar {...sidebarProps} />
         </aside>
 
@@ -537,13 +530,13 @@ function ProductsContent() {
               onClick={() => setDrawerOpen(false)}
               aria-hidden="true"
             />
-            <div className="fixed inset-y-0 left-0 z-50 w-80 max-w-full bg-white overflow-y-auto lg:hidden shadow-2xl">
+            <div className="fixed inset-y-0 left-0 z-50 w-80 max-w-full bg-[#0f0f0f] overflow-y-auto lg:hidden shadow-2xl">
               <div className="flex items-center justify-between px-6 pt-6 pb-2">
-                <span className="font-bold text-xl uppercase tracking-wider text-slate-900">Filters</span>
+                <span className="font-bold text-xl uppercase tracking-wider text-white">Filters</span>
                 <button
                   onClick={() => setDrawerOpen(false)}
                   aria-label="Close filters"
-                  className="p-2 rounded-full hover:bg-slate-100 transition-colors"
+                  className="p-2 rounded-full hover:bg-[#1a1a1a] text-white transition-colors"
                 >
                   <X size={20} />
                 </button>

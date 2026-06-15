@@ -124,7 +124,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-      <div className="relative h-20 lg:h-24 px-6 lg:px-12 flex items-center justify-between transition-all duration-300">
+      <div className="relative h-14 lg:h-16 px-4 lg:px-10 flex items-center justify-between transition-all duration-300">
       {/* ── Mobile Menu Toggle & Profile (Left on Mobile) ── */}
       <div className="flex md:hidden flex-1 justify-start items-center gap-1 relative z-20">
         <button
@@ -146,7 +146,7 @@ export default function Navbar() {
       {/* ── Logo (Center on Mobile, Left on Desktop) ── */}
       <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none z-10 overflow-hidden">
         <Link href="/" className="flex-shrink-0 overflow-hidden" aria-label="Luxy Galleria home">
-          <div className="w-36 sm:w-44 md:w-52 lg:w-56 h-14 lg:h-16 flex items-center justify-center md:justify-start overflow-hidden">
+          <div className="w-28 sm:w-32 md:w-36 lg:w-40 h-9 lg:h-11 flex items-center justify-center md:justify-start overflow-hidden">
             <img
               src="/luxy_logo.png"
               alt="Luxy Galleria Logo"
@@ -419,7 +419,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-24 left-0 right-0 bg-white border-b border-slate-200 px-6 py-4 md:hidden shadow-lg z-40"
+            className="absolute top-14 left-0 right-0 bg-white border-b border-slate-200 px-6 py-4 md:hidden shadow-lg z-40"
           >
             <form onSubmit={handleSearch} className="flex items-center gap-3">
               <div className="relative flex-1">
@@ -504,7 +504,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="absolute top-24 left-0 right-0 bg-white border-b border-slate-200 shadow-lg z-30 md:hidden overflow-hidden"
+            className="absolute top-14 left-0 right-0 bg-white border-b border-slate-200 shadow-lg z-30 md:hidden overflow-hidden"
           >
             <nav className="flex flex-col px-6 py-4 gap-2">
               <Link

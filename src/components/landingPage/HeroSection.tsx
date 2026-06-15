@@ -30,9 +30,9 @@ const DEFAULT_SLIDES: ISlide[] = [
     id: "default-1",
     image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1200&auto=format&fit=crop",
     mobileImage: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop",
-    alt: "Premium skincare dynamic hydration",
-    headline: "DYNAMIC HYDRATION",
-    subheadline: "Sweat-resistant, feather-light, invisible finish.",
+    alt: "Luxy Galleria premium imported products",
+    headline: "TASTE THE WORLD",
+    subheadline: "Premium imported snacks, drinks & more — delivered to your door.",
   },
 ];
 
