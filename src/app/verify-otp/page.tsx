@@ -83,7 +83,9 @@ function VerifyOtpContent() {
             setOtpCode(newOtp);
             fillOtpInputs(newOtp);
             sessionStorage.setItem('dev_otp', newOtp);
-            setResendSuccess("Verification code sent to your email!");
+            setResendSuccess("✅ Verification code received! Check your email or use the code shown above.");
+          } else {
+            throw new Error('No OTP in response');
           }
         } catch (err: any) {
           console.error('❌ Failed to auto-resend OTP:', err);
@@ -250,18 +252,15 @@ function VerifyOtpContent() {
                 </button>
               </div>
               <p className="text-sm text-amber-700 font-medium">✅ Code auto-filled below — click &quot;Verify &amp; Continue&quot;</p>
+              <p className="text-xs text-amber-600 mt-2">📧 Also sent to your email: <strong>{email}</strong></p>
             </div>
           ) : (
-            <div className="mb-8 rounded-2xl p-6 text-center border-2 bg-red-50 border-red-300">
-              <p className="text-xs font-bold text-red-500 uppercase tracking-widest mb-3">⚠️ No verification code found</p>
-              <p className="text-slate-500 text-sm mb-4">Please go back and register again, or click resend below.</p>
-              <button
-                onClick={handleResend}
-                type="button"
-                className="bg-[#0A192F] text-white font-bold text-sm rounded-xl px-6 py-3 hover:bg-slate-700 transition-colors"
-              >
-                Generate New Code
-              </button>
+            <div className="mb-8 rounded-2xl p-6 text-center border-2 bg-blue-50 border-blue-300">
+              <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">⏳ Retrieving verification code...</p>
+              <p className="text-slate-500 text-sm mb-4">We're fetching your OTP from the server. Please wait...</p>
+              <div className="flex justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-600"></div>
+              </div>
             </div>
           )}
 
