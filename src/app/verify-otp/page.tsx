@@ -76,35 +76,53 @@ function VerifyOtpContent() {
         try {
           const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
           console.log('📡 Calling resend-otp endpoint:', `${apiURL}/auth/resend-otp`);
+          console.log('📧 Email parameter:', email);
           
           const response = await axios.post(`${apiURL}/auth/resend-otp`, { email }, {
             timeout: 10000 // 10 second timeout
           });
           
-          console.log('📨 Resend response:', response.data);
+          console.log('📨 Full resend response:', response.data);
+          console.log('📨 Response structure:', {
+            success: response.data.success,
+            message: response.data.message,
+            data: response.data.data,
+            otp: response.data.data?.otp
+          });
           
-          if (response.data.data?.otp) {
+          if (response.data.success && response.data.data?.otp) {
             const newOtp = String(response.data.data.otp).trim();
-            if (newOtp.length === 6) {
+            if (newOtp.length === 6 && /^\d+$/.test(newOtp)) {
               console.log('✅ New OTP received from resend:', newOtp);
               setOtpCode(newOtp);
               fillOtpInputs(newOtp);
               sessionStorage.setItem('dev_otp', newOtp);
               setResendSuccess("✅ Verification code received! Check your email or use the code shown above.");
+              return;
             } else {
-              throw new Error(`Invalid OTP format: ${newOtp}`);
+              console.warn('⚠️ OTP format invalid:', { value: newOtp, length: newOtp.length, isNumeric: /^\d+$/.test(newOtp) });
+              throw new Error(`Invalid OTP format: ${newOtp} (length: ${newOtp.length})`);
             }
           } else {
-            throw new Error('No OTP in response data');
+            console.error('❌ Invalid response structure:', {
+              success: response.data.success,
+              hasData: !!response.data.data,
+              hasOtp: !!response.data.data?.otp,
+              statusCode: response.status
+            });
+            throw new Error(`Invalid response structure: success=${response.data.success}, hasOtp=${!!response.data.data?.otp}`);
           }
         } catch (err: any) {
           console.error('❌ Failed to auto-resend OTP:', err.message);
-          console.error('Error details:', {
+          console.error('Error full details:', {
+            message: err.message,
+            code: err.code,
             status: err.response?.status,
-            data: err.response?.data,
-            message: err.message
+            statusText: err.response?.statusText,
+            responseData: err.response?.data,
+            email: email
           });
-          setApiError("Could not retrieve verification code. Please click 'Generate New Code' below.");
+          setApiError("Could not retrieve verification code. Please click 'Generate New Code' below. Error: " + (err.response?.data?.message || err.message));
         }
       };
       autoResend();
