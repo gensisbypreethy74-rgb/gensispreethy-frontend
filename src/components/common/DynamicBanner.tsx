@@ -56,17 +56,17 @@ export default function DynamicBanner() {
       <div className="marquee-track">
         {/* First track */}
         <div className="flex shrink-0">
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
         </div>
         {/* Second identical track for seamless loop */}
         <div className="flex shrink-0" aria-hidden="true">
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
-          <span className="px-6 sm:px-12 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
+          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
         </div>
       </div>
     </div>

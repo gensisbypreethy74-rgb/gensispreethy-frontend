@@ -219,6 +219,10 @@ export default function CheckoutPage() {
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
+      if ((window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => resolve(true);
@@ -268,7 +272,8 @@ export default function CheckoutPage() {
 
       // Call backend to create Razorpay order only (no DB save yet)
       const createOrderRes = await axios.post(`${API_URL}/payments/create-order`, {
-        total
+        total,
+        items: orderItems,
       }, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
