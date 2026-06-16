@@ -287,6 +287,18 @@ function VerifyOtpContent() {
               <p className="text-sm text-amber-700 font-medium">✅ Code auto-filled below — click &quot;Verify &amp; Continue&quot;</p>
               {email && <p className="text-xs text-amber-600 mt-2">📧 Also sent to your email: <strong>{email}</strong></p>}
             </div>
+          ) : apiError ? (
+            <div className="mb-8 rounded-2xl p-6 text-center border-2 bg-red-50 border-red-300">
+              <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-3">⚠️ Unable to get verification code</p>
+              <p className="text-slate-600 text-sm mb-4">{apiError}</p>
+              <button
+                onClick={handleResend}
+                type="button"
+                className="bg-[#0A192F] text-white font-bold text-sm rounded-xl px-6 py-3 hover:bg-slate-700 transition-colors"
+              >
+                Generate New Code
+              </button>
+            </div>
           ) : (
             <div className="mb-8 rounded-2xl p-6 text-center border-2 bg-blue-50 border-blue-300">
               <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">⏳ Retrieving verification code...</p>
