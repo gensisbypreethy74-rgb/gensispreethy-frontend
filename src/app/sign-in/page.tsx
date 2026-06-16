@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Eye, EyeOff, ShieldCheck, UserPlus, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, ShieldCheck, UserPlus, ArrowRight, Mail } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
 import GoogleAuthButton from "../../components/auth/GoogleAuthButton";
 import { getAPIURL } from "../../lib/apiClient";
@@ -34,10 +34,12 @@ export default function SignInPage() {
   const router = useRouter();
   const { showToast } = useToast();
   const [apiError, setApiError] = useState<string | null>(null);
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
 
   const onSubmit = async (data: SignInValues) => {
     try {
       setApiError(null);
+      setUnverifiedEmail(null);
       const apiURL = getAPIURL();
       const res = await axios.post(`${apiURL}/auth/customer-login`, {
         email: data.email,
@@ -58,7 +60,13 @@ export default function SignInPage() {
       if (status === 401) {
         setApiError("Invalid email or password. Please try again.");
       } else if (status === 403) {
-        setApiError(serverMsg || "Account not verified. Please check your email for OTP.");
+        // Check if it's an unverified email error - redirect to verify-otp
+        if (serverMsg && serverMsg.toLowerCase().includes('verify')) {
+          setUnverifiedEmail(data.email);
+          setApiError(null);
+        } else {
+          setApiError(serverMsg || "Account not verified. Please check your email for OTP.");
+        }
       } else {
         console.error("Sign in error:", err);
         setApiError(serverMsg || "Something went wrong. Please try again.");
@@ -111,6 +119,27 @@ export default function SignInPage() {
               Don't have an account yet? <Link href="/register" className="font-bold underline hover:text-blue-900">Create one first</Link>, verify your email with OTP, then login here.
             </p>
           </div>
+
+          {/* Unverified Email Banner */}
+          {unverifiedEmail && (
+            <div className="mb-8 p-5 bg-amber-50 border-2 border-amber-300 rounded-xl">
+              <div className="flex items-start gap-3">
+                <Mail size={20} className="text-amber-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold text-amber-800 mb-1">Email not verified yet!</p>
+                  <p className="text-sm text-amber-700 mb-3">
+                    Please verify your email address <strong>{unverifiedEmail}</strong> to continue.
+                  </p>
+                  <button
+                    onClick={() => router.push(`/verify-otp?email=${encodeURIComponent(unverifiedEmail)}`)}
+                    className="bg-amber-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors"
+                  >
+                    Verify Email Now →
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
             {apiError && (

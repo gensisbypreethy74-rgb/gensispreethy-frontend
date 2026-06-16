@@ -119,7 +119,7 @@ export default function CategorySection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-white pt-12 md:pt-20 lg:pt-24 w-full">
+    <section ref={sectionRef} className="bg-background pt-12 md:pt-20 lg:pt-24 w-full">
       {/* Section Header */}
       <div className="text-center px-6 md:px-12 max-w-4xl mx-auto mb-8 md:mb-16">
         <p

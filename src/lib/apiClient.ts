@@ -58,16 +58,25 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('API Error:', error.response?.status, error.response?.data || error.message);
+    const status = error.response?.status;
+
+    // Only log unexpected errors (not 401/403 on public/guest routes)
+    if (status !== 401 && status !== 403) {
+      console.error('API Error:', status, error.response?.data || error.message);
+    }
     
-    if (error.response?.status === 401) {
-      // Token expired or invalid - clear storage
+    if (status === 401) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('luxygalleria_user');
-        // Only redirect if not already on sign-in page
-        if (window.location.pathname !== '/sign-in') {
-          window.location.href = '/sign-in?redirect=' + encodeURIComponent(window.location.pathname);
+        // Don't redirect if user isn't logged in at all (no stored user)
+        const storedUser = localStorage.getItem('luxygalleria_user');
+        if (storedUser) {
+          // Token expired - clear storage and redirect to login
+          localStorage.removeItem('luxygalleria_user');
+          if (window.location.pathname !== '/sign-in') {
+            window.location.href = '/sign-in?redirect=' + encodeURIComponent(window.location.pathname);
+          }
         }
+        // If no stored user, it's a guest trying a protected route - just reject silently
       }
     }
     return Promise.reject(error);

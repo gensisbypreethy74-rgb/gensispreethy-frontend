@@ -20,7 +20,7 @@ export default function AboutPage() {
         {/* Hero */}
         <section
           className="relative w-full pt-32 md:pt-40 pb-36 md:pb-48"
-          style={{ background: "linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2a1f14 100%)" }}
+          style={{ background: "linear-gradient(135deg, #2C1A10 0%, #422812 50%, #6B5344 100%)" }}
         >
           <div className="max-w-4xl mx-auto px-6 text-center">
             <div
@@ -84,13 +84,25 @@ export default function AboutPage() {
 
             <section>
               <h2 className="text-2xl font-bold text-slate-900 mb-4">Find Us On Social Media</h2>
-              <div className="flex flex-wrap gap-4">
-                <a href="https://www.instagram.com/luxygalleria" target="_blank" rel="noopener noreferrer" className="text-[#8B5E34] hover:text-[#5A3A1E] font-medium transition-colors">
-                  Instagram — @luxygalleria
+              <div className="flex flex-wrap items-center gap-y-2 gap-x-4">
+                <a href="https://www.facebook.com/share/1BLZJWnKyP/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-[#8B5E34] hover:text-[#5A3A1E] font-medium transition-colors">
+                  Facebook
                 </a>
                 <span className="text-slate-300">|</span>
-                <a href="https://www.instagram.com/luxysnackstation" target="_blank" rel="noopener noreferrer" className="text-[#8B5E34] hover:text-[#5A3A1E] font-medium transition-colors">
-                  Instagram — @luxysnackstation
+                <a href="https://www.instagram.com/luxygalleria?igsh=aDhpM2Zoc3FvejQw" target="_blank" rel="noopener noreferrer" className="text-[#8B5E34] hover:text-[#5A3A1E] font-medium transition-colors">
+                  Instagram (@luxygalleria)
+                </a>
+                <span className="text-slate-300">|</span>
+                <a href="https://www.instagram.com/luxysnackstation?igsh=MXAyNWQwZmZtaHoydQ==" target="_blank" rel="noopener noreferrer" className="text-[#8B5E34] hover:text-[#5A3A1E] font-medium transition-colors">
+                  Instagram (@luxysnackstation)
+                </a>
+                <span className="text-slate-300">|</span>
+                <a href="https://www.snapchat.com/add/luxygalleria" target="_blank" rel="noopener noreferrer" className="text-[#8B5E34] hover:text-[#5A3A1E] font-medium transition-colors">
+                  Snapchat
+                </a>
+                <span className="text-slate-300">|</span>
+                <a href="https://youtube.com/@luxysnackstation?si=oqzX6swsa1f5hYBz" target="_blank" rel="noopener noreferrer" className="text-[#8B5E34] hover:text-[#5A3A1E] font-medium transition-colors">
+                  YouTube
                 </a>
               </div>
             </section>

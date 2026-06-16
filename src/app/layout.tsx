@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/common/Navbar";
 import FloatingActions from "../components/common/FloatingActions";
-import DynamicBanner from "../components/common/DynamicBanner";
 import Footer from "../components/common/Footer";
 
 const geistSans = Geist({
@@ -48,8 +47,8 @@ export default function RootLayout({
           <CartProvider>
             <GoogleOAuthWrapper>
               <Navbar />
-              <div className="pt-16 lg:pt-20">
-                <DynamicBanner />
+              {/* pt accounts for fixed navbar (64px mobile / 80px desktop) + promo banner (~36px) */}
+              <div className="pt-20 lg:pt-28">
                 {children}
               </div>
               <Footer />

@@ -173,9 +173,9 @@ export default function HeroSection() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background"
           >
-            <h1 className="text-black font-sans font-black text-6xl md:text-8xl tracking-[0.2em] uppercase mb-8">
+            <h1 className="text-slate-900 font-sans font-black text-6xl md:text-8xl tracking-[0.2em] uppercase mb-8">
               LUXY GALLERIA
             </h1>
             <div className="w-64 md:w-80 h-[2px] bg-slate-100 overflow-hidden relative">

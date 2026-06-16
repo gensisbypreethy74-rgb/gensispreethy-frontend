@@ -142,7 +142,7 @@ function ProductCard({ product, isVisible, index }: { product: Product; isVisibl
             aria-label={`Add ${product.name} to cart`}
             className={`w-full text-white font-sans font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 ${isAdded
                 ? "bg-green-600 hover:bg-green-700"
-                : "bg-slate-900 hover:bg-slate-800"
+                : "bg-slate-500 hover:bg-slate-600"
               }`}
           >
             {isAdded ? "ADDED TO CART" : "ADD TO CART"}
@@ -207,7 +207,7 @@ export default function ProductSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-white pt-6 md:pt-12 pb-12 md:pb-20 w-full">
+    <section ref={sectionRef} className="bg-background pt-6 md:pt-12 pb-12 md:pb-20 w-full">
       {/* Section Header */}
       <div className="text-center px-6">
         <h2
@@ -217,7 +217,7 @@ export default function ProductSection() {
           OUR PRODUCTS
         </h2>
         <div
-          className={`w-20 h-1 bg-slate-900 mx-auto mt-4 mb-8 md:mb-12 transition-transform duration-500 delay-200 origin-center motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "scale-x-100" : "scale-x-0"
+          className={`w-20 h-1 bg-slate-500 mx-auto mt-4 mb-8 md:mb-12 transition-transform duration-500 delay-200 origin-center motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "scale-x-100" : "scale-x-0"
             }`}
         />
       </div>
@@ -240,7 +240,7 @@ export default function ProductSection() {
       <div className="flex justify-center mt-8 md:mt-12 px-6">
         <Link
           href="/products"
-          className="border border-slate-900 text-slate-900 font-sans font-bold text-xs md:text-sm uppercase tracking-widest py-4 px-12 hover:bg-slate-900 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2"
+          className="border border-slate-500 text-slate-500 font-sans font-bold text-xs md:text-sm uppercase tracking-widest py-4 px-12 hover:bg-slate-500 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2"
         >
           VIEW ALL PRODUCTS
         </Link>

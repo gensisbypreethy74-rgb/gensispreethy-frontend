@@ -453,7 +453,7 @@ export default function ContactUsPage() {
           className="relative w-full pt-32 md:pt-40 pb-36 md:pb-48"
           style={{
             background:
-              "linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%)",
+              "linear-gradient(135deg, #2C1A10 0%, #422812 50%, #6B5344 100%)",
           }}
         >
           <div className="max-w-4xl mx-auto px-6 text-center">
