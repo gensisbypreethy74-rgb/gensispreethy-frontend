@@ -48,7 +48,7 @@ export default function RootLayout({
           <CartProvider>
             <GoogleOAuthWrapper>
               <Navbar />
-              <div className="pt-14">
+              <div className="pt-16 lg:pt-20">
                 <DynamicBanner />
                 {children}
               </div>

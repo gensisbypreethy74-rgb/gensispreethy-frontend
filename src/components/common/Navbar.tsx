@@ -124,7 +124,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-      <div className="relative h-14 lg:h-16 px-4 lg:px-10 flex items-center justify-between transition-all duration-300">
+      <div className="relative h-16 lg:h-20 px-4 lg:px-10 flex items-center justify-between transition-all duration-300">
       {/* ── Mobile Menu Toggle & Profile (Left on Mobile) ── */}
       <div className="flex md:hidden flex-1 justify-start items-center gap-1 relative z-20">
         <button
@@ -146,7 +146,7 @@ export default function Navbar() {
       {/* ── Logo (Center on Mobile, Left on Desktop) ── */}
       <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none z-10 overflow-hidden">
         <Link href="/" className="flex-shrink-0 overflow-hidden" aria-label="Luxy Galleria home">
-          <div className="w-28 sm:w-32 md:w-36 lg:w-40 h-9 lg:h-11 flex items-center justify-center md:justify-start overflow-hidden">
+          <div className="w-32 sm:w-36 md:w-44 lg:w-52 h-10 lg:h-13 flex items-center justify-center md:justify-start overflow-hidden">
             <img
               src="/luxy_logo.png"
               alt="Luxy Galleria Logo"
