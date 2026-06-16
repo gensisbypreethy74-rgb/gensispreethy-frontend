@@ -4,35 +4,35 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getAPIURL } from "../../lib/apiClient";
-import { Facebook, Instagram, Youtube, Linkedin, Twitter } from "lucide-react";
+import { Heart, Share2, Play, Briefcase, Mail } from "lucide-react";
 
 const socials = [
   { 
-    icon: Facebook, 
+    icon: Heart, 
     label: "Facebook", 
     href: "https://www.facebook.com/share/1BLZJWnKyP/?mibextid=wwXIfr",
     color: "text-slate-400 hover:text-blue-400"
   },
   { 
-    icon: Instagram, 
+    icon: Share2, 
     label: "Instagram", 
     href: "https://www.instagram.com/luxygalleria?igsh=aDhpM2Zoc3FvejQw",
     color: "text-slate-400 hover:text-pink-400"
   },
   { 
-    icon: Youtube, 
+    icon: Play, 
     label: "YouTube", 
     href: "https://youtube.com/@luxysnackstation?si=oqzX6swsa1f5hYBz",
     color: "text-slate-400 hover:text-red-400"
   },
   { 
-    icon: Twitter, 
+    icon: Share2, 
     label: "Twitter", 
     href: "https://twitter.com",
     color: "text-slate-400 hover:text-blue-300"
   },
   { 
-    icon: Linkedin, 
+    icon: Briefcase, 
     label: "LinkedIn", 
     href: "https://linkedin.com",
     color: "text-slate-400 hover:text-blue-500"
