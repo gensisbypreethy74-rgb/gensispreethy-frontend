@@ -4,13 +4,39 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { getAPIURL } from "../../lib/apiClient";
+import { Facebook, Instagram, Youtube, Linkedin, Twitter } from "lucide-react";
 
 const socials = [
-  { src: "/social/facebook.svg", label: "Facebook", href: "https://www.facebook.com/share/1BLZJWnKyP/?mibextid=wwXIfr" },
-  { src: "/social/instagram.svg", label: "Instagram Luxy Galleria", href: "https://www.instagram.com/luxygalleria?igsh=aDhpM2Zoc3FvejQw" },
-  { src: "/social/instagram.svg", label: "Instagram Snack Station", href: "https://www.instagram.com/luxysnackstation?igsh=MXAyNWQwZmZtaHoydQ==" },
-  { src: "/social/snapchat.svg", label: "Snapchat", href: "https://www.snapchat.com/add/luxygalleria" },
-  { src: "/social/youtube.svg", label: "YouTube", href: "https://youtube.com/@luxysnackstation?si=oqzX6swsa1f5hYBz" },
+  { 
+    icon: Facebook, 
+    label: "Facebook", 
+    href: "https://www.facebook.com/share/1BLZJWnKyP/?mibextid=wwXIfr",
+    color: "text-slate-400 hover:text-blue-400"
+  },
+  { 
+    icon: Instagram, 
+    label: "Instagram", 
+    href: "https://www.instagram.com/luxygalleria?igsh=aDhpM2Zoc3FvejQw",
+    color: "text-slate-400 hover:text-pink-400"
+  },
+  { 
+    icon: Youtube, 
+    label: "YouTube", 
+    href: "https://youtube.com/@luxysnackstation?si=oqzX6swsa1f5hYBz",
+    color: "text-slate-400 hover:text-red-400"
+  },
+  { 
+    icon: Twitter, 
+    label: "Twitter", 
+    href: "https://twitter.com",
+    color: "text-slate-400 hover:text-blue-300"
+  },
+  { 
+    icon: Linkedin, 
+    label: "LinkedIn", 
+    href: "https://linkedin.com",
+    color: "text-slate-400 hover:text-blue-500"
+  },
 ];
 
 const footerLinks = [
@@ -54,18 +80,19 @@ export default function Footer() {
             <p className="max-w-md text-sm leading-7 text-slate-400">
               {footerText}
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              {socials.map(({ src, label, href }) => (
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              {socials.map(({ icon: Icon, label, href, color }) => (
                 <a
                   key={label + href}
                   href={href}
                   aria-label={label}
                   rel="noopener noreferrer"
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 border border-white/10 transition hover:bg-white/10"
+                  className={`flex h-11 w-11 items-center justify-center rounded-full bg-white/5 border border-white/10 transition-all hover:bg-white/10 ${color}`}
                   target="_blank"
                   referrerPolicy="no-referrer"
+                  title={label}
                 >
-                  <img src={src} alt={label} className="h-5 w-5 object-contain brightness-0 invert" />
+                  <Icon size={20} strokeWidth={1.5} />
                 </a>
               ))}
             </div>
