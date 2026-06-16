@@ -52,7 +52,7 @@ function VerifyOtpContent() {
     // Priority: URL param > sessionStorage > backend request
     let foundOtp = false;
 
-    if (codeFromUrl && codeFromUrl.length === 6) {
+    if (codeFromUrl && codeFromUrl.trim().length === 6) {
       console.log('✅ OTP found in URL:', codeFromUrl);
       setOtpCode(codeFromUrl);
       fillOtpInputs(codeFromUrl);
@@ -60,7 +60,7 @@ function VerifyOtpContent() {
       foundOtp = true;
     } else {
       const storedOtp = sessionStorage.getItem('dev_otp');
-      if (storedOtp && storedOtp.length === 6) {
+      if (storedOtp && storedOtp.trim().length === 6) {
         console.log('✅ OTP found in sessionStorage:', storedOtp);
         setOtpCode(storedOtp);
         fillOtpInputs(storedOtp);
@@ -75,20 +75,35 @@ function VerifyOtpContent() {
       const autoResend = async () => {
         try {
           const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
-          const response = await axios.post(`${apiURL}/auth/resend-otp`, { email });
+          console.log('📡 Calling resend-otp endpoint:', `${apiURL}/auth/resend-otp`);
+          
+          const response = await axios.post(`${apiURL}/auth/resend-otp`, { email }, {
+            timeout: 10000 // 10 second timeout
+          });
+          
+          console.log('📨 Resend response:', response.data);
           
           if (response.data.data?.otp) {
-            const newOtp = String(response.data.data.otp);
-            console.log('✅ New OTP received from resend:', newOtp);
-            setOtpCode(newOtp);
-            fillOtpInputs(newOtp);
-            sessionStorage.setItem('dev_otp', newOtp);
-            setResendSuccess("✅ Verification code received! Check your email or use the code shown above.");
+            const newOtp = String(response.data.data.otp).trim();
+            if (newOtp.length === 6) {
+              console.log('✅ New OTP received from resend:', newOtp);
+              setOtpCode(newOtp);
+              fillOtpInputs(newOtp);
+              sessionStorage.setItem('dev_otp', newOtp);
+              setResendSuccess("✅ Verification code received! Check your email or use the code shown above.");
+            } else {
+              throw new Error(`Invalid OTP format: ${newOtp}`);
+            }
           } else {
-            throw new Error('No OTP in response');
+            throw new Error('No OTP in response data');
           }
         } catch (err: any) {
-          console.error('❌ Failed to auto-resend OTP:', err);
+          console.error('❌ Failed to auto-resend OTP:', err.message);
+          console.error('Error details:', {
+            status: err.response?.status,
+            data: err.response?.data,
+            message: err.message
+          });
           setApiError("Could not retrieve verification code. Please click 'Generate New Code' below.");
         }
       };
@@ -252,7 +267,7 @@ function VerifyOtpContent() {
                 </button>
               </div>
               <p className="text-sm text-amber-700 font-medium">✅ Code auto-filled below — click &quot;Verify &amp; Continue&quot;</p>
-              <p className="text-xs text-amber-600 mt-2">📧 Also sent to your email: <strong>{email}</strong></p>
+              {email && <p className="text-xs text-amber-600 mt-2">📧 Also sent to your email: <strong>{email}</strong></p>}
             </div>
           ) : (
             <div className="mb-8 rounded-2xl p-6 text-center border-2 bg-blue-50 border-blue-300">
