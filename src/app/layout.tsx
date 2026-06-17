@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "../components/common/Navbar";
 import FloatingActions from "../components/common/FloatingActions";
 import Footer from "../components/common/Footer";
-import ThemeInit from "../components/common/ThemeInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +43,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col relative" suppressHydrationWarning>
-        <ThemeInit />
         <ToastProvider>
           <CartProvider>
             <GoogleOAuthWrapper>
@@ -62,5 +60,4 @@ export default function RootLayout({
     </html>
   );
 }
-
 
