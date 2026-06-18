@@ -166,7 +166,7 @@ export default function VideoTestimonialsSection() {
 
   return (
     <section 
-      className="bg-gradient-to-b from-[#F5F1ED] to-[#F9F7F4] w-full py-16 md:py-24 overflow-hidden border-t border-b border-[#A68B5B]/20"
+      className="bg-gradient-to-b from-[#2A1F15] to-[#3D2F22] w-full py-16 md:py-24 overflow-hidden border-t border-b border-[#A68B5B]/20"
       onMouseEnter={() => setAutoplay(false)}
       onMouseLeave={() => setAutoplay(true)}
     >
@@ -175,10 +175,10 @@ export default function VideoTestimonialsSection() {
         {/* Header Block */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
           <div>
-            <p className="font-sans font-bold text-xs tracking-[0.25em] uppercase text-[#A68B5B] mb-3">
+            <p className="font-sans font-bold text-xs tracking-[0.25em] uppercase text-[#C9A961] mb-3">
               LUXURY IN MOTION
             </p>
-            <h2 className="font-serif font-normal text-3xl md:text-4xl lg:text-5xl text-[#140C05] leading-tight">
+            <h2 className="font-serif font-normal text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
               Client Success Stories
             </h2>
           </div>
