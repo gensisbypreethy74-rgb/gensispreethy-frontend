@@ -16,6 +16,52 @@ interface VideoTestimonial {
   isActive: boolean;
 }
 
+interface VideoCardProps extends VideoTestimonial {
+  onPlayClick: () => void;
+}
+
+// Autoplay Video Thumbnail Component
+function AutoplayVideoThumbnail({ youtubeId, clientName }: { youtubeId: string; clientName: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full h-full bg-slate-900 rounded-2xl overflow-hidden border border-white/5 group"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* YouTube Thumbnail as Background */}
+      <img
+        src={`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`}
+        alt={`${clientName} Video Thumbnail`}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        loading="lazy"
+      />
+
+      {/* Muted Autoplay Video Overlay (shows on hover with smooth transition) */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-500 ${
+          isHovered ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <iframe
+          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&rel=0&showinfo=0&modestbranding=1&loop=1&playlist=${youtubeId}`}
+          title={`${clientName} Video Testimonial`}
+          className="w-full h-full border-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{ pointerEvents: isHovered ? "auto" : "none" }}
+        />
+      </div>
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/30 transition-all duration-300 group-hover:bg-black/20" />
+    </div>
+  );
+}
+
 export default function VideoTestimonialsSection() {
   const [testimonials, setTestimonials] = useState<VideoTestimonial[]>([]);
   const [loading, setLoading] = useState(true);
@@ -186,24 +232,19 @@ export default function VideoTestimonialsSection() {
                   className="snap-start shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
                 >
                   <article 
-                    className="group relative rounded-3xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-sm p-5 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/40 hover:-translate-y-1 shadow-lg shadow-black/40 h-full"
+                    className="group relative rounded-3xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-sm p-5 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/40 hover:-translate-y-1 shadow-lg shadow-black/40 h-full cursor-pointer"
+                    onClick={() => setSelectedVideo(t)}
                   >
-                    {/* Video Thumbnail Wrapper */}
+                    {/* Video Thumbnail Wrapper with Autoplay */}
                     <div 
-                      onClick={() => setSelectedVideo(t)}
-                      className="relative aspect-video rounded-2xl overflow-hidden cursor-pointer bg-slate-900 border border-white/5 group-hover:border-white/15 transition-all duration-500"
+                      className="relative aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-white/5 group-hover:border-white/15 transition-all duration-500"
                     >
-                      <img 
-                        src={t.thumbnailUrl} 
-                        alt={`${t.clientName} Video Testimonial`}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        loading="lazy"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${t.youtubeId}/0.jpg`;
-                        }}
+                      <AutoplayVideoThumbnail 
+                        youtubeId={t.youtubeId} 
+                        clientName={t.clientName}
                       />
                       {/* Play Button Overlay */}
-                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-all duration-300 group-hover:bg-black/45">
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center transition-all duration-300 group-hover:bg-black/10">
                         <div className="w-14 h-14 rounded-full bg-[#A68B5B] text-[#140C05] flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:bg-[#C9A961] shadow-[#A68B5B]/20">
                           <Play className="w-6 h-6 fill-current translate-x-[2px]" />
                         </div>
