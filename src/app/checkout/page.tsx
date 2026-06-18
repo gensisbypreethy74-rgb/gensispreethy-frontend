@@ -30,6 +30,28 @@ export default function CheckoutPage() {
   const [isSavingAddress, setIsSavingAddress] = useState(false);
   const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
 
+  const [shippingBelow500g, setShippingBelow500g] = useState(40);
+  const [shippingAbove500g, setShippingAbove500g] = useState(80);
+  const [shippingWeightThreshold, setShippingWeightThreshold] = useState(500);
+
+  useEffect(() => {
+    const fetchShippingSettings = async () => {
+      try {
+        const apiURL = getAPIURL();
+        const res = await axios.get(`${apiURL}/settings`);
+        if (res.data.success && res.data.data) {
+          const s = res.data.data;
+          if (s.shippingBelow500g !== undefined) setShippingBelow500g(s.shippingBelow500g);
+          if (s.shippingAbove500g !== undefined) setShippingAbove500g(s.shippingAbove500g);
+          if (s.shippingWeightThreshold !== undefined) setShippingWeightThreshold(s.shippingWeightThreshold);
+        }
+      } catch (err) {
+        console.error("Failed to fetch settings for shipping", err);
+      }
+    };
+    fetchShippingSettings();
+  }, []);
+
   // Check login status on mount
   useEffect(() => {
     const userStr = localStorage.getItem("luxygalleria_user");
@@ -209,13 +231,14 @@ export default function CheckoutPage() {
     }
   };
 
-  // Bug 6 fix: Correct shipping rate (₹100 flat + ₹40/kg is more realistic, but use flat ₹80 for simplicity)
-  // Removed per-kg display (Bug 7)
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
-  // Flat shipping: ₹80 if cart has items with weight, else free (no per-kg display)
-  const shipping = subtotal > 0 ? (totalWeight > 0 ? Math.round(totalWeight * 40) : 80) : 0;
+  const shipping = subtotal > 0 ? cartItems.reduce((acc, item) => {
+    const isAbove = (item.weight || 0) >= shippingWeightThreshold;
+    return acc + (isAbove ? shippingAbove500g : shippingBelow500g) * item.quantity;
+  }, 0) : 0;
   const total = subtotal + shipping;
+
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {

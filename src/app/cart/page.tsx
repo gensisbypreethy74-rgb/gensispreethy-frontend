@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
+import axios from "axios";
 
 import { useCart } from "../../context/CartContext";
 
@@ -11,10 +12,34 @@ import { useCart } from "../../context/CartContext";
 
 export default function CartPage() {
   const { cartItems, updateQuantity, removeItem } = useCart();
+  const [shippingBelow500g, setShippingBelow500g] = useState(40);
+  const [shippingAbove500g, setShippingAbove500g] = useState(80);
+  const [shippingWeightThreshold, setShippingWeightThreshold] = useState(500);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const apiURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+        const res = await axios.get(`${apiURL}/settings`);
+        if (res.data.success && res.data.data) {
+          const s = res.data.data;
+          if (s.shippingBelow500g !== undefined) setShippingBelow500g(s.shippingBelow500g);
+          if (s.shippingAbove500g !== undefined) setShippingAbove500g(s.shippingAbove500g);
+          if (s.shippingWeightThreshold !== undefined) setShippingWeightThreshold(s.shippingWeightThreshold);
+        }
+      } catch (err) {
+        console.error("Failed to fetch settings for shipping", err);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
-  const shippingFee = totalWeight > 0 ? totalWeight * 60 : 0;
+  const shippingFee = subtotal > 0 ? cartItems.reduce((acc, item) => {
+    const isAbove = (item.weight || 0) >= shippingWeightThreshold;
+    return acc + (isAbove ? shippingAbove500g : shippingBelow500g) * item.quantity;
+  }, 0) : 0;
   const total = subtotal + shippingFee;
 
   return (
@@ -152,7 +177,7 @@ export default function CartPage() {
                 {totalWeight > 0 && (
                   <div className="flex justify-between items-center text-slate-400 font-sans text-xs">
                     <span>Total Weight</span>
-                    <span>{totalWeight} kg</span>
+                    <span>{totalWeight} g/ml</span>
                   </div>
                 )}
               </div>

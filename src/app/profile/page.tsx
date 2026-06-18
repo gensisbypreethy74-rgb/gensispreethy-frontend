@@ -498,6 +498,41 @@ export default function ProfilePage() {
                               </div>
                             ))}
                           </div>
+
+                          <div className="mt-6 pt-6 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Delivery Address</p>
+                              <p className="text-xs text-slate-600 leading-relaxed">
+                                {order.shippingAddress?.street ? `${order.shippingAddress.street}, ` : ''}
+                                {order.shippingAddress?.city ? `${order.shippingAddress.city}, ` : ''}
+                                {order.shippingAddress?.state ? `${order.shippingAddress.state} ` : ''}
+                                {order.shippingAddress?.zipCode || ''}
+                              </p>
+                            </div>
+                            <div className="w-full sm:w-64 bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col gap-2">
+                              <div className="flex justify-between items-center text-xs text-slate-500 font-sans">
+                                <span>Subtotal</span>
+                                <span className="font-semibold text-slate-700">₹{order.subtotal !== undefined ? order.subtotal : (order.total - (order.shippingFee || 0) + (order.discount || 0))}</span>
+                              </div>
+                              <div className="flex justify-between items-center text-xs text-slate-500 font-sans">
+                                <span>Shipping Fee</span>
+                                <span className="font-semibold text-slate-700">
+                                  {order.shippingFee !== undefined ? (order.shippingFee > 0 ? `₹${order.shippingFee}` : 'Free') : 'Free'}
+                                </span>
+                              </div>
+                              {order.discount > 0 && (
+                                <div className="flex justify-between items-center text-xs text-slate-500 font-sans">
+                                  <span>Discount</span>
+                                  <span className="font-semibold text-green-600">-₹{order.discount}</span>
+                                </div>
+                              )}
+                              <div className="h-px bg-slate-200 my-1" />
+                              <div className="flex justify-between items-center text-sm font-bold text-slate-900 font-sans">
+                                <span>Total Paid</span>
+                                <span>₹{order.total}</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     ))}
