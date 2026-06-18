@@ -91,9 +91,9 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-5">
-            <Link href="/" className="inline-flex items-center mb-6 rounded-2xl bg-white border border-slate-200 p-3 shadow-sm">
-              <div className="h-16 w-16 flex items-center justify-center overflow-hidden">
-                <img src="/luxy_logo.png" alt="Luxy Galleria" className="h-full w-full object-contain" />
+            <Link href="/" className="inline-flex items-center mb-6 rounded-2xl bg-white border-2 border-[#A68B5B]/20 p-4 shadow-md hover:shadow-lg hover:border-[#A68B5B]/40 transition-all duration-300 group">
+              <div className="h-20 w-20 flex items-center justify-center overflow-hidden">
+                <img src="/luxy_logo.png" alt="Luxy Galleria" className="h-full w-full object-contain filter group-hover:drop-shadow-lg transition-all duration-300" />
               </div>
             </Link>
             <p className="max-w-md text-sm leading-7 text-slate-600">
@@ -106,7 +106,7 @@ export default function Footer() {
                   href={href}
                   aria-label={label}
                   rel="noopener noreferrer"
-                  className={`flex h-11 w-11 items-center justify-center rounded-full bg-white border border-slate-200 transition-all text-slate-600 ${hoverClass} shadow-sm`}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full bg-white border-2 border-[#A68B5B]/20 transition-all text-[#A68B5B] ${hoverClass} shadow-sm hover:shadow-md`}
                   target="_blank"
                   referrerPolicy="no-referrer"
                   title={label}
@@ -119,13 +119,13 @@ export default function Footer() {
 
           {/* Links column */}
           <div className="lg:col-span-3 lg:col-start-7">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-6">Quick Links</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#A68B5B] mb-6">Quick Links</h3>
             <ul className="space-y-3">
               {footerLinks.map(({ label, href }) => (
                 <li key={href}>
                   <Link
                     href={href}
-                    className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                    className="text-sm text-slate-600 hover:text-[#A68B5B] transition-colors font-medium"
                   >
                     {label}
                   </Link>
@@ -136,15 +136,15 @@ export default function Footer() {
 
           {/* Contact column */}
           <div className="lg:col-span-3 lg:col-start-10">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-6">Contact</h3>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#A68B5B] mb-6">Contact</h3>
             <ul className="space-y-3 text-sm text-slate-600">
               <li>
-                <a href="mailto:infoluxygalleria@gmail.com" className="text-slate-600 hover:text-slate-900 transition-colors">
+                <a href="mailto:infoluxygalleria@gmail.com" className="text-slate-600 hover:text-[#A68B5B] transition-colors font-medium">
                   infoluxygalleria@gmail.com
                 </a>
               </li>
               <li>
-                <a href="tel:+919074881551" className="text-slate-600 hover:text-slate-900 transition-colors">
+                <a href="tel:+919074881551" className="text-slate-600 hover:text-[#A68B5B] transition-colors font-medium">
                   +91 9074881551
                 </a>
               </li>
@@ -154,10 +154,10 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-16 pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Luxy Galleria. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} <span className="font-bold text-[#A68B5B]">Luxy Galleria</span>. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="/privacy-policy" className="text-slate-500 hover:text-slate-900 transition-colors">Privacy Policy</Link>
-            <Link href="/terms-and-conditions" className="text-slate-500 hover:text-slate-900 transition-colors">Terms & Conditions</Link>
+            <Link href="/privacy-policy" className="text-slate-500 hover:text-[#A68B5B] transition-colors font-medium">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="text-slate-500 hover:text-[#A68B5B] transition-colors font-medium">Terms & Conditions</Link>
           </div>
         </div>
       </div>

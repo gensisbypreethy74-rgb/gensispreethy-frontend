@@ -148,12 +148,12 @@ export default function Navbar() {
 
       {/* ── Logo (Center on Mobile, Left on Desktop) ── */}
       <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none z-10 overflow-hidden">
-        <Link href="/" className="flex-shrink-0 overflow-hidden" aria-label="Luxy Galleria home">
-          <div className="w-40 sm:w-48 md:w-56 lg:w-64 h-12 lg:h-16 flex items-center justify-center md:justify-start overflow-hidden">
+        <Link href="/" className="flex-shrink-0 overflow-hidden group" aria-label="Luxy Galleria home">
+          <div className="w-40 sm:w-48 md:w-56 lg:w-64 h-12 lg:h-16 flex items-center justify-center md:justify-start overflow-hidden transition-transform duration-300 group-hover:scale-105">
             <img
               src="/luxy_logo.png"
               alt="Luxy Galleria Logo"
-              className="max-w-full max-h-full object-contain"
+              className="max-w-full max-h-full object-contain filter drop-shadow-sm group-hover:drop-shadow-md transition-all duration-300"
             />
           </div>
         </Link>
