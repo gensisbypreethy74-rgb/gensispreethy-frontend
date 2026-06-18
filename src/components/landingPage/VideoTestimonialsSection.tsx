@@ -173,7 +173,7 @@ export default function VideoTestimonialsSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
         
         {/* Header Block */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-12 gap-6">
           <div>
             <p className="font-sans font-bold text-xs tracking-[0.25em] uppercase text-[#C9A961] mb-3">
               LUXURY IN MOTION
@@ -208,12 +208,12 @@ export default function VideoTestimonialsSection() {
         <div className="relative">
           {loading ? (
             /* Skeleton Loader */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((n) => (
-                <div key={n} className="rounded-3xl border border-[#A68B5B]/20 bg-white p-6 md:p-8 space-y-6 animate-pulse">
+                <div key={n} className="rounded-3xl border border-[#A68B5B]/20 bg-white p-5 md:p-6 space-y-4 animate-pulse">
                   <div className="aspect-[3/4] w-full rounded-2xl bg-slate-100" />
-                  <div className="space-y-3">
-                    <div className="h-5 w-2/3 rounded bg-slate-200" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-2/3 rounded bg-slate-200" />
                     <div className="h-3 w-1/2 rounded bg-slate-100" />
                   </div>
                 </div>
@@ -224,7 +224,7 @@ export default function VideoTestimonialsSection() {
             <div
               ref={carouselRef}
               onScroll={handleScroll}
-              className="flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-6"
+              className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-4"
             >
               {testimonials.map((t) => (
                 <div 
@@ -232,7 +232,7 @@ export default function VideoTestimonialsSection() {
                   className="snap-start shrink-0 w-full md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21px)]"
                 >
                   <article 
-                    className="group relative rounded-3xl border border-[#A68B5B]/20 bg-white hover:bg-[#FFFBF7] backdrop-blur-sm p-6 md:p-8 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/50 hover:shadow-2xl hover:-translate-y-2 shadow-lg shadow-[#A68B5B]/15 h-full cursor-pointer"
+                    className="group relative rounded-3xl border border-[#A68B5B]/20 bg-white hover:bg-[#FFFBF7] backdrop-blur-sm p-5 md:p-6 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/50 hover:shadow-2xl hover:-translate-y-2 shadow-lg shadow-[#A68B5B]/15 h-full cursor-pointer"
                     onClick={() => setSelectedVideo(t)}
                   >
                     {/* Video Thumbnail Wrapper with Autoplay - Larger */}
@@ -252,8 +252,8 @@ export default function VideoTestimonialsSection() {
                     </div>
 
                     {/* Client Info Block - Enhanced */}
-                    <div className="mt-8">
-                      <h3 className="font-sans font-bold text-lg md:text-xl tracking-[0.05em] uppercase text-[#140C05] leading-tight group-hover:text-[#A68B5B] transition-colors">
+                    <div className="mt-5">
+                      <h3 className="font-sans font-bold text-base md:text-lg tracking-[0.05em] uppercase text-[#140C05] leading-tight group-hover:text-[#A68B5B] transition-colors">
                         {t.clientName}
                       </h3>
                       <p className="font-sans font-semibold text-xs md:text-sm tracking-[0.1em] uppercase text-[#A68B5B]/70 mt-2">
@@ -269,7 +269,7 @@ export default function VideoTestimonialsSection() {
 
         {/* Pagination Indicator Dots */}
         {testimonials.length > 1 && !loading && (
-          <div className="flex justify-center items-center gap-2.5 mt-8">
+          <div className="flex justify-center items-center gap-2 mt-6">
             {testimonials.map((_, idx) => {
               // Hide trailing dots for larger screens to avoid empty scrolls
               // (e.g. on 3-col desktop, activeDot reaches up to testimonials.length - 3)
