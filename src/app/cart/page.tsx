@@ -86,7 +86,7 @@ export default function CartPage() {
             <div className="lg:col-span-8 flex flex-col gap-6">
               {cartItems.map((item) => (
                 <div
-                  key={`${item.id}-${item.size || 'default'}`}
+                  key={item.id}
                   className="flex flex-col sm:flex-row gap-6 p-8 sm:p-6 border border-slate-100 rounded-2xl bg-white relative group transition-shadow hover:shadow-md"
                 >
                   {/* Remove Button (Desktop absolute, Mobile relative) */}

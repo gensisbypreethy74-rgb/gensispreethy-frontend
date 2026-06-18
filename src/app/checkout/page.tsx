@@ -465,7 +465,7 @@ export default function CheckoutPage() {
                   const isSelected = selectedAddressId === addr.id;
                   return (
                     <button
-                      key={`${addr.id}-${addr.line1}-${addr.line2}`}
+                      key={addr.id}
                       onClick={() => setSelectedAddressId(addr.id)}
                       className={`relative border rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 w-full max-w-sm bg-white text-left transition-colors ${isSelected ? "border-slate-300" : "border-slate-200 hover:border-slate-300"
                         }`}
@@ -514,7 +514,7 @@ export default function CheckoutPage() {
                 <p className="text-slate-500 font-sans text-sm">Your order bag is empty.</p>
               ) : (
                 cartItems.map((item) => (
-                  <div key={`${item.id}-${item.size || 'default'}`} className="flex gap-4">
+                  <div key={item.id} className="flex gap-4">
                     <div className="relative w-16 h-20 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100">
                       <Image
                         src={item.image}
