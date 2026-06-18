@@ -166,7 +166,7 @@ export default function VideoTestimonialsSection() {
 
   return (
     <section 
-      className="bg-gradient-to-b from-[#140C05] to-[#0a0603] w-full py-16 md:py-24 overflow-hidden border-t border-b border-[#A68B5B]/10"
+      className="bg-gradient-to-b from-[#F5F1ED] to-[#F9F7F4] w-full py-16 md:py-24 overflow-hidden border-t border-b border-[#A68B5B]/20"
       onMouseEnter={() => setAutoplay(false)}
       onMouseLeave={() => setAutoplay(true)}
     >
@@ -175,10 +175,10 @@ export default function VideoTestimonialsSection() {
         {/* Header Block */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
           <div>
-            <p className="font-sans font-bold text-xs tracking-[0.25em] uppercase text-[#A68B5B]/60 mb-3">
+            <p className="font-sans font-bold text-xs tracking-[0.25em] uppercase text-[#A68B5B] mb-3">
               LUXURY IN MOTION
             </p>
-            <h2 className="font-serif font-normal text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
+            <h2 className="font-serif font-normal text-3xl md:text-4xl lg:text-5xl text-[#140C05] leading-tight">
               Client Success Stories
             </h2>
           </div>
@@ -188,14 +188,14 @@ export default function VideoTestimonialsSection() {
             <div className="flex items-center gap-3">
               <button
                 onClick={scrollPrev}
-                className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-white hover:border-[#A68B5B]/50 hover:bg-[#A68B5B]/10 hover:text-[#A68B5B] flex items-center justify-center transition-all duration-300 active:scale-95"
+                className="w-12 h-12 rounded-full border border-[#A68B5B]/30 bg-[#A68B5B]/5 text-[#A68B5B] hover:border-[#A68B5B] hover:bg-[#A68B5B]/15 hover:text-[#A68B5B] flex items-center justify-center transition-all duration-300 active:scale-95"
                 aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={scrollNext}
-                className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-white hover:border-[#A68B5B]/50 hover:bg-[#A68B5B]/10 hover:text-[#A68B5B] flex items-center justify-center transition-all duration-300 active:scale-95"
+                className="w-12 h-12 rounded-full border border-[#A68B5B]/30 bg-[#A68B5B]/5 text-[#A68B5B] hover:border-[#A68B5B] hover:bg-[#A68B5B]/15 hover:text-[#A68B5B] flex items-center justify-center transition-all duration-300 active:scale-95"
                 aria-label="Next testimonial"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -232,12 +232,12 @@ export default function VideoTestimonialsSection() {
                   className="snap-start shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
                 >
                   <article 
-                    className="group relative rounded-3xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] backdrop-blur-sm p-5 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/40 hover:-translate-y-1 shadow-lg shadow-black/40 h-full cursor-pointer"
+                    className="group relative rounded-3xl border border-[#A68B5B]/20 bg-white hover:bg-[#FFFBF7] backdrop-blur-sm p-5 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/50 hover:shadow-lg hover:-translate-y-1 shadow-md shadow-[#A68B5B]/10 h-full cursor-pointer"
                     onClick={() => setSelectedVideo(t)}
                   >
                     {/* Video Thumbnail Wrapper with Autoplay */}
                     <div 
-                      className="relative aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-white/5 group-hover:border-white/15 transition-all duration-500"
+                      className="relative aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-[#A68B5B]/20 group-hover:border-[#A68B5B]/40 transition-all duration-500"
                     >
                       <AutoplayVideoThumbnail 
                         youtubeId={t.youtubeId} 
@@ -245,7 +245,7 @@ export default function VideoTestimonialsSection() {
                       />
                       {/* Play Button Overlay */}
                       <div className="absolute inset-0 bg-black/20 flex items-center justify-center transition-all duration-300 group-hover:bg-black/10">
-                        <div className="w-14 h-14 rounded-full bg-[#A68B5B] text-[#140C05] flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:bg-[#C9A961] shadow-[#A68B5B]/20">
+                        <div className="w-14 h-14 rounded-full bg-[#A68B5B] text-white flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:bg-[#C9A961] shadow-[#A68B5B]/30">
                           <Play className="w-6 h-6 fill-current translate-x-[2px]" />
                         </div>
                       </div>
@@ -253,10 +253,10 @@ export default function VideoTestimonialsSection() {
 
                     {/* Client Info Block */}
                     <div className="mt-6">
-                      <h3 className="font-sans font-bold text-base tracking-[0.05em] uppercase text-white leading-tight group-hover:text-[#C9A961] transition-colors">
+                      <h3 className="font-sans font-bold text-base tracking-[0.05em] uppercase text-[#140C05] leading-tight group-hover:text-[#A68B5B] transition-colors">
                         {t.clientName}
                       </h3>
-                      <p className="font-sans font-semibold text-xs tracking-[0.1em] uppercase text-slate-500 mt-1.5">
+                      <p className="font-sans font-semibold text-xs tracking-[0.1em] uppercase text-[#A68B5B]/60 mt-1.5">
                         {t.role}
                       </p>
                     </div>
@@ -284,7 +284,7 @@ export default function VideoTestimonialsSection() {
                   className={`h-2 rounded-full transition-all duration-350 ${
                     isSelected 
                       ? "w-8 bg-[#A68B5B]" 
-                      : "w-2 bg-white/20 hover:bg-white/40"
+                      : "w-2 bg-[#A68B5B]/30 hover:bg-[#A68B5B]/60"
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
