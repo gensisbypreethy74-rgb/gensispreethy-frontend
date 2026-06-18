@@ -174,8 +174,8 @@ export default function VideoTestimonialsSection() {
         
         {/* Header Block */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-12 gap-6">
-          <div>
-            <p className="font-sans font-bold text-xs tracking-[0.25em] uppercase text-[#C9A961] mb-3">
+          <div className="bg-gradient-to-r from-[#2C1A10] via-[#422812] to-[#6B5344] rounded-2xl px-8 md:px-10 py-6 md:py-7 -ml-6 md:-ml-10 pl-8 md:pl-10">
+            <p className="font-sans font-bold text-xs tracking-[0.25em] uppercase text-[#C9A961] mb-2">
               LUXURY IN MOTION
             </p>
             <h2 className="font-serif font-normal text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
