@@ -208,13 +208,13 @@ export default function VideoTestimonialsSection() {
         <div className="relative">
           {loading ? (
             /* Skeleton Loader */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((n) => (
-                <div key={n} className="rounded-3xl border border-white/5 bg-white/5 p-6 space-y-6 animate-pulse">
-                  <div className="aspect-video w-full rounded-2xl bg-white/5" />
+                <div key={n} className="rounded-3xl border border-[#A68B5B]/20 bg-white p-6 md:p-8 space-y-6 animate-pulse">
+                  <div className="aspect-[3/4] w-full rounded-2xl bg-slate-100" />
                   <div className="space-y-3">
-                    <div className="h-4 w-1/2 rounded bg-white/10" />
-                    <div className="h-3 w-1/3 rounded bg-white/5" />
+                    <div className="h-5 w-2/3 rounded bg-slate-200" />
+                    <div className="h-3 w-1/2 rounded bg-slate-100" />
                   </div>
                 </div>
               ))}
@@ -224,20 +224,20 @@ export default function VideoTestimonialsSection() {
             <div
               ref={carouselRef}
               onScroll={handleScroll}
-              className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-6"
+              className="flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar pb-6"
             >
               {testimonials.map((t) => (
                 <div 
                   key={t._id}
-                  className="snap-start shrink-0 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
+                  className="snap-start shrink-0 w-full md:w-[calc(50%-16px)] lg:w-[calc(33.333%-21px)]"
                 >
                   <article 
-                    className="group relative rounded-3xl border border-[#A68B5B]/20 bg-white hover:bg-[#FFFBF7] backdrop-blur-sm p-5 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/50 hover:shadow-lg hover:-translate-y-1 shadow-md shadow-[#A68B5B]/10 h-full cursor-pointer"
+                    className="group relative rounded-3xl border border-[#A68B5B]/20 bg-white hover:bg-[#FFFBF7] backdrop-blur-sm p-6 md:p-8 flex flex-col justify-between transition-all duration-500 hover:border-[#A68B5B]/50 hover:shadow-2xl hover:-translate-y-2 shadow-lg shadow-[#A68B5B]/15 h-full cursor-pointer"
                     onClick={() => setSelectedVideo(t)}
                   >
-                    {/* Video Thumbnail Wrapper with Autoplay */}
+                    {/* Video Thumbnail Wrapper with Autoplay - Larger */}
                     <div 
-                      className="relative aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-[#A68B5B]/20 group-hover:border-[#A68B5B]/40 transition-all duration-500"
+                      className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-slate-900 border border-[#A68B5B]/20 group-hover:border-[#A68B5B]/40 transition-all duration-500"
                     >
                       <AutoplayVideoThumbnail 
                         youtubeId={t.youtubeId} 
@@ -245,18 +245,18 @@ export default function VideoTestimonialsSection() {
                       />
                       {/* Play Button Overlay */}
                       <div className="absolute inset-0 bg-black/20 flex items-center justify-center transition-all duration-300 group-hover:bg-black/10">
-                        <div className="w-14 h-14 rounded-full bg-[#A68B5B] text-white flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:bg-[#C9A961] shadow-[#A68B5B]/30">
-                          <Play className="w-6 h-6 fill-current translate-x-[2px]" />
+                        <div className="w-16 h-16 rounded-full bg-[#A68B5B] text-white flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-125 group-hover:bg-[#C9A961] shadow-[#A68B5B]/40">
+                          <Play className="w-7 h-7 fill-current translate-x-[2px]" />
                         </div>
                       </div>
                     </div>
 
-                    {/* Client Info Block */}
-                    <div className="mt-6">
-                      <h3 className="font-sans font-bold text-base tracking-[0.05em] uppercase text-[#140C05] leading-tight group-hover:text-[#A68B5B] transition-colors">
+                    {/* Client Info Block - Enhanced */}
+                    <div className="mt-8">
+                      <h3 className="font-sans font-bold text-lg md:text-xl tracking-[0.05em] uppercase text-[#140C05] leading-tight group-hover:text-[#A68B5B] transition-colors">
                         {t.clientName}
                       </h3>
-                      <p className="font-sans font-semibold text-xs tracking-[0.1em] uppercase text-[#A68B5B]/60 mt-1.5">
+                      <p className="font-sans font-semibold text-xs md:text-sm tracking-[0.1em] uppercase text-[#A68B5B]/70 mt-2">
                         {t.role}
                       </p>
                     </div>
