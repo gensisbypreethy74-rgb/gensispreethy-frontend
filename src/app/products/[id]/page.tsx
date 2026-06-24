@@ -33,6 +33,7 @@ interface Product {
   howToUse: string;
   sizes: string[];
   weight?: number;
+  variants?: any[];
 }
 
 // Data will be fetched dynamically from backend
@@ -119,6 +120,7 @@ export default function ProductDetailPage() {
             ingredients: p.description || "Refer to packaging",
             howToUse: "Follow instructions on packaging",
             sizes: p.variants && p.variants.length > 0 ? p.variants.map((v: any) => v.volume) : ["Standard"],
+            variants: p.variants || [],
           }));
           setProducts(mapped);
           const found = mapped.find((p: any) => p.id === id) || null;
@@ -140,13 +142,14 @@ export default function ProductDetailPage() {
     if (!product) return;
 
     const savedUser = localStorage.getItem("luxygalleria_user");
+    const selectedVariant = product.variants?.[selectedSize] || {};
     addToCart({
       id: product.id,
       name: product.name,
       image: getImageUrl(product.images[0]),
       price: product.currentPrice,
       currency: product.currency,
-      weight: (product as any).weight || 0,
+      weight: selectedVariant.weight || (product as any).weight || 0,
       size: product.sizes?.[selectedSize],
       quantity: qty,
     });

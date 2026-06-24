@@ -178,7 +178,7 @@ export default function ProductSection() {
             currency: "₹",
             dealBadge: p.offerText || "",
             benefit: p.keyFeatures || "",
-            weight: p.weight || 0,
+            weight: p.variants?.[0]?.weight || p.weight || 0,
             size: p.variants?.[0]?.volume || "Standard",
           }));
           setProducts(mappedProds);

@@ -55,7 +55,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             const items = res.data.data.items
               .filter((item: any) => item.product) // ensure product exists
               .map((item: any) => {
-                // Extract from variant safely
                 const variant = item.product.variants?.find((v: any) => v.volume === item.size) || item.product.variants?.[0] || {};
                 return {
                   id: item.product._id,
@@ -65,7 +64,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                   currency: '₹',
                   size: variant.volume || "Standard",
                   quantity: item.quantity,
-                  weight: item.product.weight || 0,
+                  weight: variant.weight || item.product.weight || 0,
                 };
               });
             setCartItems(items);

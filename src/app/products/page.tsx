@@ -71,7 +71,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
       image: getImageUrl(product.images[0]),
       price: product.currentPrice,
       currency: product.currency,
-      weight: (product as any).weight || 0,
+      weight: (product as any).variants?.[0]?.weight || (product as any).weight || 0,
       size: (product as any).size,
       quantity: 1,
     });
@@ -419,7 +419,7 @@ function ProductsContent() {
                 currency: "₹",
                 dealBadge: p.offerText || "",
                 benefit: p.keyFeatures || "",
-                weight: p.weight || 0,
+                weight: p.variants?.[0]?.weight || p.weight || 0,
                 size: p.variants?.[0]?.volume || "Standard",
                 category: p.category ? p.category.toLowerCase().replace(/\s+/g, '-') : "all",
               };
