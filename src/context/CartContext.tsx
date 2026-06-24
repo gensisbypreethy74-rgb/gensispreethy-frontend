@@ -18,7 +18,7 @@ interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
   updateQuantity: (id: string, qty: number, size?: string) => void;
-  removeItem: (id: string) => void;
+  removeItem: (id: string, size?: string) => void;
   clearCart: () => void;
   cartCount: number;
 }
@@ -137,7 +137,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       try {
         await axios.put(`${getApiUrl()}/cart/item`, {
           productId: id,
-          quantity: qty
+          quantity: qty,
+          size: size
         }, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -150,9 +151,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const removeItem = async (id: string) => {
+  const removeItem = async (id: string, size?: string) => {
     setCartItems(prev => {
-      const newCart = prev.filter(i => i.id !== id);
+      const newCart = prev.filter(i => !(i.id === id && i.size === size));
       localStorage.setItem("luxygalleria_cart", JSON.stringify(newCart));
       return newCart;
     });
@@ -162,7 +163,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       try {
         await axios.delete(`${getApiUrl()}/cart/item`, {
           headers: { Authorization: `Bearer ${token}` },
-          data: { productId: id }
+          data: { productId: id, size }
         });
       } catch (err: any) {
         // Silently handle 401 - user session might have expired

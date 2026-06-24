@@ -31,43 +31,34 @@ export default function DynamicBanner() {
     fetchSettings();
   }, [baseUrl]);
 
-  // While loading, show default banner
-  const showBanner = !loaded || !settings || settings.isBannerActive !== false;
-  const bannerText = settings?.bannerText?.trim() || DEFAULT_BANNER;
-
-  if (!showBanner) return null;
+  // While loading or if banner inactive, fallback to default banner
+  const rawBanner = settings?.bannerText?.trim() || DEFAULT_BANNER;
+  // Split banner text by lines and clean them up
+  const bannerLines = rawBanner
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0);
 
   return (
-    <div className="bg-slate-500 text-slate-100 text-[10px] sm:text-xs font-bold py-2.5 relative z-[60] tracking-widest overflow-hidden select-none border-b border-slate-600/20">
+    <div className="bg-slate-500 text-slate-100 text-[12px] sm:text-xs font-bold py-2.5 relative z-[60] tracking-widest overflow-hidden select-none border-b border-slate-600/20 flex justify-center items-center">
       <style>{`
         @keyframes marquee-scroll {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
         }
-        .marquee-track {
-          display: flex;
-          width: max-content;
+        .marquee {
+          display: inline-block;
+          white-space: nowrap;
           animation: marquee-scroll 25s linear infinite;
         }
-        .marquee-track:hover {
-          animation-play-state: paused;
-        }
+        .marquee:hover { animation-play-state: paused; }
       `}</style>
-      <div className="marquee-track">
-        {/* First track */}
-        <div className="flex shrink-0">
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-        </div>
-        {/* Second identical track for seamless loop */}
-        <div className="flex shrink-0" aria-hidden="true">
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-          <span className="px-20 sm:px-40 flex items-center">{bannerText}</span>
-        </div>
+      <div className="marquee px-4">
+        {bannerLines.map((line, index) => (
+          <span key={index} className="inline-block mx-24">
+            {line}
+          </span>
+        ))}
       </div>
     </div>
   );
