@@ -37,7 +37,7 @@ export default function CartPage() {
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeightGrams = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
   
-  const shippingFee = subtotal > 0 ? (totalWeightGrams >= shippingWeightThreshold ? shippingAbove500g : shippingBelow500g) : 0;
+  const shippingFee = subtotal > 0 ? (totalWeightGrams > shippingWeightThreshold ? shippingAbove500g : shippingBelow500g) : 0;
   const total = subtotal + shippingFee;
 
   return (
