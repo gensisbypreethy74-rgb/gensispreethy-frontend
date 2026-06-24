@@ -510,8 +510,8 @@ export default function CheckoutPage() {
               {cartItems.length === 0 ? (
                 <p className="text-slate-500 font-sans text-sm">Your order bag is empty.</p>
               ) : (
-                cartItems.map((item) => (
-                  <div key={`${item.id}-${item.size || 'default'}`} className="flex gap-4">
+                cartItems.map((item, index) => (
+                  <div key={`${item.id}-${item.size || 'default'}-${index}`} className="flex gap-4">
                     <div className="relative w-16 h-20 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100">
                       <Image
                         src={item.image}
