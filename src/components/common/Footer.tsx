@@ -91,9 +91,9 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-5">
-            <Link href="/" className="inline-flex items-center mb-6 rounded-2xl bg-white border-2 border-[#A68B5B]/20 p-4 shadow-md hover:shadow-lg hover:border-[#A68B5B]/40 transition-all duration-300 group">
-              <div className="h-20 w-20 flex items-center justify-center overflow-hidden">
-                <img src="/luxy_logo.png" alt="Luxy Galleria" className="h-full w-full object-contain filter group-hover:drop-shadow-lg transition-all duration-300" />
+            <Link href="/" className="inline-flex items-center mb-6 transition-all duration-300 group">
+              <div className="h-24 w-40 flex items-center justify-start overflow-hidden">
+                <img src="/luxy_logo.png" alt="Luxy Galleria" className="h-full w-full object-contain mix-blend-multiply filter group-hover:drop-shadow-lg transition-all duration-300" />
               </div>
             </Link>
             <p className="max-w-md text-sm leading-7 text-slate-600">

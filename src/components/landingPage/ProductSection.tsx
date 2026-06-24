@@ -68,6 +68,7 @@ function ProductCard({ product, isVisible, index }: { product: Product; isVisibl
       price: product.currentPrice,
       currency: product.currency,
       weight: (product as any).weight || 0,
+      size: (product as any).size,
       quantity: 1,
     });
     const nextCount = cartCount + 1;
@@ -178,6 +179,7 @@ export default function ProductSection() {
             dealBadge: p.offerText || "",
             benefit: p.keyFeatures || "",
             weight: p.weight || 0,
+            size: p.variants?.[0]?.volume || "Standard",
           }));
           setProducts(mappedProds);
         }

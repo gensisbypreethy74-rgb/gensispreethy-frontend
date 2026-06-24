@@ -63,7 +63,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                   image: item.product.images?.[0] || '',
                   price: variant.price || 0,
                   currency: '₹',
-                  size: variant.volume || item.size,
+                  size: variant.volume || "Standard",
                   quantity: item.quantity,
                   weight: item.product.weight || 0,
                 };

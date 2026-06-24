@@ -36,10 +36,8 @@ export default function CartPage() {
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
-  const shippingFee = subtotal > 0 ? cartItems.reduce((acc, item) => {
-    const isAbove = (item.weight || 0) >= shippingWeightThreshold;
-    return acc + (isAbove ? shippingAbove500g : shippingBelow500g) * item.quantity;
-  }, 0) : 0;
+  const totalWeightGrams = totalWeight * 1000;
+  const shippingFee = subtotal > 0 ? (totalWeightGrams >= shippingWeightThreshold ? shippingAbove500g : shippingBelow500g) : 0;
   const total = subtotal + shippingFee;
 
   return (
@@ -176,7 +174,7 @@ export default function CartPage() {
                 {totalWeight > 0 && (
                   <div className="flex justify-between items-center text-slate-400 font-sans text-xs">
                     <span>Total Weight</span>
-                    <span>{totalWeight} g/ml</span>
+                    <span>{totalWeight.toFixed(2)} kg</span>
                   </div>
                 )}
               </div>

@@ -233,10 +233,8 @@ export default function CheckoutPage() {
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const totalWeight = cartItems.reduce((acc, item) => acc + (item.weight || 0) * item.quantity, 0);
-  const shipping = subtotal > 0 ? cartItems.reduce((acc, item) => {
-    const isAbove = (item.weight || 0) >= shippingWeightThreshold;
-    return acc + (isAbove ? shippingAbove500g : shippingBelow500g) * item.quantity;
-  }, 0) : 0;
+  const totalWeightGrams = totalWeight * 1000;
+  const shipping = subtotal > 0 ? (totalWeightGrams >= shippingWeightThreshold ? shippingAbove500g : shippingBelow500g) : 0;
   const total = subtotal + shipping;
 
 

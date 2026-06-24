@@ -124,7 +124,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-slate-200 shadow-sm">
       {/* ── Promotion Banner (stays fixed with navbar) ── */}
       <DynamicBanner />
       <div className="relative h-16 lg:h-20 px-4 lg:px-10 flex items-center justify-between transition-all duration-300">
@@ -147,13 +147,13 @@ export default function Navbar() {
       </div>
 
       {/* ── Logo (Center on Mobile, Left on Desktop) ── */}
-      <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none z-10 overflow-hidden">
-        <Link href="/" className="flex-shrink-0 overflow-hidden group" aria-label="Luxy Galleria home">
-          <div className="w-40 sm:w-48 md:w-56 lg:w-64 h-12 lg:h-16 flex items-center justify-center md:justify-start overflow-hidden transition-transform duration-300 group-hover:scale-105">
+      <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none z-10 h-full overflow-hidden">
+        <Link href="/" className="flex-shrink-0 group h-full flex items-center overflow-hidden" aria-label="Luxy Galleria home">
+          <div className="w-48 sm:w-56 md:w-64 lg:w-72 h-full flex items-center justify-center md:justify-start transition-transform duration-300 group-hover:scale-105">
             <img
               src="/luxy_logo.png"
               alt="Luxy Galleria Logo"
-              className="max-w-full max-h-full object-contain filter drop-shadow-sm group-hover:drop-shadow-md transition-all duration-300"
+              className="max-w-full max-h-full object-contain mix-blend-multiply filter drop-shadow-sm transition-all duration-300 scale-150 transform origin-center md:origin-left"
             />
           </div>
         </Link>

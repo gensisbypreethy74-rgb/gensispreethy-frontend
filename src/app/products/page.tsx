@@ -72,6 +72,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
       price: product.currentPrice,
       currency: product.currency,
       weight: (product as any).weight || 0,
+      size: (product as any).size,
       quantity: 1,
     });
     const nextCount = cartCount + 1;
@@ -419,6 +420,7 @@ function ProductsContent() {
                 dealBadge: p.offerText || "",
                 benefit: p.keyFeatures || "",
                 weight: p.weight || 0,
+                size: p.variants?.[0]?.volume || "Standard",
                 category: p.category ? p.category.toLowerCase().replace(/\s+/g, '-') : "all",
               };
             });
@@ -514,7 +516,7 @@ function ProductsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-30">
+    <div className="min-h-screen bg-white">
       <div className="flex min-h-[calc(100vh-5rem)]">
 
         {/* ── Desktop Sidebar ─────────────────────────────────────── */}
