@@ -41,7 +41,7 @@ const HISTOGRAM = [
   { height: 8 }, { height: 12 }, { height: 15 }, { height: 12 },
   { height: 10 }, { height: 15 }, { height: 20 }, { height: 15 }
 ];
-const PRICE_MAX = 1200;
+const PRICE_MAX = 20000;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
