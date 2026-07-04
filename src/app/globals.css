@@ -118,9 +118,35 @@ input:focus, select:focus, textarea:focus {
   animation: accordion-close 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ── Fade-in-up entrance animation ──────────────────────────────────────── */
-
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(1.5rem); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom global overrides to enforce black background and gold text for primary/accent buttons */
+button.bg-\[\#A68B5B\],
+a.bg-\[\#A68B5B\],
+button.bg-\[\#8B5E34\],
+a.bg-\[\#8B5E34\],
+button.bg-blue-500,
+a.bg-blue-500,
+button.bg-slate-900,
+a.bg-slate-900 {
+  background-color: #000000 !important;
+  color: #C5A866 !important;
+  border: 1px solid #C5A866 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+button.bg-\[\#A68B5B\]:hover,
+a.bg-\[\#A68B5B\]:hover,
+button.bg-\[\#8B5E34\]:hover,
+a.bg-\[\#8B5E34\]:hover,
+button.bg-blue-500:hover,
+a.bg-blue-500:hover,
+button.bg-slate-900:hover,
+a.bg-slate-900:hover {
+  background-color: #C5A866 !important;
+  color: #000000 !important;
+  border-color: #C5A866 !important;
 }
