@@ -173,6 +173,7 @@ interface FilterSidebarProps {
   maxPrice: number;
   pendingMin: number;
   pendingMax: number;
+  priceMaxLimit: number;
   onCategoryChange: (id: string) => void;
   onMinChange: (v: number) => void;
   onMaxChange: (v: number) => void;
@@ -181,24 +182,24 @@ interface FilterSidebarProps {
 }
 
 function FilterSidebar({
-  categories, activeCategory, pendingMin, pendingMax,
+  categories, activeCategory, pendingMin, pendingMax, priceMaxLimit,
   onCategoryChange, onMinChange, onMaxChange, onApply, onClear,
 }: FilterSidebarProps) {
   const trackRef = useRef<HTMLDivElement>(null);
 
-  const getPercent = (val: number) => (val / PRICE_MAX) * 100;
+  const getPercent = (val: number) => (val / priceMaxLimit) * 100;
 
   const handleTrackClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (!trackRef.current) return;
       const rect = trackRef.current.getBoundingClientRect();
       const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      const val = Math.round(pct * PRICE_MAX);
+      const val = Math.round(pct * priceMaxLimit);
       const midpoint = (pendingMin + pendingMax) / 2;
       if (val < midpoint) onMinChange(Math.min(val, pendingMax - 1));
       else onMaxChange(Math.max(val, pendingMin + 1));
     },
-    [pendingMin, pendingMax, onMinChange, onMaxChange]
+    [pendingMin, pendingMax, onMinChange, onMaxChange, priceMaxLimit]
   );
 
   return (
@@ -299,7 +300,7 @@ function FilterSidebar({
               aria-label="Maximum price"
               value={pendingMax}
               min={pendingMin + 1}
-              max={PRICE_MAX}
+              max={priceMaxLimit}
               onChange={(e) => onMaxChange(Math.max(Number(e.target.value), pendingMin + 1))}
               className="w-full bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-3 text-center font-bold text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50"
             />
@@ -379,6 +380,7 @@ function ProductsContent() {
 
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [dynamicPriceMax, setDynamicPriceMax] = useState(PRICE_MAX);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(PRICE_MAX);
   const [pendingMin, setPendingMin] = useState(0);
@@ -439,6 +441,13 @@ function ProductsContent() {
               };
             });
             setProducts(mappedProds);
+            if (mappedProds.length > 0) {
+              const highestPrice = Math.max(...mappedProds.map((p: any) => p.currentPrice), 2000);
+              const roundedMax = Math.ceil(highestPrice / 100) * 100;
+              setDynamicPriceMax(roundedMax);
+              setMaxPrice(roundedMax);
+              setPendingMax(roundedMax);
+            }
           }
         }
       } catch (error) {
@@ -474,9 +483,9 @@ function ProductsContent() {
   const handleClear = () => {
     setActiveCategory("all");
     setPendingMin(0);
-    setPendingMax(PRICE_MAX);
+    setPendingMax(dynamicPriceMax);
     setMinPrice(0);
-    setMaxPrice(PRICE_MAX);
+    setMaxPrice(dynamicPriceMax);
     setSearchTerm("");
     setDrawerOpen(false);
   };
@@ -522,6 +531,7 @@ function ProductsContent() {
 
   const sidebarProps: FilterSidebarProps = {
     categories, activeCategory, minPrice, maxPrice, pendingMin, pendingMax,
+    priceMaxLimit: dynamicPriceMax,
     onCategoryChange: setActiveCategory,
     onMinChange: setPendingMin,
     onMaxChange: setPendingMax,
