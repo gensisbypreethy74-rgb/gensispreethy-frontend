@@ -48,7 +48,7 @@ export default function SignInPage() {
 
       // Success! Save user and redirect to home page
       if (res.data.data) {
-        localStorage.setItem('luxygalleria_user', JSON.stringify(res.data.data));
+        localStorage.setItem('genesis_boutique_user', JSON.stringify(res.data.data));
       }
       showToast("Signed in successfully!", "success");
       router.push("/");
@@ -77,26 +77,26 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row pt-24">
       {/* ── Left Panel: Brand Context ── */}
-      <div className="bg-[#F5F0EB] md:w-1/2 flex flex-col justify-center px-6 py-10 md:p-16 lg:p-24 relative overflow-hidden">
+      <div className="bg-[#0D0D0D] md:w-1/2 flex flex-col justify-center px-6 py-10 md:p-16 lg:p-24 relative overflow-hidden border-r border-[#222]">
         {/* Subtle decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#e8ddd4]/60 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-[#d4c5b5]/40 to-transparent rounded-full blur-2xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C5A866]/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-[#C5A866]/5 to-transparent rounded-full blur-2xl" />
 
         <div className="max-w-lg mx-auto relative z-10 w-full">
-          <p className="font-sans font-bold text-xs uppercase tracking-[0.25em] text-slate-800 mb-6 md:mb-8">
-            LUXY GALLERIA LUXURY COMMERCE
+          <p className="font-sans font-bold text-xs uppercase tracking-[0.25em] text-[#C5A866] mb-6 md:mb-8">
+            GENESIS BY PREETHY LUXURY BOUTIQUE
           </p>
 
-          <h1 className="font-serif font-normal text-4xl md:text-5xl lg:text-6xl text-[#0A192F] leading-tight mb-6">
-            Welcome back to your premium beauty experience.
+          <h1 className="font-serif font-normal text-4xl md:text-5xl lg:text-6xl text-[#C5A866] leading-tight mb-6">
+            Welcome back to your premium boutique experience.
           </h1>
 
-          <p className="font-sans text-slate-600 text-base leading-relaxed mb-12 max-w-sm">
+          <p className="font-sans text-slate-400 text-base leading-relaxed mb-12 max-w-sm">
             Sign in to access your curated collection, track orders, and enjoy a seamless luxury shopping journey.
           </p>
 
-          <div className="flex items-center gap-3 text-slate-700">
-            <ShieldCheck size={20} className="text-slate-900" />
+          <div className="flex items-center gap-3 text-slate-300">
+            <ShieldCheck size={20} className="text-[#C5A866]" />
             <span className="font-sans font-medium text-sm">Secure Authentication</span>
           </div>
         </div>
@@ -248,7 +248,7 @@ export default function SignInPage() {
               href="/register"
               className="inline-flex items-center justify-center gap-1.5 font-sans text-sm text-slate-500 hover:text-slate-900 transition-colors"
             >
-              New to Luxy Galleria? <span className="font-bold text-slate-800">Create Account</span> <UserPlus size={16} className="text-slate-800" />
+              New to Genesis by Preethy? <span className="font-bold text-slate-800">Create Account</span> <UserPlus size={16} className="text-slate-800" />
             </Link>
           </div>
         </div>

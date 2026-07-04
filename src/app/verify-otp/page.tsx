@@ -162,7 +162,7 @@ function VerifyOtpContent() {
       });
 
       if (res.data.data) {
-        localStorage.setItem("luxygalleria_user", JSON.stringify(res.data.data));
+        localStorage.setItem("genesis_boutique_user", JSON.stringify(res.data.data));
       }
       sessionStorage.removeItem("dev_otp");
       router.push("/");
@@ -213,17 +213,17 @@ function VerifyOtpContent() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row pt-24">
       {/* ── Left Panel ── */}
-      <div className="bg-[#F5F0EB] lg:w-5/12 flex flex-col justify-center px-8 pt-28 pb-16 lg:p-16 xl:p-24 relative overflow-hidden">
+      <div className="bg-[#0D0D0D] lg:w-5/12 flex flex-col justify-center px-8 pt-28 pb-16 lg:p-16 xl:p-24 relative overflow-hidden border-r border-[#222]">
         <div className="max-w-md mx-auto relative z-10 w-full">
-          <p className="font-sans font-bold text-xs uppercase tracking-[0.25em] text-slate-800 mb-6 lg:mb-8">
-            LUXY GALLERIA MEMBERSHIP
+          <p className="font-sans font-bold text-xs uppercase tracking-[0.25em] text-[#C5A866] mb-6 lg:mb-8">
+            GENESIS BY PREETHY MEMBERSHIP
           </p>
 
-          <h1 className="font-serif font-normal text-4xl lg:text-5xl xl:text-6xl text-[#0A192F] leading-tight mb-6">
+          <h1 className="font-serif font-normal text-4xl lg:text-5xl xl:text-6xl text-[#C5A866] leading-tight mb-6">
             Almost there!
           </h1>
 
-          <p className="font-sans text-slate-600 text-base leading-relaxed mb-8 max-w-sm">
+          <p className="font-sans text-slate-400 text-base leading-relaxed mb-8 max-w-sm">
             We&apos;ve sent a 6-digit verification code to your email. Enter it
             to activate your account.
           </p>
@@ -231,7 +231,7 @@ function VerifyOtpContent() {
           {/* Email indicator */}
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 mb-6">
             <div className="flex items-center gap-3 mb-2">
-              <Mail size={18} className="text-[#A68B5B]" />
+              <Mail size={18} className="text-[#C5A866]" />
               <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
                 Sent to
               </p>
@@ -269,8 +269,8 @@ function VerifyOtpContent() {
             </div>
           )}
 
-          <div className="flex items-center gap-3 text-slate-700">
-            <ShieldCheck size={20} className="text-slate-900" />
+          <div className="flex items-center gap-3 text-slate-300">
+            <ShieldCheck size={20} className="text-[#C5A866]" />
             <span className="font-sans font-medium text-sm">
               Secure Verification
             </span>

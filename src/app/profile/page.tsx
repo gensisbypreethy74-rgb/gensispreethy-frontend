@@ -63,7 +63,7 @@ export default function ProfilePage() {
           if (res.data.success) {
             const userData = { ...res.data.data, token: urlToken };
             setUser(userData);
-            localStorage.setItem("luxygalleria_user", JSON.stringify(userData));
+            localStorage.setItem("genesis_boutique_user", JSON.stringify(userData));
 
             // Clean up the URL to remove the token without reloading the page
             window.history.replaceState({}, document.title, window.location.pathname);
@@ -77,7 +77,7 @@ export default function ProfilePage() {
       }
 
       // Load user from localStorage
-      const savedUser = localStorage.getItem("luxygalleria_user");
+      const savedUser = localStorage.getItem("genesis_boutique_user");
       if (savedUser) {
         setUser(JSON.parse(savedUser));
       } else {
@@ -215,8 +215,8 @@ export default function ProfilePage() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("luxygalleria_user");
-    localStorage.removeItem("luxygalleria_cart");
+    localStorage.removeItem("genesis_boutique_user");
+    localStorage.removeItem("genesis_boutique_cart");
     clearCart();
     // Also might want to call backend logout to clear HTTP-only cookie if there's an endpoint
     // For now, clear local state and redirect
@@ -259,7 +259,7 @@ export default function ProfilePage() {
       if (res.data.success) {
         const updatedUser = { ...user, ...res.data.data, token: user.token };
         setUser(updatedUser);
-        localStorage.setItem("luxygalleria_user", JSON.stringify(updatedUser));
+        localStorage.setItem("genesis_boutique_user", JSON.stringify(updatedUser));
         setIsEditProfileOpen(false);
         showToast("Profile updated successfully", "success");
       }

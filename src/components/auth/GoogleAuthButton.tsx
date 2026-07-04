@@ -54,7 +54,7 @@ function GoogleAuthButtonConfigured({ mode = "signin" }: GoogleAuthButtonProps) 
         });
 
         if (res.data.data) {
-          localStorage.setItem("luxygalleria_user", JSON.stringify(res.data.data));
+          localStorage.setItem("genesis_boutique_user", JSON.stringify(res.data.data));
           showToast(
             mode === "signin"
               ? "Signed in with Google successfully!"

@@ -53,10 +53,9 @@ export default function VideoModal({ isOpen, onClose, youtubeId, clientName }: V
           <X className="w-5 h-5" />
         </button>
 
-        {/* YouTube IFrame Embed */}
         <iframe
           src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&showinfo=0&modestbranding=1`}
-          title={`Luxy Galleria Client Review - ${clientName}`}
+          title={`Genesis by Preethy Client Review - ${clientName}`}
           className="w-full h-full border-0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen

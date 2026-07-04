@@ -30,9 +30,9 @@ const DEFAULT_SLIDES: ISlide[] = [
     id: "default-1",
     image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1200&auto=format&fit=crop",
     mobileImage: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop",
-    alt: "Luxy Galleria premium imported products",
-    headline: "TASTE THE WORLD",
-    subheadline: "Premium imported snacks, drinks & more — delivered to your door.",
+    alt: "Genesis by Preethy Premium Boutique",
+    headline: "TASTE OF ELEGANCE",
+    subheadline: "Luxury & Premium Fashion Boutique — styling your elegance.",
   },
 ];
 
@@ -175,8 +175,8 @@ export default function HeroSection() {
             transition={{ duration: 0.6, ease: "easeInOut" }}
             className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background"
           >
-            <h1 className="text-slate-900 font-sans font-black text-6xl md:text-8xl tracking-[0.2em] uppercase mb-8">
-              LUXY GALLERIA
+            <h1 className="text-slate-900 font-sans font-black text-6xl md:text-8xl tracking-[0.2em] uppercase mb-8 text-center">
+              GENESIS BY PREETHY
             </h1>
             <div className="w-64 md:w-80 h-[2px] bg-slate-100 overflow-hidden relative">
               <motion.div

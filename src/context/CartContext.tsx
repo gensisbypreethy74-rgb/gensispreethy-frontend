@@ -35,7 +35,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const getToken = () => {
     if (typeof window !== "undefined") {
-      const userStr = localStorage.getItem("luxygalleria_user");
+      const userStr = localStorage.getItem("genesis_boutique_user");
       if (userStr) {
         return JSON.parse(userStr).token;
       }
@@ -68,19 +68,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 };
               });
             setCartItems(items);
-            localStorage.setItem("luxygalleria_cart", JSON.stringify(items));
+            localStorage.setItem("genesis_boutique_cart", JSON.stringify(items));
           }
         } catch (err: any) {
           // Silently handle 401 (unauthorized) - user just not logged in
           if (err?.response?.status !== 401) {
-            console.error("Failed to fetch cart from backend", err);
+            console.warn("Failed to fetch cart from backend", err);
           }
           // Load from local storage instead
-          const localCart = localStorage.getItem("luxygalleria_cart");
+          const localCart = localStorage.getItem("genesis_boutique_cart");
           if (localCart) setCartItems(JSON.parse(localCart));
         }
       } else {
-        const localCart = localStorage.getItem("luxygalleria_cart");
+        const localCart = localStorage.getItem("genesis_boutique_cart");
         if (localCart) setCartItems(JSON.parse(localCart));
       }
       setIsLoaded(true);
@@ -98,7 +98,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       } else {
         newCart = [...prev, item];
       }
-      localStorage.setItem("luxygalleria_cart", JSON.stringify(newCart));
+      localStorage.setItem("genesis_boutique_cart", JSON.stringify(newCart));
       return newCart;
     });
 
@@ -127,7 +127,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const existing = prev.find(i => i.id === id && i.size === size);
       const validQty = qty;
       const newCart = prev.map(i => (i.id === id && i.size === size) ? { ...i, quantity: validQty } : i);
-      localStorage.setItem("luxygalleria_cart", JSON.stringify(newCart));
+      localStorage.setItem("genesis_boutique_cart", JSON.stringify(newCart));
       return newCart;
     });
 
@@ -153,7 +153,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeItem = async (id: string, size?: string) => {
     setCartItems(prev => {
       const newCart = prev.filter(i => !(i.id === id && i.size === size));
-      localStorage.setItem("luxygalleria_cart", JSON.stringify(newCart));
+      localStorage.setItem("genesis_boutique_cart", JSON.stringify(newCart));
       return newCart;
     });
 
@@ -175,7 +175,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = async () => {
     setCartItems([]);
-    localStorage.removeItem("luxygalleria_cart");
+    localStorage.removeItem("genesis_boutique_cart");
 
     const token = getToken();
     if (token) {

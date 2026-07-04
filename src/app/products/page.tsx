@@ -26,6 +26,8 @@ interface Product {
   benefit: string;
   category: string;
   weight?: number;
+  sizes?: string[];
+  variants?: any[];
 }
 
 // Categories and Products will be fetched dynamically
@@ -64,7 +66,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 
   const handleAddToCart = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    const savedUser = localStorage.getItem("luxygalleria_user");
+    const savedUser = localStorage.getItem("genesis_boutique_user");
     addToCart({
       id: product.id,
       name: product.name,
@@ -123,9 +125,19 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
             {renderStars(product.rating)}
             <span className="text-sm text-slate-400 ml-1">({product.reviewCount})</span>
           </div>
-          <h3 className="font-sans font-bold text-sm md:text-base text-slate-900 leading-tight mb-2 md:mb-3 line-clamp-2">
+          <h3 className="font-sans font-bold text-sm md:text-base text-slate-900 leading-tight mb-1.5 line-clamp-2">
             {product.name}
           </h3>
+          {/* Sizing badges */}
+          {product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === 'Standard') && (
+            <div className="flex justify-center gap-1.5 flex-wrap mb-2">
+              {product.sizes.map((s) => (
+                <span key={s} className="text-[10px] font-bold text-[#A68B5B] bg-[#A68B5B]/10 border border-[#A68B5B]/20 px-1.5 py-0.5 rounded-md">
+                  {s}
+                </span>
+              ))}
+            </div>
+          )}
           <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-2">
             <span className="font-bold text-lg md:text-xl text-slate-900">{product.currency}{product.currentPrice}</span>
             <span className="text-xs md:text-sm line-through text-slate-400">{product.currency}{product.originalPrice}</span>
@@ -139,9 +151,9 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
           <button
             type="button"
             aria-label={`Add ${product.name} to cart`}
-            className={`w-full text-white font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 motion-reduce:transition-none ${isAdded
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-slate-900 hover:bg-slate-800"
+            className={`w-full font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 motion-reduce:transition-none ${isAdded
+              ? "bg-green-600 text-white hover:bg-green-700"
+              : "bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] text-[#C5A866]"
               }`}
           >
             {isAdded ? "ADDED TO CART" : "ADD TO CART"}
@@ -421,6 +433,8 @@ function ProductsContent() {
                 benefit: p.keyFeatures || "",
                 weight: p.variants?.[0]?.weight || p.weight || 0,
                 size: p.variants?.[0]?.volume || "Standard",
+                sizes: p.variants && p.variants.length > 0 ? p.variants.map((v: any) => v.volume) : [],
+                variants: p.variants || [],
                 category: p.category ? p.category.toLowerCase().replace(/\s+/g, '-') : "all",
               };
             });

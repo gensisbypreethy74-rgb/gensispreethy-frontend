@@ -186,7 +186,7 @@ export default function CartPage() {
                 <span className="font-sans font-bold text-3xl text-slate-900">₹{total}</span>
               </div>
 
-              <Link href="/checkout" className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-bold text-sm uppercase tracking-widest py-4 rounded-full hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2">
+              <Link href="/checkout" className="w-full flex items-center justify-center gap-2 bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] text-[#C5A866] font-bold text-sm uppercase tracking-widest py-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2">
                 Proceed to Checkout
               </Link>
               

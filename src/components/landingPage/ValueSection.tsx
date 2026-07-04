@@ -27,7 +27,7 @@ export default function ValueSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="bg-[#0A1E3D] w-full py-16 md:py-24 lg:py-32 overflow-hidden">
+    <section ref={sectionRef} className="bg-[#0A0A0A] w-full py-16 md:py-24 lg:py-32 overflow-hidden border-t border-b border-[#222]">
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
 
@@ -38,25 +38,25 @@ export default function ValueSection() {
           >
             <Image
               src="/images/value-image.png"
-              alt="Curology moisturizer product on geometric platform"
+              alt="Genesis styling design"
               fill
               priority
               className=" object-fill transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:transform-none"
               sizes="(max-width: 1024px) 80vw, 50vw"
             />
             {/* Subtle overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A1E3D]/30 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/30 to-transparent pointer-events-none" />
           </div>
 
           {/* Content Panel */}
           <div className="flex flex-col justify-center">
 
             <p
-              className={`font-sans font-semibold text-xs md:text-sm tracking-[0.25em] uppercase text-[#A68B5B]/30 mb-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5"
+              className={`font-sans font-semibold text-xs md:text-sm tracking-[0.25em] uppercase text-[#C5A866]/80 mb-4 transition-all duration-700 ease-out motion-reduce:transition-none motion-reduce:transform-none ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5"
                 }`}
               style={{ transitionDelay: "300ms" }}
             >
-              MORE THAN A PRODUCT
+              MORE THAN A BOUTIQUE
             </p>
 
             <h2 
@@ -75,7 +75,7 @@ export default function ValueSection() {
                 }`}
               style={{ transitionDelay: "500ms" }}
             >
-              At LUXY GALLERIA, we don&apos;t just create products. We create experiences that elevate your everyday lifestyle.
+              At GENESIS BY PREETHY, we don&apos;t just curate designs. We create experiences that elevate your everyday lifestyle.
             </p>
 
             {/* Feature Grid */}
@@ -102,7 +102,7 @@ export default function ValueSection() {
                 style={{ transitionDelay: "700ms" }}
               >
                 <h3 className="font-sans font-bold text-sm md:text-base tracking-[0.15em] uppercase text-white mb-3">
-                  SKIN-FRIENDLY FORMULA
+                  EXCLUSIVE CUTS
                 </h3>
                 <p className="font-sans font-normal text-xs md:text-sm tracking-wide uppercase text-slate-500 leading-relaxed">
                   GENTLE, EFFECTIVE, AND SUITED FOR DAILY USE — ESPECIALLY FOR INDIAN CONDITIONS.
@@ -145,7 +145,7 @@ export default function ValueSection() {
             <Link
               href="/process"
               aria-label="Discover our scientific process and product development"
-              className={`mt-10 self-center md:self-start bg-white text-[#0A1E3D] px-8 md:px-10 py-4 md:py-5 rounded-full font-sans font-bold text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-slate-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/60 focus:ring-offset-2 focus:ring-offset-[#0A1E3D] motion-reduce:transition-none motion-reduce:transform-none ${
+              className={`mt-10 self-center md:self-start bg-white text-[#0A0A0A] px-8 md:px-10 py-4 md:py-5 rounded-full font-sans font-bold text-xs md:text-sm tracking-[0.2em] uppercase hover:bg-slate-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#C5A866]/60 focus:ring-offset-2 focus:ring-offset-[#0A0A0A] motion-reduce:transition-none motion-reduce:transform-none ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
               style={{ transitionDelay: "1000ms" }}

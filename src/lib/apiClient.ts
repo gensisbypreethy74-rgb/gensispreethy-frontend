@@ -35,7 +35,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      const userStr = localStorage.getItem('luxygalleria_user');
+      const userStr = localStorage.getItem('genesis_boutique_user');
       if (userStr) {
         try {
           const user = JSON.parse(userStr);
@@ -45,7 +45,7 @@ apiClient.interceptors.request.use(
         } catch (err) {
           console.error('Failed to parse user data from localStorage:', err);
           // Clear corrupted data
-          localStorage.removeItem('luxygalleria_user');
+          localStorage.removeItem('genesis_boutique_user');
         }
       }
     }
@@ -68,10 +68,10 @@ apiClient.interceptors.response.use(
     if (status === 401) {
       if (typeof window !== 'undefined') {
         // Don't redirect if user isn't logged in at all (no stored user)
-        const storedUser = localStorage.getItem('luxygalleria_user');
+        const storedUser = localStorage.getItem('genesis_boutique_user');
         if (storedUser) {
           // Token expired - clear storage and redirect to login
-          localStorage.removeItem('luxygalleria_user');
+          localStorage.removeItem('genesis_boutique_user');
           if (window.location.pathname !== '/sign-in') {
             window.location.href = '/sign-in?redirect=' + encodeURIComponent(window.location.pathname);
           }

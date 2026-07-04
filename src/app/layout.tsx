@@ -21,10 +21,10 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Luxy Galleria",
-  description: "Fulfill your global cravings - Premium imported drinks, snacks & more.",
+  title: "Genesis by Preethy",
+  description: "Genesis by Preethy - Luxury & Premium Fashion Boutique",
   icons: {
-    icon: "/luxy_logo.png",
+    icon: "/genesis_icon.png",
   },
 };
 

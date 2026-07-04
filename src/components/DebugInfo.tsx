@@ -8,7 +8,7 @@ export default function DebugInfo() {
   
   useEffect(() => {
     // Get user info from localStorage
-    const userStr = localStorage.getItem('luxygalleria_user');
+    const userStr = localStorage.getItem('genesis_boutique_user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);

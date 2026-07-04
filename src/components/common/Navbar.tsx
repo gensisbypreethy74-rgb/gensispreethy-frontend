@@ -29,8 +29,8 @@ export default function Navbar() {
     if (isSearchOpen && allProducts.length === 0) {
       const fetchProducts = async () => {
         try {
-          const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-          const res = await axios.get(`${BASE_URL}/v1/products`);
+          const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+          const res = await axios.get(`${apiURL}/products`);
           if (res.data.success && res.data.data) {
             setAllProducts(res.data.data);
           }
@@ -64,12 +64,12 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("luxygalleria_user"));
+    setIsLoggedIn(!!localStorage.getItem("genesis_boutique_user"));
   }, [pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem("luxygalleria_user");
-    localStorage.removeItem("luxygalleria_cart");
+    localStorage.removeItem("genesis_boutique_user");
+    localStorage.removeItem("genesis_boutique_cart");
     setIsLoggedIn(false);
     clearCart();
     router.push("/sign-in");
@@ -148,12 +148,12 @@ export default function Navbar() {
 
       {/* ── Logo (Center on Mobile, Left on Desktop) ── */}
       <div className="flex items-center justify-center md:justify-start flex-1 md:flex-none z-10 h-full overflow-hidden">
-        <Link href="/" className="flex-shrink-0 group h-full flex items-center overflow-hidden" aria-label="Luxy Galleria home">
-          <div className="w-48 sm:w-56 md:w-64 lg:w-72 h-full flex items-center justify-center md:justify-start transition-transform duration-300 group-hover:scale-105">
+        <Link href="/" className="flex-shrink-0 group h-full flex items-center overflow-hidden" aria-label="Genesis by Preethy home">
+          <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
             <img
-              src="/luxy_logo.png"
-              alt="Luxy Galleria Logo"
-              className="max-w-full max-h-full object-contain mix-blend-multiply filter drop-shadow-sm transition-all duration-300 scale-150 transform origin-center md:origin-left"
+              src="/genesis_logo.png"
+              alt="Genesis by Preethy Logo"
+              className="max-w-full max-h-full object-contain filter drop-shadow-sm transition-all duration-300"
             />
           </div>
         </Link>

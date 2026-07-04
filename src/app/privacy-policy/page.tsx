@@ -14,10 +14,10 @@ export default function PrivacyPolicyPage() {
 
   return (
     <>
-      <title>Privacy Policy – LUXY GALLERIA</title>
+      <title>Privacy Policy – GENESIS BY PREETHY</title>
       <meta
         name="description"
-        content="Read the Privacy Policy of LUXY GALLERIA. Learn how we collect, use, and protect your data."
+        content="Read the Privacy Policy of Genesis by Preethy. Learn how we collect, use, and protect your data."
       />
 
       <main id="top" className="min-h-screen bg-slate-50">
@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
           className="relative w-full pt-32 md:pt-40 pb-36 md:pb-48"
           style={{
             background:
-              "linear-gradient(135deg, #2C1810 0%, #5A3A1E 40%, #8B5E34 100%)",
+              "linear-gradient(135deg, #050505 0%, #0F0F0F 50%, #1A1A1A 100%)",
           }}
         >
           <div className="max-w-4xl mx-auto px-6 text-center">
@@ -71,7 +71,7 @@ export default function PrivacyPolicyPage() {
                   "opacity 0.6s ease 300ms, transform 0.6s ease 300ms",
               }}
             >
-              At LUXY GALLERIA, we value your privacy. This policy explains how we collect and use your data.
+              At Genesis by Preethy, we value your privacy. This policy explains how we collect and use your data.
             </p>
           </div>
         </section>
@@ -85,14 +85,14 @@ export default function PrivacyPolicyPage() {
 
             <div className="space-y-8 text-slate-700 leading-relaxed font-sans">
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">1. Introduction</h2>
                 <p>
-                  LUXY GALLERIA is committed to protecting your privacy. This policy explains how we collect, use, and protect your personal information.
+                  Genesis by Preethy is committed to protecting your privacy. This policy explains how we collect, use, and protect your personal information.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Information We Collect</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">2. Information We Collect</h2>
                 <p className="mb-4">We may collect the following information when you use our website:</p>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Name and contact details</li>
@@ -103,51 +103,51 @@ export default function PrivacyPolicyPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">3. How We Use Your Data</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">3. How We Use Your Data</h2>
                 <p>
                   We use your information to process orders, manage deliveries, provide customer support, and improve your experience on our website.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Cookies & Tracking</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">4. Cookies & Tracking</h2>
                 <p>
                   We use cookies and similar technologies to remember preferences, analyze website traffic, and enhance user experience.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Data Security</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">5. Data Security</h2>
                 <p>
                   We take appropriate measures to protect your personal data, but no internet transmission is completely secure. Payment details are handled by trusted payment providers.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Sharing Information</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">6. Sharing Information</h2>
                 <p>
                   We do not sell your personal data. We may share information with delivery partners and payment processors as needed to fulfill your orders.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Your Rights</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">7. Your Rights</h2>
                 <p>
                   You may request access to your data, ask for corrections, or request deletion by contacting us at the email below.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Policy Updates</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">8. Policy Updates</h2>
                 <p>
                   We may update this policy from time to time. The latest version will always be available on this page.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Contact Us</h2>
-                <p className="mb-2">Email: <a href="mailto:infoluxygalleria@gmail.com" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">infoluxygalleria@gmail.com</a></p>
-                <p>Phone: <a href="tel:+919074881551" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">9074881551</a></p>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">9. Contact Us</h2>
+                <p className="mb-2">Email: <a href="mailto:genesisbypreethy74@gmail.com" className="text-[#C5A866] hover:text-[#A88F52] transition-colors">genesisbypreethy74@gmail.com</a></p>
+                <p>Phone: <a href="tel:+919074881551" className="text-[#C5A866] hover:text-[#A88F52] transition-colors">+91 9074881551</a></p>
               </section>
             </div>
           </div>

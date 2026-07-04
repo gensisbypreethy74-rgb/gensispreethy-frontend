@@ -22,6 +22,8 @@ interface Product {
   dealBadge: string;
   benefit: string;
   weight?: number;
+  sizes?: string[];
+  variants?: any[];
 }
 
 const DEFAULT_PRODUCTS: Product[] = [];
@@ -30,11 +32,14 @@ const normalizeImg = (img: any) => {
   if (!img) return "/products/suncream-1.jpg";
   const str = String(img).trim();
   if (!str) return "/products/suncream-1.jpg";
-  if (str.startsWith("http://") || str.startsWith("https://") || str.startsWith("/")) {
+  if (str.startsWith("http://") || str.startsWith("https://")) {
     return str;
   }
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL
-    ? process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/, "")
+  if (str.startsWith("/") && !str.startsWith("/uploads/")) {
+    return str;
+  }
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+    ? process.env.NEXT_PUBLIC_BACKEND_URL.replace(/\/api\/?$/, "")
     : "http://localhost:5000";
   return `${baseUrl.replace(/\/$/, "")}/${str.replace(/^\/+/, "")}`;
 };
@@ -60,7 +65,7 @@ function ProductCard({ product, isVisible, index }: { product: Product; isVisibl
 
   const handleAddToCart = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    const savedUser = localStorage.getItem("luxygalleria_user");
+    const savedUser = localStorage.getItem("genesis_boutique_user");
     addToCart({
       id: product.id,
       name: product.name,
@@ -114,9 +119,19 @@ function ProductCard({ product, isVisible, index }: { product: Product; isVisibl
             <span className="text-sm font-medium text-slate-400 ml-1">({product.reviewCount})</span>
           </div>
 
-          <h3 className="font-sans font-bold text-sm md:text-lg text-slate-900 leading-tight text-center mb-2 md:mb-3 line-clamp-2">
+          <h3 className="font-sans font-bold text-sm md:text-lg text-slate-900 leading-tight text-center mb-1.5 line-clamp-2">
             {product.name}
           </h3>
+          {/* Sizing badges */}
+          {product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === 'Standard') && (
+            <div className="flex justify-center gap-1.5 flex-wrap mb-2">
+              {product.sizes.map((s) => (
+                <span key={s} className="text-[10px] font-bold text-[#A68B5B] bg-[#A68B5B]/10 border border-[#A68B5B]/20 px-1.5 py-0.5 rounded-md">
+                  {s}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="flex items-center justify-center gap-1.5 md:gap-2 mb-2" aria-label={`Sale price ${product.currentPrice}, original price ${product.originalPrice}`}>
             <span className="font-sans font-bold text-lg md:text-2xl text-slate-900">
@@ -141,9 +156,9 @@ function ProductCard({ product, isVisible, index }: { product: Product; isVisibl
           <button
             type="button"
             aria-label={`Add ${product.name} to cart`}
-            className={`w-full text-white font-sans font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 ${isAdded
-                ? "bg-green-600 hover:bg-green-700"
-                : "bg-slate-500 hover:bg-slate-600"
+            className={`w-full font-sans font-bold text-[10px] md:text-xs uppercase tracking-widest py-2 md:py-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 ${isAdded
+                ? "bg-green-600 text-white hover:bg-green-700"
+                : "bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] text-[#C5A866]"
               }`}
           >
             {isAdded ? "ADDED TO CART" : "ADD TO CART"}
@@ -180,6 +195,8 @@ export default function ProductSection() {
             benefit: p.keyFeatures || "",
             weight: p.variants?.[0]?.weight || p.weight || 0,
             size: p.variants?.[0]?.volume || "Standard",
+            sizes: p.variants && p.variants.length > 0 ? p.variants.map((v: any) => v.volume) : [],
+            variants: p.variants || [],
           }));
           setProducts(mappedProds);
         }

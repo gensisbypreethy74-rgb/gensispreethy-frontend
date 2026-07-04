@@ -8,7 +8,7 @@ interface Settings {
   isBannerActive: boolean;
 }
 
-const DEFAULT_BANNER = "✨ WELCOME TO LUXY GALLERIA — Premium Imported Snacks & Drinks ✨";
+const DEFAULT_BANNER = "✨ WELCOME TO GENESIS BY PREETHY — Luxury & Premium Fashion Boutique ✨";
 
 export default function DynamicBanner() {
   const [settings, setSettings] = useState<Settings | null>(null);

@@ -14,10 +14,10 @@ export default function TermsAndConditionsPage() {
 
   return (
     <>
-      <title>Terms & Conditions – LUXY GALLERIA</title>
+      <title>Terms & Conditions – GENESIS BY PREETHY</title>
       <meta
         name="description"
-        content="Read the Terms & Conditions of LUXY GALLERIA. Learn about the rules and regulations for using our website."
+        content="Read the Terms & Conditions of GENESIS BY PREETHY. Learn about the rules and regulations for using our website."
       />
 
       <main id="top" className="min-h-screen bg-slate-50">
@@ -26,7 +26,7 @@ export default function TermsAndConditionsPage() {
           className="relative w-full pt-32 md:pt-40 pb-36 md:pb-48"
           style={{
             background:
-              "linear-gradient(135deg, #2C1810 0%, #5A3A1E 40%, #8B5E34 100%)",
+              "linear-gradient(135deg, #050505 0%, #0F0F0F 50%, #1A1A1A 100%)",
           }}
         >
           <div className="max-w-4xl mx-auto px-6 text-center">
@@ -71,7 +71,7 @@ export default function TermsAndConditionsPage() {
                   "opacity 0.6s ease 300ms, transform 0.6s ease 300ms",
               }}
             >
-              Welcome to LUXY GALLERIA. By accessing or using our website, you agree to comply with these Terms & Conditions.
+              Welcome to GENESIS BY PREETHY. By accessing or using our website, you agree to comply with these Terms & Conditions.
             </p>
           </div>
         </section>
@@ -85,21 +85,21 @@ export default function TermsAndConditionsPage() {
 
             <div className="space-y-8 text-slate-700 leading-relaxed font-sans">
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">1. Introduction</h2>
                 <p>
-                  These Terms & Conditions govern your access to and use of the LUXY GALLERIA website and services. By using this site, you agree to comply with these terms.
+                  These Terms & Conditions govern your access to and use of the GENESIS BY PREETHY website and services. By using this site, you agree to comply with these terms.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Product Information</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">2. Product Information</h2>
                 <p>
-                  We make every effort to present accurate product information, pricing, and availability. However, LUXY GALLERIA does not guarantee that all information is error-free.
+                  We make every effort to present accurate product information, pricing, and availability. However, GENESIS BY PREETHY does not guarantee that all information is error-free.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Orders & Payments</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">3. Orders & Payments</h2>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Orders are confirmed only after successful payment.</li>
                   <li>Payments are processed through licensed payment gateways.</li>
@@ -108,23 +108,23 @@ export default function TermsAndConditionsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Shipping & Delivery</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">4. Shipping & Delivery</h2>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Delivery timelines are estimates and depend on the destination and courier partner.</li>
                   <li>Shipping fees are displayed during checkout and depend on the order details.</li>
-                  <li>LUXY GALLERIA is not responsible for delays caused by courier services or external disruptions.</li>
+                  <li>GENESIS BY PREETHY is not responsible for delays caused by courier services or external disruptions.</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Returns & Refunds</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">5. Returns & Refunds</h2>
                 <p>
                   Returns and refunds are subject to our return policy. Please inspect items on delivery and raise any concerns promptly.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">6. User Conduct</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">6. User Conduct</h2>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Provide accurate account and shipping information.</li>
                   <li>Do not use the website for unlawful or unauthorized activities.</li>
@@ -132,30 +132,30 @@ export default function TermsAndConditionsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Intellectual Property</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">7. Intellectual Property</h2>
                 <p>
-                  All content on this site, including text, images, logos, and designs, is the property of LUXY GALLERIA and may not be used without permission.
+                  All content on this site, including text, images, logos, and designs, is the property of GENESIS BY PREETHY and may not be used without permission.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Limitation of Liability</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">8. Limitation of Liability</h2>
                 <p>
-                  LUXY GALLERIA is not liable for any indirect, incidental, or consequential losses, including allergic reactions, delays, or loss of income.
+                  GENESIS BY PREETHY is not liable for any indirect, incidental, or consequential losses, including allergic reactions, delays, or loss of income.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Governing Law</h2>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">9. Governing Law</h2>
                 <p>
                   These Terms are governed by the laws of India. Any disputes will be subject to the jurisdiction of Indian courts.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Contact Us</h2>
-                <p className="mb-2">Email: <a href="mailto:infoluxygalleria@gmail.com" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">infoluxygalleria@gmail.com</a></p>
-                <p>Phone: <a href="tel:+919074881551" className="text-[#8B5E34] hover:text-[#5A3A1E] transition-colors">9074881551</a></p>
+                <h2 className="text-2xl font-bold text-[#C5A866] mb-4">10. Contact Us</h2>
+                <p className="mb-2">Email: <a href="mailto:genesisbypreethy74@gmail.com" className="text-[#C5A866] hover:text-[#A88F52] transition-colors">genesisbypreethy74@gmail.com</a></p>
+                <p>Phone: <a href="tel:+919074881551" className="text-[#C5A866] hover:text-[#A88F52] transition-colors">+91 9074881551</a></p>
               </section>
             </div>
           </div>

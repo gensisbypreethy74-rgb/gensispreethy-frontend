@@ -14,26 +14,19 @@ export const getImageUrl = (imagePath: string | undefined | null): string => {
     return getPlaceholderUrl('No image available');
   }
 
-  // Already a full URL (http/https)
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+  // Already a full URL (http/https) or base64 data
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('data:')) {
     return imagePath;
   }
 
-  // Backend uploads path
-  if (imagePath.startsWith('/uploads/')) {
-    const baseUrl = 
-      process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/api\/?$/, '') || 
-      'http://localhost:5000';
-    return `${baseUrl}${imagePath}`;
-  }
-
-  // Data URL (base64)
-  if (imagePath.startsWith('data:')) {
-    return imagePath;
-  }
-
-  // Fallback to placeholder for unrecognized formats
-  return getPlaceholderUrl('Invalid image');
+  // Prepend backend URL for all local paths (e.g. /uploads/..., uploads/..., /products/...)
+  const rawUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+  const baseUrl = (rawUrl && rawUrl !== 'undefined')
+    ? rawUrl.replace(/\/api\/?$/, '')
+    : 'http://localhost:5000';
+    
+  const cleanPath = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+  return `${baseUrl.replace(/\/$/, '')}${cleanPath}`;
 };
 
 /**

@@ -45,8 +45,8 @@ export default function CheckoutPage() {
           if (s.shippingAbove500g !== undefined) setShippingAbove500g(s.shippingAbove500g);
           if (s.shippingWeightThreshold !== undefined) setShippingWeightThreshold(s.shippingWeightThreshold);
         }
-      } catch (err) {
-        console.error("Failed to fetch settings for shipping", err);
+      } catch (err: any) {
+        console.warn("Failed to fetch settings for shipping", err);
       }
     };
     fetchShippingSettings();
@@ -54,7 +54,7 @@ export default function CheckoutPage() {
 
   // Check login status on mount
   useEffect(() => {
-    const userStr = localStorage.getItem("luxygalleria_user");
+    const userStr = localStorage.getItem("genesis_boutique_user");
     if (!userStr) {
       showToast("Please login to proceed with checkout.", "warning");
       router.push("/sign-in");
@@ -67,7 +67,7 @@ export default function CheckoutPage() {
 
   const fetchAddresses = async () => {
     try {
-      const userStr = localStorage.getItem("luxygalleria_user");
+      const userStr = localStorage.getItem("genesis_boutique_user");
       if (!userStr) {
         console.log('No user token found');
         return;
@@ -108,13 +108,14 @@ export default function CheckoutPage() {
         }
       }
     } catch (err: any) {
-      console.error("Failed to fetch addresses", err);
+      console.warn("Failed to fetch addresses", err);
       if (err.response?.status === 401) {
         showToast("Session expired. Please login again.", "warning");
-        localStorage.removeItem("luxygalleria_user");
+        localStorage.removeItem("genesis_boutique_user");
         router.push("/sign-in");
       } else {
-        showToast("Failed to load addresses. Please try again.", "error");
+        const errMsg = err.response?.data?.message || "Failed to load addresses. Please try again.";
+        showToast(errMsg, "error");
       }
     }
   };
@@ -135,7 +136,7 @@ export default function CheckoutPage() {
     setIsSavingAddress(true);
 
     try {
-      const userStr = localStorage.getItem("luxygalleria_user");
+      const userStr = localStorage.getItem("genesis_boutique_user");
       
       // If logged in, save to backend
       if (userStr) {
@@ -190,7 +191,7 @@ export default function CheckoutPage() {
           console.error('Address save error:', err);
           if (err.response?.status === 401) {
             showToast("Session expired. Please login again.", "warning");
-            localStorage.removeItem("luxygalleria_user");
+            localStorage.removeItem("genesis_boutique_user");
             router.push("/sign-in");
           } else {
             showToast(err.response?.data?.message || "Error saving address", "error");
@@ -263,7 +264,7 @@ export default function CheckoutPage() {
     }
 
     try {
-      const userStr = localStorage.getItem("luxygalleria_user");
+      const userStr = localStorage.getItem("genesis_boutique_user");
       if (!userStr) {
         showToast("Please login to proceed.", "warning");
         return;
@@ -341,7 +342,7 @@ export default function CheckoutPage() {
         key: key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_YourTestKey", // Use backend key first to guarantee match
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        name: "Luxy Galleria",
+        name: "Genesis by Preethy",
         description: "Order Payment",
         order_id: razorpayOrder.id,
         handler: async function (response: any) {
@@ -396,7 +397,7 @@ export default function CheckoutPage() {
       const status = err.response?.status;
       if (status === 401) {
         // Token expired or invalid - redirect to sign-in
-        localStorage.removeItem("luxygalleria_user");
+        localStorage.removeItem("genesis_boutique_user");
         showToast("Your session expired. Please sign in again.", "warning");
         router.push("/sign-in");
       } else {
@@ -570,7 +571,7 @@ export default function CheckoutPage() {
 
             <button
               onClick={handleCheckout}
-              className="w-full bg-[#111] text-white font-bold text-base py-4 sm:py-5 rounded-xl hover:bg-black transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 mb-4"
+              className="w-full bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] text-[#C5A866] font-bold text-base py-4 sm:py-5 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 mb-4"
             >
               Secure Checkout
             </button>
@@ -676,7 +677,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handleSaveAddress}
                 disabled={isSavingAddress}
-                className="w-full bg-[#111] text-white font-bold text-base py-4 rounded-xl mt-4 hover:bg-black transition-colors focus:outline-none disabled:opacity-50"
+                className="w-full bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] text-[#C5A866] font-bold text-base py-4 rounded-xl mt-4 focus:outline-none disabled:opacity-50"
               >
                 {isSavingAddress ? "Saving..." : "Save & Deliver Here"}
               </button>

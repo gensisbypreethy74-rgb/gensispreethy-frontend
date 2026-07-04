@@ -59,9 +59,9 @@ const CONTACT_CARDS: ContactCardData[] = [
     id: "email",
     Icon: Mail,
     title: "Email Us",
-    primary: "infoluxygalleria@gmail.com",
-    href: "mailto:infoluxygalleria@gmail.com",
-    ariaLabel: "Email us at infoluxygalleria@gmail.com",
+    primary: "genesisbypreethy74@gmail.com",
+    href: "mailto:genesisbypreethy74@gmail.com",
+    ariaLabel: "Email us at genesisbypreethy74@gmail.com",
   },
   {
     id: "hours",
@@ -440,10 +440,10 @@ export default function ContactUsPage() {
 
   return (
     <>
-      <title>Contact Us – LUXY GALLERIA | We&apos;d Love to Hear From You</title>
+      <title>Contact Us – Genesis by Preethy | We&apos;d Love to Hear From You</title>
       <meta
         name="description"
-        content="Get in touch with the LUXY GALLERIA team. Call, email, or send us a message — we're here to help with all your skincare needs."
+        content="Get in touch with the Genesis by Preethy team. Call, email, or send us a message — we're here to help with all your skincare needs."
       />
 
       <main id="top" className="min-h-screen bg-slate-50">

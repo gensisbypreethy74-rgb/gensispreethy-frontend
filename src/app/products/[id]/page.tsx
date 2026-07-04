@@ -141,13 +141,14 @@ export default function ProductDetailPage() {
     }
     if (!product) return;
 
-    const savedUser = localStorage.getItem("luxygalleria_user");
+    const savedUser = localStorage.getItem("genesis_boutique_user");
     const selectedVariant = product.variants?.[selectedSize] || {};
+    const activePrice = selectedVariant.price || product.currentPrice;
     addToCart({
       id: product.id,
       name: product.name,
       image: getImageUrl(product.images[0]),
-      price: product.currentPrice,
+      price: activePrice,
       currency: product.currency,
       weight: selectedVariant.weight || (product as any).weight || 0,
       size: product.sizes?.[selectedSize],
@@ -189,7 +190,10 @@ export default function ProductDetailPage() {
     );
   }
 
-  const discount = Math.round((1 - product.currentPrice / product.originalPrice) * 100);
+  const selectedVariant = product.variants?.[selectedSize] || product.variants?.[0] || {};
+  const currentPrice = selectedVariant.price || product.currentPrice;
+  const originalPrice = selectedVariant.oldPrice || selectedVariant.price || product.originalPrice;
+  const discount = Math.round((1 - currentPrice / originalPrice) * 100);
 
   return (
     <div className="min-h-screen bg-white pt-30">
@@ -297,18 +301,18 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="flex items-end gap-3 mb-2">
               <span className="font-sans font-bold text-4xl text-slate-900">
-                {product.currency}{product.currentPrice}
+                {product.currency}{currentPrice}
               </span>
               <span className="font-sans text-lg text-slate-400 line-through mb-0.5">
-                {product.currency}{product.originalPrice}
+                {product.currency}{originalPrice}
               </span>
             </div>
             <p className="font-bold text-xs uppercase tracking-wider text-red-500 mb-6">
-              {product.dealBadge} — You save {product.currency}{product.originalPrice - product.currentPrice}
+              {product.dealBadge} — You save {product.currency}{originalPrice - currentPrice}
             </p>
 
             {/* Size Selector */}
-            {product.sizes.length > 1 && (
+            {product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === 'Standard') && (
               <div className="mb-6">
                 <p className="font-sans font-semibold text-sm text-slate-700 mb-3 uppercase tracking-[0.1em]">
                   Size
@@ -368,7 +372,7 @@ export default function ProductDetailPage() {
                 <button
                   type="button"
                   aria-label="Add to cart"
-                  className={`inline-flex items-center justify-center gap-3 px-6 py-3 rounded-full font-bold text-sm uppercase tracking-widest transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 ${added ? "bg-green-500 text-white" : "bg-slate-900 text-white hover:bg-slate-800"}`}
+                  className={`inline-flex items-center justify-center gap-3 px-6 py-3 rounded-full font-bold text-sm uppercase tracking-widest transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#A68B5B]/50 focus:ring-offset-2 ${added ? "bg-green-600 text-white" : "bg-[#1A1A1A] hover:bg-[#252525] border border-[#2A2A2A] text-[#C5A866]"}`}
                 >
                   {added ? (
                     <><Check size={18} /> Added</>
@@ -402,62 +406,13 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* ── Info Tabs ── */}
+      {/* ── Product Description ── */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-12 md:py-16">
-        {/* Tab Bar */}
-        <div className="flex border-b border-slate-200 mb-8 gap-8">
-          {([
-            { key: "benefits", label: "Benefits" },
-            { key: "ingredients", label: "Ingredients" },
-            { key: "how-to", label: "How to Use" },
-          ] as const).map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className={`pb-4 font-sans font-bold text-sm uppercase tracking-[0.12em] border-b-2 transition-all duration-200 focus:outline-none ${activeTab === key
-                ? "border-slate-900 text-slate-900"
-                : "border-transparent text-slate-400 hover:text-slate-700"
-                }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Tab Content */}
-        <div className="max-w-2xl">
-          {activeTab === "benefits" && (
-            <ul className="space-y-3">
-              {product.benefits.map((b) => (
-                <li key={b} className="flex items-start gap-3">
-                  <div className="mt-0.5 w-5 h-5 rounded-full bg-[#A68B5B]/10 flex items-center justify-center flex-shrink-0">
-                    <Check size={11} className="text-[#8B5E34]" strokeWidth={3} />
-                  </div>
-                  <span className="font-sans text-base text-slate-700">{b}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-          {activeTab === "ingredients" && (
-            <div>
-              <p className={`font-sans text-base text-slate-600 leading-relaxed whitespace-pre-wrap transition-all duration-300 ${!isIngredientsExpanded ? 'line-clamp-4' : ''}`}>
-                {product.ingredients}
-              </p>
-              {product.ingredients && product.ingredients.length > 200 && (
-                <button
-                  onClick={() => setIsIngredientsExpanded(!isIngredientsExpanded)}
-                  className="text-[#8B5E34] font-semibold text-sm mt-2 hover:text-[#5A3A1E] transition-colors inline-block"
-                >
-                  {isIngredientsExpanded ? 'Read Less' : 'Read More'}
-                </button>
-              )}
-            </div>
-          )}
-          {activeTab === "how-to" && (
-            <p className="font-sans text-base text-slate-600 leading-relaxed">
-              {product.howToUse}
-            </p>
-          )}
+        <h2 className="font-sans font-bold text-xl uppercase tracking-[0.12em] text-slate-900 mb-6 border-b-2 border-slate-100 pb-4">
+          Product Description
+        </h2>
+        <div className="max-w-3xl font-sans text-slate-600 text-base leading-relaxed whitespace-pre-wrap">
+          {product.tagline || "No description available."}
         </div>
       </section>
 

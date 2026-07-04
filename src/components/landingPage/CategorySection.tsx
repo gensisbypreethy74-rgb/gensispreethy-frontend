@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { getImageUrl } from "../../lib/imageUtils";
 
 const DEFAULT_CATEGORIES = [
   {
@@ -46,7 +47,7 @@ export default function CategorySection() {
             const formatted = activeCats.map((c: any, index: number) => ({
               id: c.name.toLowerCase().replace(/\s+/g, '-'),
               label: c.name,
-              image: c.image || DEFAULT_CATEGORIES[index % 3].image,
+              image: c.image ? getImageUrl(c.image) : DEFAULT_CATEGORIES[index % 3].image,
               alt: `${c.name} category`
             }));
             setCategories(formatted);

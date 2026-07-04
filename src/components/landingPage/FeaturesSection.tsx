@@ -71,7 +71,7 @@ export default function FeaturesSection() {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16 md:mb-20">
           <div className="lg:max-w-2xl">
             <p 
-              className={`font-sans font-bold text-xs tracking-[0.15em] uppercase text-[#5A3A1E] mb-3 transition-opacity duration-400 ease-out motion-reduce:transition-none ${
+              className={`font-sans font-bold text-xs tracking-[0.15em] uppercase text-[#C5A866] mb-3 transition-opacity duration-400 ease-out motion-reduce:transition-none ${
                 isVisible ? "opacity-100" : "opacity-0"
               }`}
             >
@@ -94,7 +94,7 @@ export default function FeaturesSection() {
             style={{ transitionDelay: "200ms" }}
           >
             <p className="font-sans font-normal text-base md:text-lg text-slate-400 leading-relaxed">
-              Every drop of LUXY GALLERIA is crafted with powerful actives to protect, nourish, and elevate your skin in modern environments.
+              Every piece from GENESIS BY PREETHY is crafted with premium quality to elevate your everyday elegance.
             </p>
           </div>
         </div>
