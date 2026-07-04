@@ -48,9 +48,16 @@ body {
 
 /* Force light background elements to dark charcoal card style */
 .bg-white,
+[class*="bg-white"],
 .bg-slate-50,
 .bg-slate-100,
-.bg-slate-200 {
+.bg-slate-200,
+.bg-gray-50,
+.bg-gray-100,
+.bg-\[\#FAFAFA\],
+[class*="bg-[#FAFAFA]"],
+.bg-\[\#F8F9FB\],
+[class*="bg-[#F8F9FB]"] {
   background-color: #121212 !important;
   border-color: #222222 !important;
 }
