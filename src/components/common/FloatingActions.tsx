@@ -6,7 +6,7 @@ import axios from "axios";
 
 export default function FloatingActions() {
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [whatsappNumber, setWhatsappNumber] = useState("7012552969");
+  const [whatsappNumber, setWhatsappNumber] = useState("7736605422");
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
@@ -15,7 +15,7 @@ export default function FloatingActions() {
       setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener("scroll", handleScroll);
-    
+
     // Fetch WhatsApp Number
     const fetchSettings = async () => {
       try {
@@ -41,9 +41,8 @@ export default function FloatingActions() {
       {/* Scroll to Top */}
       <button
         onClick={scrollToTop}
-        className={`w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#8B5E34] text-white shadow-lg hover:bg-[#6B4423] hover:scale-110 transition-all duration-300 flex items-center justify-center ${
-          showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
-        } motion-reduce:transition-none motion-reduce:transform-none`}
+        className={`w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#8B5E34] text-white shadow-lg hover:bg-[#6B4423] hover:scale-110 transition-all duration-300 flex items-center justify-center ${showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+          } motion-reduce:transition-none motion-reduce:transform-none`}
         aria-label="Scroll to top"
       >
         <ArrowUp size={20} />
