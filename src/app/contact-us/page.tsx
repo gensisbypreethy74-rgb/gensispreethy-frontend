@@ -50,10 +50,10 @@ const CONTACT_CARDS: ContactCardData[] = [
     id: "call",
     Icon: Phone,
     title: "Call Us",
-    primary: "+91 907 4881 551",
+    primary: "+91 773 660 5422",
     // secondary: "Mon – Sat: 9AM – 7PM",
-    href: "tel:+919074881551",
-    ariaLabel: "Call us at +91 907 4881 551",
+    href: "tel:+917736605422",
+    ariaLabel: "Call us at +91 773 660 5422",
   },
   {
     id: "email",

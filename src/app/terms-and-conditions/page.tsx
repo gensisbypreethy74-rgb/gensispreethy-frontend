@@ -155,7 +155,7 @@ export default function TermsAndConditionsPage() {
               <section>
                 <h2 className="text-2xl font-bold text-[#C5A866] mb-4">10. Contact Us</h2>
                 <p className="mb-2">Email: <a href="mailto:genesisbypreethy74@gmail.com" className="text-[#C5A866] hover:text-[#A88F52] transition-colors">genesisbypreethy74@gmail.com</a></p>
-                <p>Phone: <a href="tel:+919074881551" className="text-[#C5A866] hover:text-[#A88F52] transition-colors">+91 9074881551</a></p>
+                <p>Phone: <a href="tel:+917736605422" className="text-[#C5A866] hover:text-[#A88F52] transition-colors">+91 77366 05422</a></p>
               </section>
             </div>
           </div>
